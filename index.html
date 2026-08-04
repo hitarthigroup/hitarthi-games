@@ -1,259 +1,676 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<!-- Hitarthi Arcade homepage — "Recess / Classroom": a notebook page where every game is a sticker pinned up at recess. Dark mode = the classroom chalkboard. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hitarthi Arcade — Team Games</title>
-<meta name="description" content="A growing arcade of small browser games built by the Hitarthi team. A new game every week — play free, no install.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%95%B9%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<script>
+/* set theme before first paint to avoid a flash: saved choice, else system preference */
+(function () {
+  var t = null;
+  try { t = localStorage.getItem("arcade-theme"); } catch (e) {}
+  if (t !== "dark" && t !== "light") {
+    t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  document.documentElement.setAttribute("data-theme", t);
+})();
+</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕹️</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#05030c;
-    --panel:#1c1136;
-    --panel-2:#241645;
-    --gold:#f4c95d;
-    --gold-deep:#c9932e;
-    --magic:#8b6bff;
-    --teal:#39d6c4;
-    --text:#f4ecff;
-    --text-dim:#c4b8e6;
-    --text-dim-2:#9184b8;
-    --ease:cubic-bezier(.22,1,.36,1);
-    --px:'Press Start 2P', monospace;
+    color-scheme:light;
+    --ink:#0f1729;
+    --on-amber:#0f1729;
+    --ink-body:#3d4759;
+    --ink-muted:#5b6474;
+    --blue:#2563eb;
+    --blue-bright:#3b82f6;
+    --amber:#f59e0b;
+    --teal:#1e6b5e;
+    --slate:#f1f5f9;
+    --border:#e2e8f0;
+    --paper:#ffffff;
+    --card:#ffffff;
+    --ring:#ffffff;
+    --chip-bg:#ffffff;
+    --header-bg:rgba(255,255,255,.93);
+    --footer-bg:rgba(255,255,255,.9);
+    --radius:1rem;
+    --rule:rgba(37,99,235,.075);
+    --margin-line:rgba(245,158,11,.32);
+    --cs-bg:rgba(241,245,249,.55);
+    --tape-amber:rgba(245,158,11,.28);
+    --tape-blue:rgba(59,130,246,.18);
+    --btn-bg:#2563eb;
+    --btn-bg-hover:#3b82f6;
+    --shadow-soft:0 10px 24px rgba(15,23,41,.06);
   }
-  *,*::before,*::after{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  /* dark mode: the classroom chalkboard — chalk lines, glowing stickers */
+  [data-theme="dark"]{
+    color-scheme:dark;
+    --ink:#e9eef7;
+    --ink-body:#b8c2d8;
+    --ink-muted:#8b97af;
+    --blue:#7fa8ff;
+    --blue-bright:#a3c2ff;
+    --teal:#45b8a3;
+    --slate:#22304b;
+    --border:#2e3d5f;
+    --paper:#0d1526;
+    --card:#151f38;
+    --ring:#151f38;
+    --chip-bg:#151f38;
+    --header-bg:rgba(13,21,38,.92);
+    --footer-bg:rgba(13,21,38,.88);
+    --rule:rgba(255,255,255,.05);
+    --margin-line:rgba(245,158,11,.22);
+    --cs-bg:rgba(34,48,75,.45);
+    --tape-amber:rgba(245,158,11,.2);
+    --tape-blue:rgba(127,168,255,.16);
+    --shadow-soft:0 10px 24px rgba(0,0,0,.4);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
   body{
-    margin:0; background:var(--bg); color:var(--text);
-    font-family:'Trebuchet MS','Segoe UI',Verdana,sans-serif;
-    overflow-x:hidden; -webkit-font-smoothing:antialiased;
+    font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+    color:var(--ink);
+    background-color:var(--paper);
+    /* ruled notebook lines (chalk lines in dark mode) */
+    background-image:repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 35px,
+      var(--rule) 35px,
+      var(--rule) 36px
+    );
+    line-height:1.6;
+    min-height:100vh;
+    transition:background-color .35s ease,color .35s ease;
   }
-  a{color:inherit; text-decoration:none;}
-  ::selection{background:var(--magic); color:#fff;}
+  /* the pink-amber margin line every notebook has */
+  body::before{
+    content:"";
+    position:fixed;
+    top:0;bottom:0;
+    left:clamp(16px,4vw,56px);
+    width:2px;
+    background:var(--margin-line);
+    pointer-events:none;
+    z-index:0;
+  }
+  a{color:var(--blue)}
+  a:focus-visible,
+  button:focus-visible{
+    outline:3px solid var(--blue);
+    outline-offset:3px;
+    border-radius:6px;
+  }
+  .skip-link{
+    position:absolute;
+    left:-9999px;
+    top:0;
+    background:#0f1729;
+    color:#fff;
+    padding:.6rem 1.2rem;
+    border-radius:0 0 var(--radius) 0;
+    font-weight:600;
+    z-index:100;
+    text-decoration:none;
+  }
+  .skip-link:focus-visible{left:0}
 
-  /* ---------- ambient background ---------- */
-  .bg-glow{
-    position:fixed; inset:0; z-index:-2; pointer-events:none;
-    background:
-      radial-gradient(600px 500px at 12% -5%, #8b6bff33, transparent 60%),
-      radial-gradient(700px 600px at 90% 10%, #39d6c422, transparent 60%),
-      radial-gradient(800px 700px at 50% 100%, #f4c95d1a, transparent 60%),
-      var(--bg);
+  .wrap{
+    width:min(1080px,100% - 2rem);
+    margin-inline:auto;
+    position:relative;
+    z-index:1;
   }
-  .bg-stars{
-    position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.5;
-    background-image:
-      radial-gradient(1.5px 1.5px at 20px 30px, #ffffff88, transparent),
-      radial-gradient(1.5px 1.5px at 120px 90px, #ffffff66, transparent),
-      radial-gradient(1px 1px at 200px 40px, #ffffff77, transparent),
-      radial-gradient(1.5px 1.5px at 300px 140px, #ffffff55, transparent),
-      radial-gradient(1px 1px at 400px 60px, #ffffff66, transparent),
-      radial-gradient(1.5px 1.5px at 480px 180px, #ffffff55, transparent);
-    background-repeat:repeat; background-size:520px 220px;
-    animation:starDrift 90s linear infinite;
-  }
-  @keyframes starDrift{from{background-position:0 0;} to{background-position:-1040px 220px;}}
 
-  .container{width:100%; max-width:1080px; margin:0 auto; padding:0 24px;}
+  /* ============ Header ============ */
+  .site-header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:var(--header-bg);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    border-bottom:1.5px solid var(--border);
+  }
+  .site-header .wrap{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+    padding:.85rem 0;
+  }
+  .wordmark{
+    display:inline-flex;
+    align-items:baseline;
+    gap:.5rem;
+    text-decoration:none;
+    color:var(--ink);
+  }
+  .wordmark .brand{
+    font-family:"Outfit",sans-serif;
+    font-weight:800;
+    font-size:1.3rem;
+    letter-spacing:.09em;
+  }
+  .wordmark .arcade{
+    font-family:"Kalam",cursive;
+    font-weight:700;
+    font-size:1.25rem;
+    color:var(--blue);
+    transform:rotate(-3deg);
+    text-decoration:underline wavy rgba(245,158,11,.85);
+    text-decoration-thickness:2px;
+    text-underline-offset:6px;
+  }
+  .header-right{
+    display:flex;
+    align-items:center;
+    gap:.9rem;
+  }
+  .theme-toggle{
+    display:inline-grid;
+    place-items:center;
+    width:38px;
+    height:38px;
+    font-size:1.05rem;
+    line-height:1;
+    font-family:inherit;
+    background:var(--chip-bg);
+    color:var(--ink);
+    border:1.5px solid var(--border);
+    border-radius:999px;
+    cursor:pointer;
+    box-shadow:0 2px 6px rgba(15,23,41,.05);
+    transition:transform .2s ease,border-color .2s ease,background .35s ease;
+  }
+  .theme-toggle:hover{transform:rotate(-10deg) scale(1.07);border-color:var(--amber)}
+  .header-link{
+    font-size:.85rem;
+    font-weight:600;
+    color:var(--teal);
+    text-decoration:none;
+    white-space:nowrap;
+  }
+  .header-link:hover{text-decoration:underline}
 
-  /* ---------- marquee header ---------- */
-  .marquee{padding:72px 0 40px; text-align:center;}
-  .marquee .coin{
-    font-family:var(--px); font-size:.6rem; color:var(--teal); letter-spacing:2px;
-    animation:blink 1.6s steps(2) infinite;
+  /* ============ Hero ============ */
+  .hero{padding:clamp(3rem,7vw,5rem) 0 clamp(2rem,4vw,3rem)}
+  .eyebrow{
+    font-family:"Kalam",cursive;
+    font-weight:700;
+    color:var(--teal);
+    font-size:1.05rem;
+    display:inline-block;
+    transform:rotate(-1deg);
+    margin-bottom:.75rem;
   }
-  @keyframes blink{50%{opacity:.25;}}
-  .marquee h1{
-    font-family:var(--px); font-size:clamp(1.15rem, 4.5vw, 2.1rem);
-    color:var(--gold); margin:22px 0 18px; line-height:1.5;
-    text-shadow:0 0 18px #f4c95d66, 0 0 50px #8b6bff55;
+  .hero h1{
+    font-family:"Outfit",sans-serif;
+    font-weight:800;
+    font-size:clamp(2rem,5.5vw,3.4rem);
+    line-height:1.15;
+    letter-spacing:-.01em;
+    max-width:18ch;
   }
-  .marquee .tagline{
-    color:var(--text-dim); font-size:1rem; margin:0 auto; max-width:520px; line-height:1.6;
+  .circled{
+    position:relative;
+    display:inline-block;
+    padding:0 .18em;
+    font-family:"Kalam",cursive;
+    font-weight:700;
+    color:var(--blue);
   }
-  .marquee .tagline .hi{color:var(--teal); font-weight:700;}
-  .marquee .count{
-    display:inline-flex; align-items:center; gap:8px; margin-top:22px;
-    font-family:var(--px); font-size:.55rem; color:var(--text-dim);
-    background:rgba(28,17,54,.7); border:1px solid rgba(139,107,255,.4);
-    border-radius:20px; padding:9px 16px; letter-spacing:1px;
+  .circle-svg{
+    position:absolute;
+    top:-16%;left:-9%;
+    width:118%;height:132%;
+    overflow:visible;
+    pointer-events:none;
   }
-  .marquee .count b{color:var(--gold);}
-
-  /* ---------- featured cabinet ---------- */
-  .featured{
-    display:grid; grid-template-columns:0.9fr 1.1fr; gap:0; overflow:hidden;
-    background:linear-gradient(160deg,rgba(36,22,69,.85),rgba(10,6,22,.92));
-    border:1.5px solid rgba(244,201,93,.45); border-radius:26px;
-    box-shadow:0 20px 60px rgba(0,0,0,.55), 0 0 60px #8b6bff22;
-    margin-bottom:56px;
+  .circle-svg path{
+    fill:none;
+    stroke:var(--amber);
+    stroke-width:3.5;
+    stroke-linecap:round;
+    vector-effect:non-scaling-stroke;
+    stroke-dasharray:100;
+    stroke-dashoffset:100;
+    animation:draw 1s ease-out .5s forwards;
   }
-  .featured-screen{
-    position:relative; min-height:290px; display:flex; align-items:center; justify-content:center;
-    background:
-      radial-gradient(ellipse at 50% 20%, #8b6bff44, transparent 60%),
-      linear-gradient(180deg,#160c28,#241645);
-    border-right:1.5px solid rgba(244,201,93,.25);
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .hero .lede{
+    margin-top:1.25rem;
+    max-width:56ch;
+    font-size:1.05rem;
+    color:var(--ink-body);
   }
-  .featured-screen::after{ /* scanlines */
-    content:''; position:absolute; inset:0; pointer-events:none; opacity:.5;
-    background:repeating-linear-gradient(0deg, transparent 0 3px, #00000033 3px 4px);
+  .hero .lede strong{color:var(--ink)}
+  .chip-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.75rem;
+    margin-top:1.75rem;
   }
-  .featured-screen .big-emoji{
-    font-size:clamp(4.5rem, 10vw, 7rem);
-    filter:drop-shadow(0 10px 24px #000c) drop-shadow(0 0 30px #f4c95d44);
-    animation:bob 2.4s ease-in-out infinite;
-  }
-  @keyframes bob{0%,100%{transform:translateY(0);} 50%{transform:translateY(-12px);}}
-  .featured-info{padding:36px 34px 34px;}
-  .badge-now{
-    display:inline-block; font-family:var(--px); font-size:.55rem; letter-spacing:1.5px;
-    color:#1a0f33; background:linear-gradient(90deg,var(--gold),#ffe9a8);
-    border-radius:8px; padding:7px 12px; margin-bottom:16px;
-    box-shadow:0 0 20px #f4c95d55;
-  }
-  .featured-info h2{font-size:clamp(1.4rem,3vw,1.9rem); margin:0 0 4px; font-weight:800; line-height:1.25;}
-  .featured-info .hindi-title{color:var(--gold); font-weight:800; font-size:.95rem; margin-bottom:14px;}
-  .featured-info p.desc{color:var(--text-dim); line-height:1.65; font-size:.98rem; margin:0 0 20px;}
-  .meta-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px;}
   .chip{
-    font-size:.74rem; font-weight:700; color:var(--text-dim);
-    background:rgba(28,17,54,.8); border:1px solid rgba(139,107,255,.35);
-    border-radius:20px; padding:5px 12px;
+    display:inline-flex;
+    align-items:center;
+    gap:.5em;
+    background:var(--chip-bg);
+    border:1.5px solid var(--border);
+    border-radius:999px;
+    padding:.5em 1.1em;
+    font-size:.92rem;
+    font-weight:600;
+    box-shadow:0 2px 6px rgba(15,23,41,.05);
   }
-  .chip.date{color:var(--teal); border-color:rgba(57,214,196,.4);}
+  .chip-amber{
+    background:rgba(245,158,11,.1);
+    border-color:rgba(245,158,11,.45);
+  }
+  .chip-amber strong{color:var(--teal)}
 
+  /* ============ Section labels ============ */
+  .scribble-label{
+    font-family:"Kalam",cursive;
+    font-weight:700;
+    font-size:clamp(1.2rem,3vw,1.5rem);
+    color:var(--ink);
+    display:inline-block;
+    transform:rotate(-.6deg);
+    margin-bottom:1.5rem;
+  }
+  .scribble-label .hi{color:var(--teal)}
+
+  /* ============ Featured sticker ============ */
+  .featured{padding:1rem 0 2.5rem}
+  .featured-card{
+    position:relative;
+    display:grid;
+    grid-template-columns:minmax(140px,220px) 1fr;
+    gap:clamp(1.25rem,3vw,2rem);
+    align-items:center;
+    background:var(--card);
+    border:1.5px solid var(--border);
+    border-radius:1.25rem;
+    padding:clamp(1.25rem,3.5vw,2.25rem);
+    box-shadow:0 0 0 5px var(--ring),0 0 0 6.5px var(--border),var(--shadow-soft);
+    transform:rotate(-.8deg);
+    transition:transform .25s ease,box-shadow .25s ease,background .35s ease;
+    margin-top:1rem;
+  }
+  .featured-card:hover{
+    transform:rotate(0deg) translateY(-3px);
+    box-shadow:0 0 0 5px var(--ring),0 0 0 6.5px var(--border),0 18px 36px rgba(15,23,41,.1);
+  }
+  /* washi tape strips */
+  .featured-card::before,
+  .featured-card::after{
+    content:"";
+    position:absolute;
+    top:-14px;
+    width:92px;
+    height:28px;
+    background:var(--tape-amber);
+    border-radius:2px;
+    box-shadow:0 1px 2px rgba(15,23,41,.08);
+  }
+  .featured-card::before{left:8%;transform:rotate(-6deg)}
+  .featured-card::after{right:8%;transform:rotate(5deg)}
+  .f-emoji{
+    display:grid;
+    place-items:center;
+    background:var(--slate);
+    border-radius:var(--radius);
+    aspect-ratio:1;
+    font-size:clamp(4rem,9vw,6rem);
+    line-height:1;
+  }
+  .f-flag{
+    display:inline-block;
+    font-family:"Outfit",sans-serif;
+    font-weight:700;
+    font-size:.75rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    background:var(--amber);
+    color:var(--on-amber);
+    border-radius:999px;
+    padding:.25em .9em;
+    box-shadow:0 0 0 3px var(--ring);
+    transform:rotate(-2deg);
+    margin-bottom:.75rem;
+  }
+  .f-title{
+    font-family:"Outfit",sans-serif;
+    font-weight:700;
+    font-size:clamp(1.4rem,3.4vw,2rem);
+    line-height:1.2;
+  }
+  .f-title a{
+    color:var(--ink);
+    text-decoration:none;
+  }
+  .f-title a:hover{color:var(--blue);text-decoration:underline;text-underline-offset:5px}
+  .f-hindi{
+    font-family:"Kalam",cursive;
+    font-weight:400;
+    color:var(--teal);
+    font-size:1.1rem;
+    margin-top:.15rem;
+  }
+  .f-desc{
+    margin-top:.75rem;
+    color:var(--ink-body);
+    max-width:58ch;
+  }
+  .tag-list{
+    list-style:none;
+    display:flex;
+    flex-wrap:wrap;
+    gap:.5rem;
+    margin-top:.9rem;
+  }
+  .tag-list li{
+    font-size:.76rem;
+    font-weight:600;
+    color:var(--blue);
+    background:rgba(59,130,246,.08);
+    border:1px solid rgba(59,130,246,.25);
+    border-radius:999px;
+    padding:.15em .8em;
+  }
+  .f-foot{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:1rem;
+    margin-top:1.25rem;
+  }
+  .f-foot time{
+    font-size:.85rem;
+    color:var(--ink-muted);
+    font-weight:500;
+  }
   .btn-play{
-    display:inline-flex; flex-direction:column; align-items:center; gap:3px;
-    font-family:var(--px); font-size:.72rem; color:#1a0f33; cursor:pointer;
-    background:linear-gradient(180deg,#ffe9a8,var(--gold) 55%,var(--gold-deep));
-    border:none; border-radius:14px; padding:16px 30px;
-    box-shadow:0 4px 0 #8a611c, 0 10px 24px #f4c95d33;
-    transition:transform .15s var(--ease), box-shadow .2s var(--ease);
+    display:inline-block;
+    background:var(--btn-bg);
+    color:#fff;
+    font-weight:700;
+    font-size:.95rem;
+    text-decoration:none;
+    border-radius:999px;
+    padding:.65em 1.5em;
+    box-shadow:0 4px 12px rgba(37,99,235,.3);
+    transition:background .2s ease,transform .2s ease;
   }
-  .btn-play small{font-family:'Trebuchet MS','Segoe UI',sans-serif; font-size:.72rem; font-weight:700; color:#3c2a12; opacity:.85;}
-  .btn-play:hover{transform:translateY(-2px); box-shadow:0 4px 0 #8a611c, 0 14px 30px #f4c95d55;}
-  .btn-play:active{transform:translateY(2px); box-shadow:0 1px 0 #8a611c, 0 4px 10px #0006;}
+  .btn-play:hover{background:var(--btn-bg-hover);transform:translateY(-2px)}
 
-  /* ---------- section label ---------- */
-  .shelf-label{
-    display:flex; align-items:center; gap:14px; margin:0 0 22px;
-    font-family:var(--px); font-size:.62rem; color:var(--text-dim); letter-spacing:2px;
+  /* ============ Shelf grid ============ */
+  .shelf{padding:1.5rem 0 4rem}
+  .shelf-head{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:.75rem 1.25rem;
+    margin-bottom:.5rem;
   }
-  .shelf-label::after{content:''; flex:1; height:1px; background:linear-gradient(90deg,rgba(139,107,255,.5),transparent);}
+  .shelf-head .chip{font-size:.82rem;padding:.35em .95em}
+  .shelf-grid{
+    list-style:none;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    gap:2rem 1.75rem;
+    padding-top:1.25rem;
+  }
+  .sticker-card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    background:var(--card);
+    border:1.5px solid var(--border);
+    border-radius:1.25rem;
+    padding:1.5rem 1.4rem 1.3rem;
+    text-decoration:none;
+    color:var(--ink);
+    box-shadow:0 0 0 4px var(--ring),0 0 0 5.5px var(--border),0 6px 16px rgba(15,23,41,.05);
+    transition:transform .25s ease,box-shadow .25s ease,background .35s ease;
+  }
+  .shelf-grid li:nth-child(odd) .sticker-card{transform:rotate(-1.1deg)}
+  .shelf-grid li:nth-child(even) .sticker-card{transform:rotate(1deg)}
+  .shelf-grid li:nth-child(3n) .sticker-card{transform:rotate(.5deg)}
+  .sticker-card:hover{
+    transform:rotate(0deg) translateY(-5px);
+    box-shadow:0 0 0 4px var(--ring),0 0 0 5.5px var(--border),0 16px 30px rgba(15,23,41,.1);
+  }
+  .sticker-card:hover .card-title{color:var(--blue)}
+  .tape{
+    position:absolute;
+    top:-13px;
+    left:50%;
+    transform:translateX(-50%) rotate(-2.5deg);
+    width:84px;
+    height:24px;
+    background:var(--tape-blue);
+    border-radius:2px;
+    box-shadow:0 1px 2px rgba(15,23,41,.07);
+  }
+  .new-flag{
+    position:absolute;
+    top:-12px;
+    right:-8px;
+    font-family:"Outfit",sans-serif;
+    font-weight:700;
+    font-size:.7rem;
+    letter-spacing:.08em;
+    background:var(--amber);
+    color:var(--on-amber);
+    border-radius:999px;
+    padding:.25em .8em;
+    transform:rotate(6deg);
+    box-shadow:0 0 0 3px var(--ring);
+  }
+  .card-emoji{
+    font-size:2.6rem;
+    line-height:1;
+    margin-bottom:.75rem;
+  }
+  .card-title{
+    font-family:"Outfit",sans-serif;
+    font-weight:700;
+    font-size:1.15rem;
+    line-height:1.3;
+    transition:color .2s ease;
+  }
+  .card-hindi{
+    font-family:"Kalam",cursive;
+    color:var(--teal);
+    font-size:.95rem;
+    margin-top:.15rem;
+  }
+  .card-desc{
+    font-size:.88rem;
+    color:var(--ink-body);
+    margin-top:.6rem;
+    flex-grow:1;
+  }
+  .card-meta{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:.5rem;
+    margin-top:1rem;
+    padding-top:.9rem;
+    border-top:1.5px dashed var(--border);
+  }
+  .card-meta time{font-size:.78rem;color:var(--ink-muted);font-weight:500}
+  .play-hint{
+    font-size:.85rem;
+    font-weight:700;
+    color:var(--blue);
+  }
+  .sticker-card .tag-list{margin-top:.7rem}
+  .sticker-card .tag-list li{font-size:.7rem}
 
-  /* ---------- cabinet grid ---------- */
-  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:80px;}
-  .cab{
-    display:flex; flex-direction:column; overflow:hidden; position:relative;
-    background:linear-gradient(160deg,rgba(36,22,69,.75),rgba(22,12,40,.88));
-    border:1px solid rgba(139,107,255,.3); border-radius:18px;
-    transition:transform .3s var(--ease), border-color .3s, box-shadow .3s;
+  /* coming-soon sticker */
+  .coming-soon{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap:.5rem;
+    min-height:260px;
+    height:100%;
+    border:2px dashed rgba(59,130,246,.45);
+    border-radius:1.25rem;
+    background:var(--cs-bg);
+    padding:1.5rem 1.25rem;
   }
-  .cab:hover{transform:translateY(-6px); border-color:rgba(244,201,93,.55); box-shadow:0 16px 40px rgba(0,0,0,.45), 0 0 30px #8b6bff22;}
-  .cab:focus-within{border-color:var(--gold);}
-  .cab-screen{
-    position:relative; height:130px; display:flex; align-items:center; justify-content:center;
-    background:radial-gradient(ellipse at 50% 30%, #8b6bff33, transparent 65%), linear-gradient(180deg,#160c28,#1c1136);
-    border-bottom:1px solid rgba(139,107,255,.25);
+  .coming-soon .cs-emoji{font-size:2.4rem;line-height:1}
+  .coming-soon .cs-hindi{
+    font-family:"Kalam",cursive;
+    font-weight:700;
+    font-size:1.15rem;
+    color:var(--blue);
   }
-  .cab-screen::after{
-    content:''; position:absolute; inset:0; opacity:.45; pointer-events:none;
-    background:repeating-linear-gradient(0deg, transparent 0 3px, #00000030 3px 4px);
+  .coming-soon p{
+    font-size:.85rem;
+    color:var(--ink-muted);
+    max-width:26ch;
   }
-  .cab-screen .emoji{font-size:3rem; filter:drop-shadow(0 6px 14px #000b); transition:transform .3s var(--ease);}
-  .cab:hover .cab-screen .emoji{transform:scale(1.15);}
-  .cab-press{
-    position:absolute; bottom:8px; left:0; right:0; text-align:center;
-    font-family:var(--px); font-size:.5rem; color:var(--gold); letter-spacing:1.5px;
-    opacity:0; transition:opacity .25s;
-  }
-  .cab:hover .cab-press{opacity:1; animation:blink 1s steps(2) infinite;}
-  .cab-body{padding:16px 18px 18px; display:flex; flex-direction:column; gap:8px; flex:1;}
-  .cab-body h3{margin:0; font-size:1.02rem; font-weight:800; line-height:1.3;}
-  .cab-body .hindi-title{color:var(--gold); font-size:.8rem; font-weight:800;}
-  .cab-body p{margin:0; color:var(--text-dim); font-size:.85rem; line-height:1.5; flex:1;}
-  .cab-foot{display:flex; align-items:center; justify-content:space-between; margin-top:6px;}
-  .cab-foot .chip{font-size:.68rem; padding:4px 10px;}
-  .cab-foot .play-link{
-    font-family:var(--px); font-size:.55rem; color:var(--gold); letter-spacing:1px;
-    border:1px solid rgba(244,201,93,.5); border-radius:10px; padding:8px 12px;
-    transition:background .2s, color .2s;
-  }
-  .cab-foot .play-link:hover{background:var(--gold); color:#1a0f33;}
-  .cab > a.cab-cover{position:absolute; inset:0; z-index:1;}
-  .cab .cab-foot .play-link{position:relative; z-index:2;}
 
-  /* coming-soon slot */
-  .cab.soon{
-    border:1.5px dashed rgba(139,107,255,.4); background:rgba(28,17,54,.35);
-    align-items:center; justify-content:center; text-align:center; min-height:280px; gap:10px;
+  /* ============ Footer ============ */
+  .site-footer{
+    border-top:1.5px solid var(--border);
+    background:var(--footer-bg);
+    padding:2rem 0 2.5rem;
+    text-align:center;
   }
-  .cab.soon:hover{transform:none; box-shadow:none; border-color:rgba(139,107,255,.6);}
-  .cab.soon .emoji{font-size:2.6rem; opacity:.75;}
-  .cab.soon .soon-en{font-family:var(--px); font-size:.6rem; color:var(--text-dim); letter-spacing:1px; line-height:1.9;}
-  .cab.soon .soon-hi{color:var(--text-dim-2); font-size:.85rem; font-weight:700;}
+  .site-footer .made-by{
+    font-family:"Kalam",cursive;
+    font-size:1.05rem;
+    color:var(--teal);
+  }
+  .site-footer .legal{
+    margin-top:.5rem;
+    font-size:.85rem;
+    color:var(--ink-muted);
+  }
+  .site-footer a{
+    color:var(--blue);
+    font-weight:600;
+    text-decoration:none;
+  }
+  .site-footer a:hover{text-decoration:underline}
 
-  /* ---------- footer ---------- */
-  footer{
-    border-top:1px solid rgba(139,107,255,.18); padding:30px 0 40px; text-align:center;
-    color:var(--text-dim-2); font-size:.82rem;
+  /* ============ Responsive ============ */
+  @media (max-width:640px){
+    .featured-card{grid-template-columns:1fr}
+    .f-emoji{max-width:160px;justify-self:start}
+    .featured-card::after{display:none}
+    body::before{left:14px}
   }
-  footer .px{font-family:var(--px); font-size:.5rem; letter-spacing:1.5px; color:var(--text-dim); display:block; margin-bottom:10px;}
+  @media (max-width:400px){
+    .wordmark .brand{font-size:1.1rem}
+    .wordmark .arcade{font-size:1.05rem}
+    .header-link{font-size:.78rem}
+    .header-right{gap:.55rem}
+  }
 
-  a:focus-visible, button:focus-visible{outline:2px solid var(--teal); outline-offset:3px; border-radius:6px;}
-
-  @media (max-width:860px){
-    .featured{grid-template-columns:1fr;}
-    .featured-screen{min-height:200px; border-right:none; border-bottom:1.5px solid rgba(244,201,93,.25);}
-    .grid{grid-template-columns:repeat(2,1fr);}
-  }
-  @media (max-width:560px){
-    .marquee{padding:52px 0 32px;}
-    .grid{grid-template-columns:1fr;}
-    .featured-info{padding:26px 22px;}
-  }
+  /* ============ Reduced motion ============ */
   @media (prefers-reduced-motion: reduce){
-    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+    html{scroll-behavior:auto}
+    *,*::before,*::after{
+      animation:none !important;
+      transition:none !important;
+    }
+    .circle-svg path{stroke-dashoffset:0}
+    .sticker-card:hover,.featured-card:hover,.btn-play:hover{transform:none}
+    .shelf-grid li:nth-child(odd) .sticker-card:hover{transform:rotate(-1.1deg)}
+    .shelf-grid li:nth-child(even) .sticker-card:hover{transform:rotate(1deg)}
+    .shelf-grid li:nth-child(3n) .sticker-card:hover{transform:rotate(.5deg)}
   }
 </style>
 </head>
 <body>
-<div class="bg-glow"></div>
-<div class="bg-stars"></div>
+<a class="skip-link" href="#main">Skip to the games · सीधे games पर जाएँ</a>
 
-<header class="marquee container">
-  <div class="coin">◆ INSERT COIN ◆</div>
-  <h1>HITARTHI<br>ARCADE</h1>
-  <p class="tagline">
-    Small browser games built by the team — play free, right here, no install.<br>
-    <span class="hi">हर हफ्ते एक नया खेल · A new game every week</span>
-  </p>
-  <div class="count">🕹️ <span><b id="gameCount">0</b> GAME(S) LIVE</span></div>
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="#" aria-label="Hitarthi Arcade home">
+      <span class="brand">HITARTHI</span>
+      <span class="arcade">Arcade</span>
+    </a>
+    <div class="header-right">
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false" aria-label="Switch to dark mode · बत्ती बंद">🌙</button>
+      <a class="header-link" href="https://hitarthi.com">hitarthi.com ↗</a>
+    </div>
+  </div>
 </header>
 
-<main class="container">
-  <section id="featuredSlot" aria-label="Newest game"></section>
+<main id="main">
+  <section class="hero wrap" aria-labelledby="hero-heading">
+    <p class="eyebrow">Hitarthi ka recess corner · छुट्टी की घंटी बज चुकी है 🔔</p>
+    <h1 id="hero-heading">Where Homework Ends, and Real
+      <span class="circled" lang="hi">खेल<svg class="circle-svg" viewBox="0 0 260 110" preserveAspectRatio="none" aria-hidden="true"><path pathLength="100" d="M128 12 C 60 8, 12 28, 10 55 C 8 84, 68 100, 136 98 C 204 96, 252 78, 250 52 C 248 26, 186 10, 118 14"/></svg></span>
+      Begins.
+    </h1>
+    <p class="lede">
+      Hitarthi Arcade is our team's playground between classes — <strong>chhote-chhote games jo
+      chupke se kuch naya sikha jaate hain</strong>. No downloads, no logins, no marks.
+      Bas kholo, khelo, aur seekhte jao.
+    </p>
+    <div class="chip-row">
+      <span class="chip chip-amber">🎮 <strong id="live-count">…</strong>&nbsp;· sab free, sab yahin</span>
+      <span class="chip">📅 हर हफ्ते एक नया खेल · A new game every week</span>
+    </div>
+  </section>
 
-  <h2 class="shelf-label">ALL GAMES</h2>
-  <section class="grid" id="gridSlot" aria-label="All games"></section>
+  <section class="featured wrap" aria-labelledby="featured-heading">
+    <h2 id="featured-heading" class="scribble-label">⭐ <span class="hi" lang="hi">इस हफ्ते का खेल</span> · This week's star of the board</h2>
+    <div id="featured-slot"></div>
+  </section>
+
+  <section class="shelf wrap" aria-labelledby="shelf-heading">
+    <div class="shelf-head">
+      <h2 id="shelf-heading" class="scribble-label">📚 The full games shelf · <span class="hi" lang="hi">पूरी अलमारी</span></h2>
+      <span class="chip" id="shelf-count">…</span>
+    </div>
+    <ul class="shelf-grid" id="shelf-grid">
+      <li id="coming-soon-slot">
+        <div class="coming-soon">
+          <span class="cs-emoji" aria-hidden="true">✏️</span>
+          <span class="cs-hindi" lang="hi">नया खेल जल्द आ रहा है</span>
+          <p>A fresh sticker goes up on this board every week. Tab tak, apne favourites dobara khelo!</p>
+        </div>
+      </li>
+    </ul>
+  </section>
 </main>
 
-<footer>
-  <span class="px">GAME OVER? PLAY AGAIN.</span>
-  Made with ❤️ by the Hitarthi team · © <span id="year"></span>
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="made-by" lang="hi">सीखना कभी बंद नहीं होता — खेलना भी नहीं। 🍎</p>
+    <p class="legal">
+      Made during chai breaks by the Hitarthi team · © <span id="year"></span> Hitarthi ·
+      <a href="https://hitarthi.com">hitarthi.com</a>
+    </p>
+  </div>
 </footer>
 
 <script>
 /* =====================================================================
    ADD NEW GAMES HERE — one object per game, newest date shows on top.
-   Steps for a new game:
-     1. Copy the game's folder into this repo (e.g. "snake-dash/").
-     2. Add one entry below with its folder path.
-     3. Commit + push. Done — it appears on the site in ~1 minute.
    ===================================================================== */
 const GAMES = [
   {
@@ -266,61 +683,155 @@ const GAMES = [
     tags: ["runner", "bilingual", "learning"]
   }
 ];
-/* ===================================================================== */
 
-function fmtDate(iso){
-  const d = new Date(iso + "T00:00:00");
-  return d.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"});
-}
+(function () {
+  "use strict";
 
-const sorted = [...GAMES].sort((a,b)=> b.added.localeCompare(a.added));
-document.getElementById("gameCount").textContent = sorted.length;
-document.getElementById("year").textContent = new Date().getFullYear();
+  var games = GAMES.slice().sort(function (a, b) {
+    return b.added.localeCompare(a.added) || a.title.localeCompare(b.title);
+  });
 
-/* featured = newest game */
-const f = sorted[0];
-if (f){
-  document.getElementById("featuredSlot").innerHTML = `
-  <article class="featured">
-    <div class="featured-screen"><span class="big-emoji">${f.emoji}</span></div>
-    <div class="featured-info">
-      <span class="badge-now">★ NOW PLAYING</span>
-      <h2>${f.title}</h2>
-      ${f.hindi ? `<div class="hindi-title">${f.hindi}</div>` : ""}
-      <p class="desc">${f.desc}</p>
-      <div class="meta-row">
-        <span class="chip date">Added ${fmtDate(f.added)}</span>
-        ${(f.tags||[]).map(t=>`<span class="chip">${t}</span>`).join("")}
-      </div>
-      <a class="btn-play" href="${f.path}">▶ PLAY NOW <small>अभी खेलें</small></a>
-    </div>
-  </article>`;
-}
+  function formatDate(iso) {
+    var d = new Date(iso + "T00:00:00");
+    return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  }
 
-/* grid = every game + a coming-soon slot */
-const grid = document.getElementById("gridSlot");
-grid.innerHTML = sorted.map(g => `
-  <article class="cab">
-    <a class="cab-cover" href="${g.path}" aria-label="Play ${g.title}"></a>
-    <div class="cab-screen">
-      <span class="emoji">${g.emoji}</span>
-      <span class="cab-press">▶ PRESS START</span>
-    </div>
-    <div class="cab-body">
-      <h3>${g.title}</h3>
-      ${g.hindi ? `<div class="hindi-title">${g.hindi}</div>` : ""}
-      <p>${g.desc}</p>
-      <div class="cab-foot">
-        <span class="chip date">${fmtDate(g.added)}</span>
-        <a class="play-link" href="${g.path}">PLAY</a>
-      </div>
-    </div>
-  </article>`).join("") + `
-  <article class="cab soon" aria-label="Next game coming soon">
-    <span class="emoji">🕹️</span>
-    <span class="soon-en">NEXT CABINET<br>ARRIVING SOON</span>
-    <span class="soon-hi">नया खेल जल्द आ रहा है</span>
-  </article>`;
+  function el(tag, className, text) {
+    var node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  function buildTags(tags) {
+    var list = el("ul", "tag-list");
+    (tags || []).forEach(function (t) {
+      list.appendChild(el("li", null, "#" + t));
+    });
+    return list;
+  }
+
+  function buildTime(iso) {
+    var time = document.createElement("time");
+    time.dateTime = iso;
+    time.textContent = "Added " + formatDate(iso);
+    return time;
+  }
+
+  /* ---- Featured (newest) ---- */
+  function renderFeatured(game) {
+    var slot = document.getElementById("featured-slot");
+    var card = el("article", "featured-card");
+
+    var emoji = el("div", "f-emoji", game.emoji);
+    emoji.setAttribute("aria-hidden", "true");
+    card.appendChild(emoji);
+
+    var body = el("div", "f-body");
+    body.appendChild(el("span", "f-flag", "New this week"));
+
+    var title = el("h3", "f-title");
+    var link = el("a", null, game.title);
+    link.href = game.path;
+    title.appendChild(link);
+    body.appendChild(title);
+
+    var hindi = el("p", "f-hindi", game.hindi);
+    hindi.lang = "hi";
+    body.appendChild(hindi);
+
+    body.appendChild(el("p", "f-desc", game.desc));
+    body.appendChild(buildTags(game.tags));
+
+    var foot = el("div", "f-foot");
+    foot.appendChild(buildTime(game.added));
+    var play = el("a", "btn-play", "खेलो · Play now →");
+    play.href = game.path;
+    foot.appendChild(play);
+    body.appendChild(foot);
+
+    card.appendChild(body);
+    slot.appendChild(card);
+  }
+
+  /* ---- Shelf grid (all games) ---- */
+  function renderShelf(list) {
+    var grid = document.getElementById("shelf-grid");
+    var comingSoon = document.getElementById("coming-soon-slot");
+    var frag = document.createDocumentFragment();
+
+    list.forEach(function (game, i) {
+      var li = document.createElement("li");
+      var card = el("a", "sticker-card");
+      card.href = game.path;
+
+      var tape = el("span", "tape");
+      tape.setAttribute("aria-hidden", "true");
+      card.appendChild(tape);
+
+      if (i === 0) card.appendChild(el("span", "new-flag", "New"));
+
+      var emoji = el("span", "card-emoji", game.emoji);
+      emoji.setAttribute("aria-hidden", "true");
+      card.appendChild(emoji);
+
+      card.appendChild(el("h3", "card-title", game.title));
+
+      var hindi = el("p", "card-hindi", game.hindi);
+      hindi.lang = "hi";
+      card.appendChild(hindi);
+
+      card.appendChild(el("p", "card-desc", game.desc));
+      card.appendChild(buildTags(game.tags));
+
+      var meta = el("div", "card-meta");
+      meta.appendChild(buildTime(game.added));
+      meta.appendChild(el("span", "play-hint", "Play →"));
+      card.appendChild(meta);
+
+      li.appendChild(card);
+      frag.appendChild(li);
+    });
+
+    grid.insertBefore(frag, comingSoon);
+  }
+
+  /* ---- Counts + footer year ---- */
+  function renderCounts(n) {
+    document.getElementById("live-count").textContent =
+      n + " " + (n === 1 ? "game" : "games") + " live";
+    document.getElementById("shelf-count").textContent =
+      n + " " + (n === 1 ? "sticker" : "stickers") + " on the board — aur aate rahenge";
+  }
+
+  if (games.length > 0) {
+    renderFeatured(games[0]);
+    renderShelf(games);
+  }
+  renderCounts(games.length);
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* ---- Dark mode toggle (lights on / lights off) ---- */
+  var toggle = document.getElementById("theme-toggle");
+
+  function syncToggle() {
+    var dark = document.documentElement.getAttribute("data-theme") === "dark";
+    toggle.textContent = dark ? "☀️" : "🌙";
+    toggle.setAttribute("aria-pressed", String(dark));
+    toggle.setAttribute("aria-label", dark
+      ? "Switch to light mode · बत्ती चालू"
+      : "Switch to dark mode · बत्ती बंद");
+  }
+
+  toggle.addEventListener("click", function () {
+    var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("arcade-theme", next); } catch (e) {}
+    syncToggle();
+  });
+
+  syncToggle();
+})();
 </script>
 </body>
 </html>
