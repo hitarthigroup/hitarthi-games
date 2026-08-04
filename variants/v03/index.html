@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<base href="../../"><!-- PREVIEW ONLY: remove this line when this file becomes the site homepage -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hitarthi Arcade — Team Games</title>
+<meta name="description" content="Hitarthi Arcade — small browser games built by the Hitarthi team, one new level every week. हर हफ्ते एक नया खेल.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕹️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<!-- Variant v03 — "Level Roadmap": games as numbered level nodes on a curving dashed SVG path over a blueprint-dot grid — the newest node glows "YOU ARE HERE". -->
+<style>
+  :root{
+    --ink:#0f1729;
+    --blue:#2563eb;
+    --blue-bright:#3b82f6;
+    --amber:#f59e0b;
+    --teal:#1e6b5e;
+    --slate:#f1f5f9;
+    --border:#e2e8f0;
+    --white:#ffffff;
+    --text-2:#475569;
+    --text-3:#64748b;
+    --radius:16px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+    color:var(--ink);
+    background-color:var(--white);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(37,99,235,.11) 1px, transparent 1.7px),
+      linear-gradient(180deg,#f8fafc 0%,#ffffff 380px);
+    background-size:26px 26px,100% 100%;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+  ::selection{background:rgba(37,99,235,.18)}
+  a{color:var(--blue)}
+  a:focus-visible,button:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:6px}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .skip-link{position:absolute;left:1rem;top:-3rem;background:var(--blue);color:#fff;padding:.5rem .9rem;border-radius:.6rem;font-weight:600;font-size:.85rem;text-decoration:none;z-index:100;transition:top .15s ease}
+  .skip-link:focus-visible{top:.75rem}
+
+  /* ---------- Header ---------- */
+  .site-header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,255,255,.88);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .header-in{max-width:1040px;margin:0 auto;padding:.85rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .brand{
+    display:inline-flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--ink);
+    font-family:"Outfit",sans-serif;font-weight:800;font-size:1.02rem;letter-spacing:.13em;
+  }
+  .brand-joy{font-size:1.15rem;letter-spacing:0}
+  .brand-arcade{
+    font-weight:700;font-size:.76rem;letter-spacing:.05em;
+    color:#fff;background:var(--blue);
+    padding:.24rem .62rem;border-radius:.6rem;
+    transform:rotate(-3deg);
+  }
+  .site-link{font-weight:600;font-size:.88rem;text-decoration:none;color:var(--text-2);white-space:nowrap}
+  .site-link:hover{color:var(--blue);text-decoration:underline;text-underline-offset:3px}
+
+  main{flex:1;width:100%}
+
+  /* ---------- Hero ---------- */
+  .hero{max-width:880px;margin:0 auto;padding:3.6rem 1.25rem 2.4rem;text-align:center}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:.45rem;
+    background:var(--white);border:1px solid var(--border);border-radius:999px;
+    padding:.42rem .95rem;font-size:.7rem;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--blue);
+    box-shadow:0 1px 2px rgba(15,23,41,.05);
+  }
+  .hero h1{
+    font-family:"Outfit",sans-serif;font-weight:700;letter-spacing:-.02em;
+    font-size:clamp(2.05rem,4.8vw,3.2rem);line-height:1.14;
+    max-width:760px;margin:1.15rem auto 0;
+  }
+  .hl{background:linear-gradient(transparent 64%, rgba(245,158,11,.4) 64%);border-radius:2px;padding:0 .1em}
+  .hero-hindi{margin-top:.9rem;color:var(--teal);font-weight:600;font-size:1.02rem}
+  .hero-sub{margin:.85rem auto 0;max-width:620px;color:var(--text-2);font-size:1.03rem;line-height:1.68}
+  .hero-stats{margin-top:1.7rem;display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem}
+  .stat-pill{
+    display:inline-flex;align-items:center;gap:.45rem;
+    background:var(--white);border:1px solid var(--border);border-radius:999px;
+    padding:.5rem .95rem;font-size:.87rem;font-weight:600;color:var(--ink);
+    box-shadow:0 1px 2px rgba(15,23,41,.05);
+  }
+  .stat-pill strong{color:var(--blue);font-weight:700}
+
+  /* ---------- Sections ---------- */
+  .section{max-width:880px;margin:0 auto;padding:0 1.25rem 3rem}
+  .section-label{
+    display:flex;align-items:center;gap:.7rem;
+    font-family:"Outfit",sans-serif;font-weight:700;font-size:.78rem;
+    letter-spacing:.17em;text-transform:uppercase;color:var(--text-3);
+    margin-bottom:1.1rem;
+  }
+  .section-label::after{content:"";flex:1;height:1px;background:var(--border)}
+
+  /* ---------- Featured card ---------- */
+  .featured-card{
+    position:relative;overflow:hidden;display:grid;grid-template-columns:120px 1fr;gap:1.4rem;
+    background:var(--white);border:1px solid var(--border);border-radius:20px;
+    padding:1.6rem;text-decoration:none;color:inherit;
+    box-shadow:0 8px 24px rgba(15,23,41,.06);
+    transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+  }
+  .featured-card::before{
+    content:"";position:absolute;left:0;right:0;top:0;height:4px;
+    background:linear-gradient(90deg,var(--blue),var(--blue-bright),var(--amber));
+  }
+  .featured-card:hover{transform:translateY(-3px);border-color:var(--blue-bright);box-shadow:0 14px 34px rgba(15,23,41,.1)}
+  .featured-card:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:20px}
+  .featured-emoji{
+    width:120px;height:120px;display:grid;place-items:center;font-size:3.4rem;
+    background:var(--slate);border:1px dashed rgba(37,99,235,.4);border-radius:18px;
+  }
+  .chip-latest{
+    display:inline-flex;align-items:center;gap:.35rem;
+    background:var(--amber);color:var(--ink);
+    font-family:"Outfit",sans-serif;font-weight:700;font-size:.66rem;
+    letter-spacing:.12em;text-transform:uppercase;
+    padding:.3rem .65rem;border-radius:999px;
+  }
+  .featured-title{font-family:"Outfit",sans-serif;font-weight:700;font-size:1.45rem;letter-spacing:-.01em;margin:.6rem 0 .1rem}
+  .hindi{color:var(--teal);font-weight:600;font-size:.95rem}
+  .desc{color:var(--text-2);line-height:1.62;font-size:.96rem;margin:.6rem 0 .85rem}
+  .tags{display:flex;flex-wrap:wrap;gap:.4rem}
+  .tag{background:var(--slate);color:var(--text-2);font-size:.72rem;font-weight:600;padding:.28rem .62rem;border-radius:999px}
+  .meta-row{display:flex;flex-wrap:wrap;align-items:center;gap:.9rem;margin-top:1rem;color:var(--text-3);font-size:.84rem;font-weight:500}
+  .play-btn{
+    margin-left:auto;display:inline-flex;align-items:center;gap:.45rem;
+    background:var(--blue);color:#fff;font-weight:600;font-size:.9rem;
+    padding:.6rem 1.15rem;border-radius:.8rem;transition:background .15s ease;
+  }
+  .featured-card:hover .play-btn{background:#1d4ed8}
+  .arr{display:inline-block;transition:transform .18s ease}
+  .featured-card:hover .arr,.node-card:hover .arr{transform:translateX(3px)}
+
+  /* ---------- Level map ---------- */
+  .map-note{color:var(--text-3);font-size:.9rem;line-height:1.6;margin:-.3rem 0 2rem;max-width:560px}
+  .map-wrap{position:relative}
+  .map-path{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
+  .map-path path{fill:none;stroke:var(--blue);stroke-opacity:.38;stroke-width:2.5;stroke-linecap:round;stroke-dasharray:2 10}
+  .map{position:relative;z-index:1;list-style:none;display:flex;flex-direction:column;gap:2.7rem;padding-top:.5rem}
+  .node{display:flex;align-items:flex-start;gap:1.1rem;width:100%}
+  @media (min-width:760px){
+    .node{width:min(600px,100%)}
+    .node.right{align-self:flex-end;flex-direction:row-reverse}
+  }
+  .node-marker{
+    flex:none;position:relative;width:58px;height:58px;border-radius:50%;
+    background:var(--white);border:2px solid var(--blue);
+    display:grid;place-items:center;
+    font-family:"Outfit",sans-serif;font-weight:700;font-size:1.05rem;color:var(--ink);
+    font-variant-numeric:tabular-nums;letter-spacing:.02em;
+    box-shadow:0 2px 6px rgba(15,23,41,.08);
+  }
+  .node.latest .node-marker{
+    background:var(--blue);color:#fff;
+    box-shadow:0 0 0 7px rgba(37,99,235,.14),0 4px 14px rgba(37,99,235,.35);
+  }
+  .node.latest .node-marker::after{
+    content:"";position:absolute;inset:-7px;border-radius:50%;
+    border:2px solid rgba(37,99,235,.45);
+    animation:node-pulse 2.3s ease-out infinite;
+  }
+  @keyframes node-pulse{
+    0%{transform:scale(1);opacity:1}
+    70%{transform:scale(1.55);opacity:0}
+    100%{transform:scale(1.55);opacity:0}
+  }
+  .you-are-here{
+    position:absolute;bottom:calc(100% + 13px);left:-4px;
+    white-space:nowrap;background:var(--amber);color:var(--ink);
+    font-family:"Outfit",sans-serif;font-weight:700;font-size:.63rem;
+    letter-spacing:.1em;text-transform:uppercase;
+    padding:.32rem .62rem;border-radius:999px;
+    box-shadow:0 3px 10px rgba(245,158,11,.45);
+  }
+  .you-are-here::after{
+    content:"";position:absolute;top:100%;left:29px;
+    border:5px solid transparent;border-top-color:var(--amber);
+  }
+  @media (min-width:760px){
+    /* the latest node sits on the right on desktop — anchor the pill so it never overflows the container */
+    .node.right .you-are-here{left:auto;right:-4px}
+    .node.right .you-are-here::after{left:auto;right:29px}
+  }
+  .node.soon .node-marker{
+    background:#f8fafc;border:2px dashed #94a3b8;color:var(--text-3);box-shadow:none;
+  }
+  .node-card{
+    flex:1;min-width:0;display:block;background:var(--white);
+    border:1px solid var(--border);border-radius:var(--radius);
+    padding:1.15rem 1.3rem;text-decoration:none;color:inherit;
+    transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+  }
+  a.node-card:hover{transform:translateY(-3px);border-color:var(--blue-bright);box-shadow:0 10px 24px rgba(15,23,41,.09)}
+  a.node-card:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:var(--radius)}
+  .node-title{font-family:"Outfit",sans-serif;font-weight:700;font-size:1.12rem;letter-spacing:-.01em;display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap}
+  .node-emoji{font-size:1.25rem}
+  .node-hindi{color:var(--teal);font-weight:600;font-size:.87rem;margin-top:.15rem}
+  .node-desc{color:var(--text-2);font-size:.92rem;line-height:1.58;margin:.55rem 0 .7rem}
+  .node-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.7rem}
+  .node-foot{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem;font-size:.8rem;color:var(--text-3);font-weight:500}
+  .node-play{margin-left:auto;color:var(--blue);font-weight:600;font-size:.88rem;display:inline-flex;align-items:center;gap:.35rem}
+  .soon-card{background:#f8fafc;border:1px dashed #94a3b8;cursor:default}
+  .soon-card .node-desc{margin-bottom:0}
+
+  /* ---------- Footer ---------- */
+  .site-footer{
+    border-top:1px solid var(--border);background:rgba(255,255,255,.75);
+    padding:2rem 1.25rem 2.5rem;text-align:center;color:var(--text-3);font-size:.9rem;line-height:1.8;
+  }
+  .site-footer a{color:var(--blue);text-decoration:none;font-weight:600}
+  .site-footer a:hover{text-decoration:underline;text-underline-offset:3px}
+
+  /* ---------- Small screens ---------- */
+  @media (max-width:640px){
+    .featured-card{grid-template-columns:1fr;padding:1.3rem}
+    .featured-emoji{width:84px;height:84px;font-size:2.4rem;border-radius:14px}
+    .hero{padding-top:2.8rem}
+    .node{gap:.85rem}
+    .node-marker{width:50px;height:50px;font-size:.95rem}
+    .play-btn{margin-left:0}
+    .meta-row{gap:.7rem}
+  }
+
+  /* ---------- Reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none !important;transition:none !important}
+    .featured-card:hover,a.node-card:hover{transform:none}
+  }
+</style>
+</head>
+<body id="top">
+<a class="skip-link" href="#map-section">Skip to the level map</a>
+
+<header class="site-header">
+  <div class="header-in">
+    <a class="brand" href="#top">
+      <span class="brand-joy" aria-hidden="true">🕹️</span>
+      <span>HITARTHI</span>
+      <span class="brand-arcade">Arcade</span>
+    </a>
+    <a class="site-link" href="https://hitarthi.com">hitarthi.com ↗</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-label="Welcome">
+    <p class="eyebrow">Team games · Weekly drops</p>
+    <h1>Welcome to the roadmap where, potential <span class="hl">levels up</span> every week.</h1>
+    <p class="hero-hindi">हर हफ्ते एक नया खेल · A new game every week</p>
+    <p class="hero-sub">
+      Chhote-chhote browser games, built by the Hitarthi team between classes and chai breaks.
+      Every game is a level on this map — no downloads, no sign-ups, bas click karo aur khelo.
+    </p>
+    <div class="hero-stats">
+      <span class="stat-pill">🎮 <span id="game-count"><strong>–</strong> levels live</span></span>
+      <span class="stat-pill">🗓️ New level weekly · हर हफ्ते</span>
+      <span class="stat-pill">🚫 No installs, seedha browser mein</span>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="featured-heading">
+    <h2 class="section-label" id="featured-heading">Just shipped · अभी-अभी आया</h2>
+    <div id="featured-slot"></div>
+  </section>
+
+  <section class="section" id="map-section" aria-labelledby="map-heading">
+    <h2 class="section-label" id="map-heading">The level map · लेवल का नक्शा</h2>
+    <p class="map-note">
+      Levels are numbered in the order we shipped them — Level 01 is the game that started it all.
+      Follow the dotted path down memory lane, ya seedha latest pe jump karo.
+    </p>
+    <div class="map-wrap" id="map-wrap">
+      <svg class="map-path" aria-hidden="true" id="map-svg"><path id="map-path-line" d=""/></svg>
+      <ol class="map" id="map" aria-label="All games, newest first"></ol>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>Made with care (aur thodi si masti) by the Hitarthi team.</p>
+  <p>© <span id="year"></span> Hitarthi · <a href="https://hitarthi.com">hitarthi.com</a></p>
+</footer>
+
+<script>
+/* =====================================================================
+   ADD NEW GAMES HERE — one object per game, newest date shows on top.
+   ===================================================================== */
+const GAMES = [
+  {
+    title: "Word Runner: The Lost Kingdom",
+    hindi: "शब्द धावक: खोया हुआ जादुई राज्य",
+    emoji: "🏃",
+    path: "word-runner/",
+    desc: "A bilingual (Hindi + English) endless runner — collect real vocabulary, dodge obstacles, and beat boss word-quizzes across six magical worlds.",
+    added: "2026-08-04",
+    tags: ["runner", "bilingual", "learning"]
+  }
+];
+
+(function () {
+  "use strict";
+
+  var pad = function (n) { return String(n).padStart(2, "0"); };
+  var esc = function (s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  };
+  var fmtDate = function (iso) {
+    var d = new Date(iso + "T00:00:00");
+    return new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(d);
+  };
+
+  /* Level number = real shipping order (oldest game is Level 01). */
+  var byOldest = GAMES.slice().sort(function (a, b) { return a.added < b.added ? -1 : a.added > b.added ? 1 : 0; });
+  var levelByPath = {};
+  byOldest.forEach(function (g, i) { levelByPath[g.path] = i + 1; });
+  var byNewest = byOldest.slice().reverse();
+
+  /* Live count */
+  var n = GAMES.length;
+  document.getElementById("game-count").innerHTML =
+    "<strong>" + n + "</strong> " + (n === 1 ? "level" : "levels") + " live";
+
+  /* Featured (newest) */
+  var featuredSlot = document.getElementById("featured-slot");
+  if (byNewest.length) {
+    var f = byNewest[0];
+    var fl = levelByPath[f.path];
+    featuredSlot.innerHTML =
+      '<a class="featured-card" href="' + esc(f.path) + '">' +
+        '<span class="featured-emoji" aria-hidden="true">' + esc(f.emoji) + "</span>" +
+        "<span>" +
+          '<span class="chip-latest"><span class="sr-only">Level </span>' + pad(fl) + " · Latest drop</span>" +
+          '<span class="featured-title" role="heading" aria-level="3" style="display:block">' + esc(f.title) + "</span>" +
+          '<span class="hindi" style="display:block">' + esc(f.hindi) + "</span>" +
+          '<span class="desc" style="display:block">' + esc(f.desc) + "</span>" +
+          '<span class="tags">' + f.tags.map(function (t) { return '<span class="tag">' + esc(t) + "</span>"; }).join("") + "</span>" +
+          '<span class="meta-row">' +
+            "<span>Added " + fmtDate(f.added) + "</span>" +
+            '<span class="play-btn">Play now · अभी खेलो <span class="arr" aria-hidden="true">→</span></span>' +
+          "</span>" +
+        "</span>" +
+      "</a>";
+  }
+
+  /* Level map — "coming soon" node on top, then all games newest-first. */
+  var mapEl = document.getElementById("map");
+  var rows = [];
+
+  rows.push(
+    '<li class="node soon left">' +
+      '<div class="node-marker"><span class="sr-only">Level </span>' + pad(n + 1) + "</div>" +
+      '<div class="node-card soon-card">' +
+        '<p class="node-title">New game arriving soon <span class="node-emoji" aria-hidden="true">🔜</span></p>' +
+        '<p class="node-hindi">नया खेल जल्द आ रहा है</p>' +
+        '<p class="node-desc">Every week this path grows by one more stop — the next level is already in the workshop. Bookmark kar lo, aur agle hafte milte hain.</p>' +
+      "</div>" +
+    "</li>"
+  );
+
+  byNewest.forEach(function (g, i) {
+    var lvl = levelByPath[g.path];
+    var isLatest = i === 0;
+    var side = (i + 1) % 2 === 0 ? "left" : "right"; /* continue the zigzag after the soon node */
+    rows.push(
+      '<li class="node ' + side + (isLatest ? " latest" : "") + '">' +
+        '<div class="node-marker">' +
+          '<span class="sr-only">Level </span>' + pad(lvl) +
+          (isLatest ? '<span class="you-are-here">You are here · आप यहाँ हैं</span>' : "") +
+        "</div>" +
+        '<a class="node-card" href="' + esc(g.path) + '">' +
+          '<p class="node-title"><span class="node-emoji" aria-hidden="true">' + esc(g.emoji) + "</span> " + esc(g.title) + "</p>" +
+          '<p class="node-hindi">' + esc(g.hindi) + "</p>" +
+          '<p class="node-desc">' + esc(g.desc) + "</p>" +
+          '<p class="node-tags">' + g.tags.map(function (t) { return '<span class="tag">' + esc(t) + "</span>"; }).join("") + "</p>" +
+          '<p class="node-foot">' +
+            "<span>Level " + pad(lvl) + "</span>" +
+            '<span aria-hidden="true">·</span>' +
+            "<span>Added " + fmtDate(g.added) + "</span>" +
+            '<span class="node-play">Play · खेलो <span class="arr" aria-hidden="true">→</span></span>' +
+          "</p>" +
+        "</a>" +
+      "</li>"
+    );
+  });
+
+  mapEl.innerHTML = rows.join("");
+
+  /* ---- Draw the curving dashed path through every node marker ---- */
+  var wrap = document.getElementById("map-wrap");
+  var svg = document.getElementById("map-svg");
+  var line = document.getElementById("map-path-line");
+
+  function drawPath() {
+    var markers = wrap.querySelectorAll(".node-marker");
+    var w = wrap.clientWidth, h = wrap.clientHeight;
+    if (markers.length < 2 || w === 0 || h === 0) { line.setAttribute("d", ""); return; }
+    svg.setAttribute("viewBox", "0 0 " + w + " " + h);
+    var wr = wrap.getBoundingClientRect();
+    var pts = [];
+    markers.forEach(function (m) {
+      var r = m.getBoundingClientRect();
+      pts.push({ x: r.left + r.width / 2 - wr.left, y: r.top + r.height / 2 - wr.top });
+    });
+    var d = "M " + pts[0].x.toFixed(1) + " " + pts[0].y.toFixed(1);
+    for (var i = 1; i < pts.length; i++) {
+      var p0 = pts[i - 1], p1 = pts[i];
+      var midY = (p0.y + p1.y) / 2;
+      if (Math.abs(p1.x - p0.x) < 12) {
+        /* markers stacked (mobile): bow the segment gently sideways */
+        var bow = (i % 2 === 0 ? -1 : 1) * 26;
+        d += " C " + (p0.x + bow).toFixed(1) + " " + (p0.y + (p1.y - p0.y) * 0.33).toFixed(1) +
+             ", " + (p1.x + bow).toFixed(1) + " " + (p0.y + (p1.y - p0.y) * 0.67).toFixed(1) +
+             ", " + p1.x.toFixed(1) + " " + p1.y.toFixed(1);
+      } else {
+        /* zigzag (desktop): smooth S-curve with vertical tangents */
+        d += " C " + p0.x.toFixed(1) + " " + midY.toFixed(1) +
+             ", " + p1.x.toFixed(1) + " " + midY.toFixed(1) +
+             ", " + p1.x.toFixed(1) + " " + p1.y.toFixed(1);
+      }
+    }
+    line.setAttribute("d", d);
+  }
+
+  var redrawTimer;
+  function scheduleDraw() {
+    clearTimeout(redrawTimer);
+    redrawTimer = setTimeout(drawPath, 100);
+  }
+  if (typeof ResizeObserver !== "undefined") {
+    new ResizeObserver(scheduleDraw).observe(wrap);
+  }
+  window.addEventListener("resize", scheduleDraw);
+  window.addEventListener("load", drawPath);
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(drawPath); }
+  drawPath(); /* immediate synchronous draw — layout is ready since this script sits at the end of body */
+  requestAnimationFrame(drawPath);
+
+  /* Footer year */
+  document.getElementById("year").textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>

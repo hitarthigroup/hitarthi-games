@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<base href="../../"><!-- PREVIEW ONLY: remove this line when this file becomes the site homepage -->
+<!-- Variant v05 — "Press Start Minimal": Swiss-typographic minimalism — huge Outfit type, white space as the design, monochrome slate with one blue accent, and the featured game as a giant play button. -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Hitarthi Arcade — छोटे browser games, हर हफ्ते एक नया. Built by the Hitarthi team, free to play, no downloads.">
+<title>Hitarthi Arcade — Team Games</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🕹️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1729;
+    --blue: #2563eb;
+    --blue-bright: #3b82f6;
+    --slate: #f1f5f9;
+    --border: #e2e8f0;
+    --muted: #64748b;
+    --faint: #94a3b8;
+    --radius: 16px;
+    --font-display: 'Outfit', 'Inter', sans-serif;
+    --pad-x: clamp(1.25rem, 5vw, 2.5rem);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: #ffffff;
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection { background: var(--ink); color: #ffffff; }
+
+  :focus-visible {
+    outline: 3px solid var(--blue);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* ---------- skip link ---------- */
+  .skip {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    z-index: 20;
+    background: var(--ink);
+    color: #fff;
+    padding: 0.6rem 1.1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: top 0.15s ease;
+  }
+  .skip:focus { top: 1rem; }
+
+  /* ---------- header ---------- */
+  .site-header { border-bottom: 1px solid var(--border); }
+
+  .header-inner {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 1.4rem var(--pad-x);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .wordmark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.16em;
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s ease;
+  }
+  .wordmark .arcade {
+    color: var(--blue);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .wordmark:hover { color: var(--blue); }
+
+  .header-note {
+    font-size: 0.82rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* ---------- layout ---------- */
+  main {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 0 var(--pad-x);
+  }
+
+  /* ---------- hero ---------- */
+  .hero { padding-top: clamp(4rem, 11vw, 7.5rem); }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2.8rem, 11vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+  }
+  .hero h1 .dot { color: var(--blue); }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+    max-width: 36rem;
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    color: var(--muted);
+  }
+
+  /* ---------- featured: the giant play button ---------- */
+  .featured { margin-top: clamp(3rem, 8vw, 5rem); }
+
+  .featured-kicker {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.1rem;
+  }
+
+  .play {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 2.75rem);
+    background: var(--blue);
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: calc(var(--radius) * 1.5);
+    padding: clamp(2rem, 6vw, 3.5rem) clamp(1.6rem, 6vw, 3.5rem);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  }
+  .play:hover {
+    background: var(--blue-bright);
+    transform: translateY(-3px);
+    box-shadow: 0 22px 44px -20px rgba(37, 99, 235, 0.55);
+  }
+  .play:active { transform: translateY(-1px); }
+  .play:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 4px;
+  }
+
+  .play-icon {
+    width: clamp(2.4rem, 7vw, 3.8rem);
+    height: auto;
+    flex-shrink: 0;
+    transition: transform 0.18s ease;
+  }
+  .play:hover .play-icon { transform: translateX(7px); }
+
+  .play-title {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.45rem, 4.5vw, 2.8rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+  }
+  .play-hindi {
+    display: block;
+    margin-top: 0.55rem;
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    opacity: 0.85;
+  }
+
+  .play-desc {
+    margin-top: 1.25rem;
+    max-width: 42rem;
+    font-size: 0.98rem;
+    color: var(--muted);
+  }
+
+  /* ---------- library: quiet single-column list ---------- */
+  .library { margin-top: clamp(4rem, 10vw, 6.5rem); }
+
+  .library-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+
+  .library h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    letter-spacing: -0.02em;
+  }
+  .library h2 .hi {
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 0.72em;
+  }
+
+  .lib-count {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .lib-count a { color: var(--ink); }
+
+  ol.games {
+    list-style: none;
+    border-bottom: 1px solid var(--border);
+  }
+  ol.games > li { border-top: 1px solid var(--border); }
+  ol.games > li.soon-li { border-top: 1px dashed var(--border); }
+
+  .row {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto auto;
+    align-items: center;
+    gap: clamp(0.9rem, 2.5vw, 1.5rem);
+    padding: 1.35rem 0.25rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .row-num {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    color: var(--faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .row-emoji { font-size: 1.5rem; line-height: 1; }
+
+  .row-title {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.05rem, 2.4vw, 1.3rem);
+    letter-spacing: -0.01em;
+    transition: color 0.15s ease;
+  }
+
+  .row-sub {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+
+  .row-new {
+    display: inline-block;
+    margin-left: 0.55rem;
+    vertical-align: 0.12em;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue);
+    border: 1px solid currentColor;
+    border-radius: 99px;
+    padding: 0.14rem 0.5rem 0.1rem;
+  }
+
+  .row-meta { text-align: right; }
+  .row-tags {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    color: var(--faint);
+  }
+  .row-date {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .row-arrow {
+    color: var(--faint);
+    font-size: 1.25rem;
+    line-height: 1;
+    transition: transform 0.15s ease, color 0.15s ease;
+  }
+
+  a.row:hover .row-title { color: var(--blue); }
+  a.row:hover .row-arrow { transform: translateX(5px); color: var(--blue); }
+
+  .soon { color: var(--muted); cursor: default; }
+  .soon .row-title { color: var(--muted); }
+  .soon-dots {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--faint);
+    letter-spacing: 0.05em;
+  }
+
+  /* ---------- footer ---------- */
+  footer {
+    margin-top: clamp(4.5rem, 11vw, 7.5rem);
+    border-top: 1px solid var(--border);
+  }
+  .footer-inner {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 2rem var(--pad-x) 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  footer a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  footer a:hover { color: var(--blue); border-color: var(--blue); }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 640px) {
+    .row { grid-template-columns: auto auto 1fr auto; }
+    .row-meta { display: none; }
+  }
+  @media (max-width: 430px) {
+    .row { grid-template-columns: auto 1fr auto; }
+    .row-num { display: none; }
+    .header-note { display: none; }
+    .play { gap: 1.2rem; }
+  }
+
+  /* ---------- reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+    .play:hover, .play:active { transform: none; }
+    .play:hover .play-icon { transform: none; }
+    a.row:hover .row-arrow { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#library">Skip to games · खेलों तक जाएँ</a>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="wordmark" href="./">HITARTHI&nbsp;<span class="arcade">Arcade</span></a>
+    <span class="header-note">team games · हर हफ्ते नया</span>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="hero-title">
+    <h1 id="hero-title">Press start<span class="dot">.</span></h1>
+    <p class="hero-sub">हर हफ्ते एक नया खेल · a new game every week. Small games built by the Hitarthi team — खेलते-खेलते सीखिए. No downloads, no sign-ups, बस play दबाइए.</p>
+  </section>
+
+  <section class="featured" aria-labelledby="featured-kicker">
+    <p class="featured-kicker" id="featured-kicker">इस हफ्ते का खेल · This week's game</p>
+    <div id="featured-slot"></div>
+  </section>
+
+  <section class="library" id="library" aria-labelledby="library-title" tabindex="-1">
+    <div class="library-head">
+      <h2 id="library-title">All games <span class="hi" lang="hi">· सारे खेल</span></h2>
+      <p class="lib-count" id="game-count"></p>
+    </div>
+    <ol class="games" id="game-list"></ol>
+    <noscript>
+      <p class="lib-count">The games list needs JavaScript to load. तब तक, visit <a href="https://hitarthi.com">hitarthi.com</a>.</p>
+    </noscript>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>Made खेल-खेल में by the Hitarthi team.</p>
+    <p>© <span id="year"></span> Hitarthi · <a href="https://hitarthi.com">hitarthi.com</a></p>
+  </div>
+</footer>
+
+<script>
+/* =====================================================================
+   ADD NEW GAMES HERE — one object per game, newest date shows on top.
+   ===================================================================== */
+const GAMES = [
+  {
+    title: "Word Runner: The Lost Kingdom",
+    hindi: "शब्द धावक: खोया हुआ जादुई राज्य",
+    emoji: "🏃",
+    path: "word-runner/",
+    desc: "A bilingual (Hindi + English) endless runner — collect real vocabulary, dodge obstacles, and beat boss word-quizzes across six magical worlds.",
+    added: "2026-08-04",
+    tags: ["runner", "bilingual", "learning"]
+  }
+];
+
+(function () {
+  "use strict";
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function fmtDate(iso) {
+    var d = new Date(iso + "T00:00:00");
+    return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  }
+
+  var games = GAMES.slice().sort(function (a, b) {
+    return a.added < b.added ? 1 : a.added > b.added ? -1 : 0;
+  });
+
+  /* Featured — the newest game IS the giant play button */
+  var latest = games[0];
+  var featuredSlot = document.getElementById("featured-slot");
+  if (latest && featuredSlot) {
+    featuredSlot.innerHTML =
+      '<a class="play" href="' + esc(latest.path) + '">' +
+        '<svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+          '<path d="M7 4.8v14.4L19.5 12z" fill="currentColor"></path>' +
+        '</svg>' +
+        '<span class="play-text">' +
+          '<span class="play-title">' + esc(latest.title) + '</span>' +
+          '<span class="play-hindi" lang="hi">' + esc(latest.hindi) + '</span>' +
+        '</span>' +
+      '</a>' +
+      '<p class="play-desc">' + esc(latest.emoji) + ' ' + esc(latest.desc) + '</p>';
+  }
+
+  /* Collection — quiet single-column list, newest on top */
+  var listEl = document.getElementById("game-list");
+  if (listEl) {
+    var rows = games.map(function (g, i) {
+      return (
+        '<li>' +
+          '<a class="row" href="' + esc(g.path) + '">' +
+            '<span class="row-num" aria-hidden="true">' + String(games.length - i).padStart(2, "0") + '</span>' +
+            '<span class="row-emoji" aria-hidden="true">' + esc(g.emoji) + '</span>' +
+            '<span class="row-main">' +
+              '<span class="row-title">' + esc(g.title) + (i === 0 ? '<span class="row-new">New</span>' : '') + '</span>' +
+              '<span class="row-sub" lang="hi">' + esc(g.hindi) + '</span>' +
+            '</span>' +
+            '<span class="row-meta">' +
+              '<span class="row-tags">' + g.tags.map(esc).join(" · ") + '</span>' +
+              '<span class="row-date">' + esc(fmtDate(g.added)) + '</span>' +
+            '</span>' +
+            '<span class="row-arrow" aria-hidden="true">→</span>' +
+          '</a>' +
+        '</li>'
+      );
+    });
+
+    /* Weekly cadence affordance — the next slot in the list */
+    rows.push(
+      '<li class="soon-li">' +
+        '<div class="row soon">' +
+          '<span class="row-num" aria-hidden="true">' + String(games.length + 1).padStart(2, "0") + '</span>' +
+          '<span class="row-emoji soon-dots" aria-hidden="true">···</span>' +
+          '<span class="row-main">' +
+            '<span class="row-title soon-title" lang="hi">नया खेल जल्द आ रहा है</span>' +
+            '<span class="row-sub">A new game arriving soon — the team ships one every week, बिना नागा.</span>' +
+          '</span>' +
+          '<span class="row-meta"><span class="row-date">Next week</span></span>' +
+        '</div>' +
+      '</li>'
+    );
+
+    listEl.innerHTML = rows.join("");
+  }
+
+  /* Visible count of live games */
+  var n = games.length;
+  var countEl = document.getElementById("game-count");
+  if (countEl) {
+    countEl.textContent = n + (n === 1 ? " game live" : " games live") + " · हर हफ्ते एक नया";
+  }
+
+  /* Footer year */
+  var yearEl = document.getElementById("year");
+  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+  /* In-page anchors: while the preview-only <base> is present, fragment
+     links would resolve against it — handle them in-page instead. */
+  document.addEventListener("click", function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    var target = document.getElementById(a.getAttribute("href").slice(1));
+    if (!target) return;
+    e.preventDefault();
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    target.focus({ preventScroll: true });
+    target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  });
+})();
+</script>
+
+</body>
+</html>
