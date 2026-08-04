@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Runner: The Lost Kingdom | शब्द धावक: खोया हुआ जादुई राज्य</title>
+<meta name="description" content="An original bilingual (Hindi + English) endless runner adventure that teaches vocabulary through magical worlds, boss battles, and word collection. Play free in your browser.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%83%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="style.css" as="style">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="bg-stars"></div>
+
+<!-- ===================== HEADER ===================== -->
+<header class="site-header" id="siteHeader">
+  <div class="container nav-inner">
+    <a href="#home" class="brand">
+      <span class="emoji">🏃</span>
+      <span>Word Runner<small>शब्द धावक</small></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#features">Features</a>
+      <a href="#worlds">Worlds</a>
+      <a href="#about">About</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="game.html" class="btn btn-primary">▶ Play Now</a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="overlay-scrim" id="scrim"></div>
+<nav class="mobile-panel" id="mobilePanel">
+  <a href="#home">Home</a>
+  <a href="#features">Features</a>
+  <a href="#worlds">Worlds</a>
+  <a href="#about">About</a>
+  <a href="game.html" class="btn btn-primary">▶ Play Now</a>
+</nav>
+
+<main>
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="home">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <span class="eyebrow">✨ Free Bilingual Learning Adventure</span>
+      <h1>
+        Run, Collect Words,<br>
+        <span class="accent">Save the Magic Kingdom</span>
+        <span class="hi-line">दौड़ें, शब्द इकट्ठा करें, जादुई राज्य को बचाएं</span>
+      </h1>
+      <p class="lead">
+        Word Runner: The Lost Kingdom is an original endless-runner adventure that teaches
+        real English vocabulary — in both Hindi and English — while you run, jump, slide and dash
+        through six magical worlds and battle bosses with your word power.
+      </p>
+      <div class="hero-ctas">
+        <a href="game.html" class="btn btn-primary btn-lg">▶ Play Now <small>अभी खेलें</small></a>
+        <a href="#features" class="btn btn-ghost btn-lg">See Features <small>विशेषताएं देखें</small></a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-chip">🌍 <b>6</b> Magical Worlds</div>
+        <div class="stat-chip">📚 <b>60+</b> Vocabulary Words</div>
+        <div class="stat-chip">🐉 <b>6</b> Epic Boss Battles</div>
+        <div class="stat-chip">🇮🇳🇬🇧 <b>100%</b> Bilingual</div>
+      </div>
+    </div>
+
+    <div class="hero-visual" id="heroVisual">
+      <div class="glow-ring"></div>
+      <div class="device">
+        <div class="device-hud">
+          <span class="device-pill">🪙 120</span>
+          <span class="device-pill">❤️❤️❤️</span>
+        </div>
+        <div class="device-road" id="deviceOrbs"></div>
+        <div class="device-player">🦸</div>
+      </div>
+    </div>
+  </div>
+
+  <a href="#features" class="scroll-cue">
+    <span>Scroll · स्क्रॉल करें</span>
+    <span>⌄</span>
+  </a>
+</section>
+
+<!-- ===================== ABOUT (short intro) ===================== -->
+<section class="section" id="story">
+  <div class="container section-head reveal">
+    <span class="section-tag">The Story · कहानी</span>
+    <h2>Words Have Vanished From the Kingdom
+      <span class="hi">राज्य से सारे शब्द गायब हो गए हैं</span>
+    </h2>
+    <p>
+      A mysterious darkness has stolen every English word from the magical world, and without them,
+      no one can speak, dream, or remember. You are the Word Hero — <b>शब्द नायक</b> — and the only way
+      to bring the words back is to run, explore, and collect them before the shadows do.
+    </p>
+  </div>
+</section>
+
+<!-- ===================== FEATURES ===================== -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-tag">Why You'll Love It · विशेषताएं</span>
+      <h2>Built to Make Learning Feel Like an Adventure
+        <span class="hi">सीखना अब एक रोमांचक साहसिक यात्रा है</span>
+      </h2>
+      <p>Every mechanic is designed so vocabulary sticks — without ever feeling like a quiz.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">🏃</div>
+        <h3>Smooth Runner Controls<span class="hi">तेज़ और आसान नियंत्रण</span></h3>
+        <p>Jump, double jump, slide, dash, and switch lanes with swipes, on-screen buttons, or your keyboard — built for mobile first.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">📖</div>
+        <h3>Real Vocabulary, Instantly<span class="hi">तुरंत असली शब्द ज्ञान</span></h3>
+        <p>Collecting a correct word shows its Hindi meaning, pronunciation, and an example sentence — for just a few seconds, without stopping your run.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🐉</div>
+        <h3>Boss Battles<span class="hi">रोमांचक बॉस लड़ाई</span></h3>
+        <p>Every world ends in a vocabulary showdown. Answer correctly to weaken the boss — get it wrong, and it strikes back.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🌍</div>
+        <h3>Six Unique Worlds<span class="hi">छह जादुई दुनियाएं</span></h3>
+        <p>From a haunted forest to a magic ocean, every world has its own vocabulary theme, enemies, and atmosphere.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🇮🇳</div>
+        <h3>Fully Bilingual<span class="hi">पूरी तरह द्विभाषी</span></h3>
+        <p>Every button, mission, popup, and reward appears in both Hindi and English, so nothing is ever lost in translation.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">⚡</div>
+        <h3>Works Offline, Instantly<span class="hi">बिना इंटरनेट भी चले</span></h3>
+        <p>No installs, no accounts, no downloads. It loads in seconds and keeps running even without a connection.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WORLDS ===================== -->
+<section class="section" id="worlds">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-tag">Explore · दुनियाओं की खोज</span>
+      <h2>Six Worlds. Six Vocabulary Themes.
+        <span class="hi">छह दुनियाएं, छह शब्द विषय</span>
+      </h2>
+      <p>Each world unlocks after you defeat its guardian boss.</p>
+    </div>
+
+    <div class="worlds-grid">
+      <div class="world-card reveal" style="background:linear-gradient(160deg,#57c98acc,#0d3d2eee)">
+        <span class="we">🌳</span>
+        <h4>Forest of Words<span class="eng">शब्दों का जंगल</span></h4>
+        <span class="wtheme">Animals · जानवर</span>
+      </div>
+      <div class="world-card reveal" style="background:linear-gradient(160deg,#6a2f7acc,#160822ee)">
+        <span class="we">👻</span>
+        <h4>Haunted Forest<span class="eng">रहस्यमयी जंगल</span></h4>
+        <span class="wtheme">Spooky Words · डरावने शब्द</span>
+      </div>
+      <div class="world-card reveal" style="background:linear-gradient(160deg,#c15fd6cc,#1a1046ee)">
+        <span class="we">🧚</span>
+        <h4>Fairy Kingdom<span class="eng">परियों की दुनिया</span></h4>
+        <span class="wtheme">Fantasy Words · जादुई शब्द</span>
+      </div>
+      <div class="world-card reveal" style="background:linear-gradient(160deg,#8a3a4ccc,#241226ee)">
+        <span class="we">🏰</span>
+        <h4>Forgotten Castle<span class="eng">भूला हुआ किला</span></h4>
+        <span class="wtheme">Royalty Words · राजसी शब्द</span>
+      </div>
+      <div class="world-card reveal" style="background:linear-gradient(160deg,#5fc9e8cc,#08182eee)">
+        <span class="we">❄️</span>
+        <h4>Ice Cave<span class="eng">बर्फ की गुफा</span></h4>
+        <span class="wtheme">Winter Words · सर्दी के शब्द</span>
+      </div>
+      <div class="world-card reveal" style="background:linear-gradient(160deg,#1fb0c9cc,#031630ee)">
+        <span class="we">🌊</span>
+        <h4>Magic Ocean<span class="eng">जादुई समुद्र</span></h4>
+        <span class="wtheme">Ocean Words · समुद्री शब्द</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ABOUT ===================== -->
+<section class="section" id="about">
+  <div class="container about-wrap">
+    <div class="about-card reveal">
+      <div class="who-emoji">🦸</div>
+      <h3>Meet the Word Hero<span class="hi">शब्द नायक से मिलें</span></h3>
+      <p>That's you. No cape required — just curiosity, quick reflexes, and a growing vocabulary.</p>
+      <ul class="about-list">
+        <li><span class="tick">✓</span> Designed for children, teens, and beginner English learners</li>
+        <li><span class="tick">✓</span> Every word is taught in context, with pronunciation and an example sentence</li>
+        <li><span class="tick">✓</span> No accounts, no ads, no pressure — just play and learn</li>
+      </ul>
+    </div>
+    <div class="about-copy reveal">
+      <span class="section-tag">About the Game · परिचय</span>
+      <h2>Learning English, Without Feeling Like Studying
+        <span class="hi">पढ़ाई जैसा महसूस हुए बिना अंग्रेज़ी सीखना</span>
+      </h2>
+      <p>
+        Most vocabulary apps feel like flashcards with extra steps. Word Runner flips that around:
+        the running, jumping, and dodging come first, and the words are simply what you're chasing.
+        By the time a player realizes they've learned ten new English words, they've already had fun
+        doing it.
+      </p>
+      <p>
+        Built for beginners in India and anywhere else English is a second language, every piece of
+        the interface — instructions, rewards, dialogue, and popups — speaks both Hindi and English,
+        so no learner is ever left guessing what a button means.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FINAL CTA ===================== -->
+<section class="section">
+  <div class="container">
+    <div class="final-cta reveal">
+      <h2>Ready to Bring the Words Back?
+        <span class="hi">शब्दों को वापस लाने के लिए तैयार हैं?</span>
+      </h2>
+      <p>The kingdom is waiting. Jump in and start your first run — it's free and works right in your browser.</p>
+      <a href="game.html" class="btn btn-primary btn-lg">▶ Play Now <small>अभी खेलें</small></a>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">🏃 Word Runner: The Lost Kingdom</div>
+    <div class="footer-links">
+      <a href="#home">Home</a>
+      <a href="#features">Features</a>
+      <a href="#worlds">Worlds</a>
+      <a href="#about">About</a>
+      <a href="game.html">Play</a>
+    </div>
+  </div>
+  <div class="footer-note" style="margin-top:14px;">© <span id="year"></span> Word Runner: The Lost Kingdom · शब्द धावक: खोया हुआ जादुई राज्य · Made for young English learners</div>
+</footer>
+
+<button id="backToTop" aria-label="Back to top">↑</button>
+
+<script src="script.js"></script>
+</body>
+</html>

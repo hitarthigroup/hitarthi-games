@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Word Runner: The Lost Kingdom | शब्द धावक: खोया हुआ जादुई राज्य</title>
+<style>
+  :root{
+    --gold:#f4c95d;
+    --gold-deep:#c9932e;
+    --ink:#160c28;
+    --panel:#1c1136ee;
+    --panel-2:#241645f0;
+    --magic:#8b6bff;
+    --magic-2:#39d6c4;
+    --danger:#ff5c7a;
+    --good:#5cff9d;
+    --text:#f4ecff;
+    --text-dim:#c4b8e6;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none;}
+  html,body{
+    margin:0; padding:0; width:100%; height:100%; overflow:hidden;
+    background:#0a0616; font-family:'Trebuchet MS','Segoe UI',sans-serif; color:var(--text);
+    touch-action:none;
+  }
+  #wrap{
+    position:fixed; inset:0; width:100%; height:100%;
+    max-width:560px; margin:0 auto;
+    background:#05030c;
+    box-shadow:0 0 60px #000;
+    overflow:hidden;
+  }
+  canvas{position:absolute; inset:0; width:100%; height:100%; display:block;}
+
+  .hindi{font-weight:700; }
+  .eng{opacity:0.85; font-weight:400;}
+  .bi{display:flex; flex-direction:column; align-items:center; line-height:1.15;}
+  .bi .eng{font-size:0.72em;}
+
+  /* ---------- overlays ---------- */
+  .overlay{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; text-align:center; padding:18px;
+    background:radial-gradient(ellipse at 50% 20%, #2a1a55dd 0%, #0a0616f2 70%);
+    z-index:20; animation:fadeIn .35s ease;
+  }
+  .hidden{display:none !important;}
+  @keyframes fadeIn{from{opacity:0; transform:scale(0.97)} to{opacity:1; transform:scale(1)}}
+
+  h1.title{
+    font-size:1.7em; margin:0 0 2px; color:var(--gold);
+    text-shadow:0 0 12px #f4c95d99, 0 0 30px #8b6bff88;
+    letter-spacing:1px;
+  }
+  h1.title small{display:block; font-size:0.5em; color:var(--magic-2); font-weight:400; margin-top:2px;}
+  .subtitle{color:var(--text-dim); font-size:0.85em; margin-bottom:14px; max-width:380px;}
+
+  .glow-btn{
+    font-family:inherit; font-weight:700; font-size:1.05em; color:#1a0f33;
+    background:linear-gradient(180deg,#ffe9a8,var(--gold) 55%, var(--gold-deep));
+    border:none; border-radius:16px; padding:14px 26px; margin:7px 0;
+    box-shadow:0 4px 0 #8a611c, 0 8px 18px #00000066, inset 0 1px 0 #fff8;
+    cursor:pointer; min-width:230px; display:flex; flex-direction:column; align-items:center;
+    transition:transform .08s;
+  }
+  .glow-btn:active{transform:translateY(3px); box-shadow:0 1px 0 #8a611c, 0 3px 8px #00000066;}
+  .glow-btn .eng{font-size:0.68em; color:#3c2a12; opacity:.8;}
+  .glow-btn.secondary{
+    background:linear-gradient(180deg,#5a4590,#3a2a66 60%,#241a4a);
+    color:#f4ecff; box-shadow:0 4px 0 #150e2e, 0 8px 18px #00000066, inset 0 1px 0 #ffffff22;
+  }
+  .glow-btn.secondary .eng{color:#c4b8e6;}
+  .glow-btn.small{min-width:140px; padding:10px 16px; font-size:0.9em; margin:5px;}
+  .btn-row{display:flex; flex-wrap:wrap; justify-content:center; gap:4px;}
+
+  .panel{
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    border:2px solid #7a5cff55; border-radius:20px; padding:16px 18px;
+    box-shadow:0 10px 30px #000a, inset 0 0 40px #7a5cff22;
+    max-width:420px; width:92%;
+  }
+
+  /* ---------- HUD ---------- */
+  #hud{
+    position:absolute; top:0; left:0; right:0; z-index:10; pointer-events:none;
+    padding:8px 10px; display:flex; justify-content:space-between; align-items:flex-start;
+  }
+  .hud-pill{
+    pointer-events:auto; display:flex; align-items:center; gap:5px;
+    background:#160c28cc; border:1px solid #7a5cff55; border-radius:20px;
+    padding:5px 10px; font-size:0.82em; font-weight:700; backdrop-filter:blur(2px);
+  }
+  #hearts{display:flex; gap:2px;}
+  .heart{filter:drop-shadow(0 0 3px #ff5c7a);}
+  .heart.lost{opacity:0.18; filter:none;}
+  #hud-left{display:flex; flex-direction:column; gap:5px; align-items:flex-start;}
+  #hud-right{display:flex; flex-direction:column; gap:5px; align-items:flex-end;}
+  #energyWrap{
+    pointer-events:auto; position:absolute; top:8px; left:50%; transform:translateX(-50%);
+    width:46%; min-width:160px; text-align:center;
+  }
+  #energyLabel{font-size:0.62em; color:var(--magic-2); font-weight:700; letter-spacing:0.5px;}
+  #energyBarOuter{
+    height:10px; border-radius:8px; background:#1c1136; border:1px solid #39d6c455;
+    overflow:hidden; box-shadow:inset 0 0 6px #000a;
+  }
+  #energyBarInner{height:100%; width:0%; background:linear-gradient(90deg,#39d6c4,#8b6bff); transition:width .25s;}
+  #worldTag{
+    position:absolute; top:44px; left:50%; transform:translateX(-50%);
+    font-size:0.68em; color:var(--gold); text-shadow:0 0 6px #000; font-weight:700; white-space:nowrap;
+  }
+
+  #padBtns{
+    position:absolute; bottom:0; left:0; right:0; z-index:10; display:flex; justify-content:space-between;
+    align-items:flex-end; padding:14px 12px 18px; pointer-events:none;
+  }
+  .pad{
+    pointer-events:auto; width:58px; height:58px; border-radius:50%;
+    background:radial-gradient(circle at 32% 28%, #4a3585, #1c1136 70%);
+    border:2px solid #7a5cffaa; color:#f4ecff; font-size:1.3em; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 10px #0008, inset 0 0 10px #7a5cff44;
+  }
+  .pad:active{background:radial-gradient(circle at 32% 28%,#6a55b5,#2c2156 70%);}
+  #padCenter{display:flex; gap:10px;}
+  #dashBtn{background:radial-gradient(circle at 32% 28%,#ffdd88,#c9932e 70%); border-color:#f4c95d; color:#3a2610;}
+  #pauseBtn{width:40px; height:40px; font-size:1em;}
+
+  /* ---------- vocab popup ---------- */
+  #vocabPopup{
+    position:absolute; left:50%; top:26%; transform:translate(-50%,-10px); z-index:15;
+    background:linear-gradient(180deg,#2c1e55f0,#160c28f5); border:2px solid var(--gold);
+    border-radius:18px; padding:12px 20px; text-align:center; min-width:210px;
+    box-shadow:0 0 30px #f4c95d99, 0 10px 24px #000a; opacity:0; pointer-events:none;
+    transition:opacity .18s, transform .18s;
+  }
+  #vocabPopup.show{opacity:1; transform:translate(-50%,0);}
+  #vocabPopup .vpWord{font-size:1.5em; font-weight:800; color:var(--gold);}
+  #vocabPopup .vpMeaning{font-size:1.05em; color:var(--good); font-weight:700; margin-top:2px;}
+  #vocabPopup .vpPron{font-size:0.78em; color:var(--text-dim); margin-top:2px;}
+  #vocabPopup .vpEx{font-size:0.72em; color:var(--text-dim); margin-top:6px; font-style:italic; line-height:1.35;}
+
+  #wrongToast{
+    position:absolute; left:50%; top:26%; transform:translate(-50%,-10px); z-index:15;
+    background:linear-gradient(180deg,#5a1c33f0,#2a0c18f5); border:2px solid var(--danger);
+    border-radius:18px; padding:10px 18px; text-align:center; min-width:200px;
+    box-shadow:0 0 30px #ff5c7a99, 0 10px 24px #000a; opacity:0; pointer-events:none;
+    transition:opacity .18s, transform .18s;
+  }
+  #wrongToast.show{opacity:1; transform:translate(-50%,0);}
+  #wrongToast .wtWord{font-size:1.2em; font-weight:800; color:#ffb3c2;}
+  #wrongToast .wtNote{font-size:0.75em; color:#ffd7de; margin-top:3px;}
+
+  #floatTextLayer{position:absolute; inset:0; pointer-events:none; z-index:14;}
+  .floatText{
+    position:absolute; font-weight:800; font-size:0.9em; color:var(--good);
+    text-shadow:0 0 6px #000; animation:floatUp 0.9s ease-out forwards;
+  }
+  @keyframes floatUp{from{opacity:1; transform:translateY(0)} to{opacity:0; transform:translateY(-46px)}}
+
+  /* achievement toast */
+  #achieveToast{
+    position:absolute; top:74px; left:50%; transform:translate(-50%,-16px); z-index:16;
+    background:linear-gradient(90deg,#f4c95d,#ffe9a8); color:#3a2610; font-weight:800;
+    border-radius:14px; padding:8px 16px; font-size:0.82em; opacity:0; transition:all .25s;
+    box-shadow:0 6px 16px #0008; display:flex; align-items:center; gap:6px; white-space:nowrap;
+  }
+  #achieveToast.show{opacity:1; transform:translate(-50%,0);}
+
+  /* ---------- boss ---------- */
+  #bossOverlay{
+    position:absolute; inset:0; z-index:18; display:flex; flex-direction:column; align-items:center;
+    justify-content:flex-start; padding-top:10px; pointer-events:none;
+  }
+  #bossOverlay.active{pointer-events:auto;}
+  #bossBar{width:88%; max-width:420px; margin-top:6px;}
+  #bossName{text-align:center; font-weight:800; color:#ffb3c2; text-shadow:0 0 8px #000; font-size:0.95em;}
+  #bossHpOuter{height:16px; border-radius:10px; background:#1c1136; border:2px solid #ff5c7a; overflow:hidden; margin-top:3px;}
+  #bossHpInner{height:100%; width:100%; background:linear-gradient(90deg,#ff5c7a,#ff9f5c); transition:width .3s;}
+  #bossQuestionBox{
+    margin-top:auto; margin-bottom:16px; width:92%; max-width:440px;
+    background:linear-gradient(180deg,#2c1e55f5,#160c28f8); border:2px solid var(--magic);
+    border-radius:18px; padding:14px 16px; box-shadow:0 0 30px #8b6bff77, 0 10px 24px #000a;
+  }
+  #bossQWord{text-align:center; font-size:1.4em; font-weight:800; color:var(--gold); margin-bottom:2px;}
+  #bossQPrompt{text-align:center; font-size:0.78em; color:var(--text-dim); margin-bottom:10px;}
+  #bossOptions{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+  .optBtn{
+    font-family:inherit; font-size:0.88em; font-weight:700; color:var(--text);
+    background:#2a1e4d; border:2px solid #7a5cff66; border-radius:12px; padding:10px 6px;
+    cursor:pointer;
+  }
+  .optBtn.correct{background:#1e5a3a; border-color:var(--good);}
+  .optBtn.wrong{background:#5a1c2c; border-color:var(--danger);}
+
+  /* world select */
+  #worldGrid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; max-height:52vh; overflow-y:auto; width:100%;}
+  .worldCard{
+    border-radius:16px; padding:12px 8px; text-align:center; cursor:pointer;
+    border:2px solid #7a5cff55; position:relative; min-height:88px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .worldCard .we{font-size:1.6em;}
+  .worldCard .wn{font-size:0.78em; font-weight:800; margin-top:3px;}
+  .worldCard .wn .eng{font-size:0.85em; display:block; font-weight:400; opacity:.75;}
+  .worldCard.locked{filter:grayscale(1) brightness(0.5); cursor:not-allowed;}
+  .worldCard.locked::after{content:'🔒'; position:absolute; top:6px; right:8px; font-size:0.9em;}
+  .worldCard.done::after{content:'⭐'; position:absolute; top:6px; right:8px; font-size:0.9em;}
+
+  #journalList{max-height:48vh; overflow-y:auto; width:100%; text-align:left; margin-top:8px;}
+  .jItem{display:flex; justify-content:space-between; padding:7px 4px; border-bottom:1px solid #7a5cff33; font-size:0.85em;}
+  .jItem b{color:var(--gold);}
+  .jItem span{color:var(--text-dim);}
+
+  #statsRow{display:flex; gap:14px; justify-content:center; margin:10px 0; flex-wrap:wrap;}
+  .statChip{background:#160c28aa; border:1px solid #7a5cff55; border-radius:12px; padding:6px 12px; font-size:0.8em; font-weight:700;}
+
+  ::-webkit-scrollbar{width:6px;}
+  ::-webkit-scrollbar-thumb{background:#7a5cff88; border-radius:4px;}
+
+  @media (max-height:620px){
+    .glow-btn{padding:10px 22px; font-size:0.95em;}
+    h1.title{font-size:1.4em;}
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="game"></canvas>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div id="hud-left">
+      <div class="hud-pill">🪙 <span id="coinCount">0</span></div>
+      <div class="hud-pill">✨ <span id="xpCount">0</span> <span style="opacity:.7">XP</span></div>
+    </div>
+    <div id="hud-right">
+      <div class="hud-pill" id="hearts"></div>
+      <div class="hud-pill" style="cursor:pointer;" id="pauseBtnTop">⏸</div>
+    </div>
+  </div>
+  <div id="worldTag"></div>
+  <div id="energyWrap">
+    <div id="energyLabel">✨ जादुई ऊर्जा / Magic Energy</div>
+    <div id="energyBarOuter"><div id="energyBarInner"></div></div>
+  </div>
+
+  <div id="floatTextLayer"></div>
+  <div id="vocabPopup">
+    <div class="vpWord" id="vpWord"></div>
+    <div class="vpMeaning" id="vpMeaning"></div>
+    <div class="vpPron" id="vpPron"></div>
+    <div class="vpEx" id="vpEx"></div>
+  </div>
+  <div id="wrongToast">
+    <div class="wtWord" id="wtWord"></div>
+    <div class="wtNote" id="wtNote"></div>
+  </div>
+  <div id="achieveToast">🏆 <span id="achieveText"></span></div>
+
+  <!-- touch pad -->
+  <div id="padBtns">
+    <div class="pad" id="btnLeft">⬅️</div>
+    <div id="padCenter">
+      <div class="pad" id="btnSlide">⬇️</div>
+      <div class="pad" id="btnJump">⬆️</div>
+      <div class="pad" id="dashBtn">⚡</div>
+    </div>
+    <div class="pad" id="btnRight">➡️</div>
+  </div>
+
+  <!-- BOSS -->
+  <div id="bossOverlay">
+    <div id="bossBar">
+      <div id="bossName"></div>
+      <div id="bossHpOuter"><div id="bossHpInner"></div></div>
+    </div>
+    <div id="bossQuestionBox" class="hidden">
+      <div id="bossQPrompt">इस शब्द का सही अर्थ चुनें / Choose the correct meaning</div>
+      <div id="bossQWord"></div>
+      <div id="bossOptions"></div>
+    </div>
+  </div>
+
+  <!-- MAIN MENU -->
+  <div class="overlay" id="menuScreen">
+    <h1 class="title">🏃 Word Runner<br><span class="hindi" style="font-size:0.62em">शब्द धावक: खोया हुआ जादुई राज्य</span></h1>
+    <div class="subtitle">एक रहस्यमयी अंधकार ने राज्य के सारे अंग्रेज़ी शब्द चुरा लिए हैं। शब्द नायक बनें और शब्द इकट्ठा करें!<br><br>
+    <span style="opacity:.85">A mysterious darkness has stolen all English words from the kingdom. Become the Word Hero and run to bring them back!</span></div>
+    <button class="glow-btn" id="startBtn"><span class="hindi">▶ खेल शुरू करें</span><span class="eng">Start Game</span></button>
+    <button class="glow-btn secondary" id="mapBtn"><span class="hindi">🗺 राज्य का नक्शा</span><span class="eng">World Map</span></button>
+    <button class="glow-btn secondary" id="journalBtn"><span class="hindi">📖 शब्द पुस्तिका</span><span class="eng">Word Journal</span></button>
+    <button class="glow-btn secondary" id="muteBtnMenu"><span class="hindi" id="muteLabelHi">🔊 ध्वनि चालू</span><span class="eng" id="muteLabelEn">Sound On</span></button>
+  </div>
+
+  <!-- WORLD MAP -->
+  <div class="overlay hidden" id="mapScreen">
+    <div class="panel">
+      <h1 class="title" style="font-size:1.2em">🗺 <span class="hindi">राज्य का नक्शा</span><br><span class="eng" style="font-size:.6em">World Map</span></h1>
+      <div id="worldGrid"></div>
+      <button class="glow-btn secondary small" id="mapBackBtn"><span class="hindi">वापस</span><span class="eng">Back</span></button>
+    </div>
+  </div>
+
+  <!-- JOURNAL -->
+  <div class="overlay hidden" id="journalScreen">
+    <div class="panel">
+      <h1 class="title" style="font-size:1.2em">📖 <span class="hindi">शब्द पुस्तिका</span><br><span class="eng" style="font-size:.6em">Word Journal</span></h1>
+      <div id="journalList"></div>
+      <button class="glow-btn secondary small" id="journalBackBtn"><span class="hindi">वापस</span><span class="eng">Back</span></button>
+    </div>
+  </div>
+
+  <!-- STORY / WORLD INTRO -->
+  <div class="overlay hidden" id="storyScreen">
+    <div class="panel">
+      <div style="font-size:2.4em" id="storyEmoji">🌳</div>
+      <h1 class="title" id="storyTitleHi" style="font-size:1.25em"></h1>
+      <div class="eng" id="storyTitleEn" style="color:var(--magic-2); margin-bottom:8px; font-weight:700;"></div>
+      <div class="subtitle" id="storyTextHi"></div>
+      <div class="subtitle" id="storyTextEn" style="opacity:.8"></div>
+      <div class="hud-pill" style="margin:8px auto; display:inline-flex;">🎯 <span id="storyMissionHi"></span> / <span id="storyMissionEn"></span></div>
+      <button class="glow-btn" id="storyGoBtn"><span class="hindi">दौड़ना शुरू करें</span><span class="eng">Begin Run</span></button>
+    </div>
+  </div>
+
+  <!-- PAUSE -->
+  <div class="overlay hidden" id="pauseScreen">
+    <div class="panel">
+      <h1 class="title" style="font-size:1.3em">⏸ <span class="hindi">विराम</span> <span class="eng">Paused</span></h1>
+      <button class="glow-btn" id="resumeBtn"><span class="hindi">▶ जारी रखें</span><span class="eng">Resume</span></button>
+      <button class="glow-btn secondary" id="journalBtnPause"><span class="hindi">📖 शब्द पुस्तिका</span><span class="eng">Word Journal</span></button>
+      <button class="glow-btn secondary" id="muteBtnPause"><span class="hindi" id="muteLabelHi2">🔊 ध्वनि चालू</span><span class="eng" id="muteLabelEn2">Sound On</span></button>
+      <button class="glow-btn secondary" id="quitBtn"><span class="hindi">🏠 मुख्य मेनू</span><span class="eng">Main Menu</span></button>
+    </div>
+  </div>
+
+  <!-- WORLD COMPLETE -->
+  <div class="overlay hidden" id="completeScreen">
+    <div class="panel">
+      <div style="font-size:2.6em">🎉</div>
+      <h1 class="title"><span class="hindi">राज्य बचाया गया!</span><br><span class="eng" style="font-size:.6em">World Saved!</span></h1>
+      <div class="subtitle" id="completeText"></div>
+      <div id="statsRow">
+        <div class="statChip">🪙 <span id="rewardCoins"></span></div>
+        <div class="statChip">✨ <span id="rewardXp"></span> XP</div>
+        <div class="statChip">🔑 <span id="rewardKey">+1</span> <span class="hindi">कुंजी</span></div>
+      </div>
+      <button class="glow-btn" id="nextWorldBtn"><span class="hindi">अगला राज्य</span><span class="eng">Next World</span></button>
+      <button class="glow-btn secondary" id="completeMapBtn"><span class="hindi">नक्शा</span><span class="eng">World Map</span></button>
+    </div>
+  </div>
+
+  <!-- GAME OVER -->
+  <div class="overlay hidden" id="gameOverScreen">
+    <div class="panel">
+      <div style="font-size:2.6em">💀</div>
+      <h1 class="title"><span class="hindi">अंधकार जीत गया...</span><br><span class="eng" style="font-size:.6em">The Darkness Won...</span></h1>
+      <div class="subtitle"><span class="hindi">चिंता न करें, शब्द नायक! फिर से कोशिश करें।</span><br><span class="eng">Don't worry, Word Hero! Try again.</span></div>
+      <div id="statsRow">
+        <div class="statChip">🪙 <span id="finalCoins"></span></div>
+        <div class="statChip">📚 <span id="finalWords"></span> <span class="hindi">शब्द</span></div>
+      </div>
+      <button class="glow-btn" id="retryBtn"><span class="hindi">🔄 फिर कोशिश करें</span><span class="eng">Try Again</span></button>
+      <button class="glow-btn secondary" id="gameOverMenuBtn"><span class="hindi">🏠 मुख्य मेनू</span><span class="eng">Main Menu</span></button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ================= DATA ================= */
+const WORLDS = [
+  {
+    key:'forest', emoji:'🌳', nameEn:'Forest of Words', nameHi:'शब्दों का जंगल',
+    themeEn:'Animals', themeHi:'जानवर',
+    sky:['#0d3d2e','#1c6b4a','#57c98a'], road:'#1a3325', roadLine:'#3fae7a',
+    enemyEmoji:'🐺', bossEmoji:'🐺', bossNameEn:'Shadow Wolf King', bossNameHi:'छाया भेड़िया राजा',
+    storyHi:'एक शांत जंगल, जहाँ पेड़ों में जादू बसता था, अब चुप है। पशु-शब्द गायब हो गए हैं।',
+    storyEn:'A quiet forest once full of magic has gone silent — all its animal words have vanished.',
+    words:[
+      {en:'Dog',hi:'कुत्ता',pron:'डॉग',exEn:'This is a dog.',exHi:'यह एक कुत्ता है।'},
+      {en:'Cat',hi:'बिल्ली',pron:'कैट',exEn:'The cat is sleeping.',exHi:'बिल्ली सो रही है।'},
+      {en:'Lion',hi:'शेर',pron:'लायन',exEn:'The lion is the king.',exHi:'शेर राजा है।'},
+      {en:'Bird',hi:'चिड़िया',pron:'बर्ड',exEn:'The bird can fly.',exHi:'चिड़िया उड़ सकती है।'},
+      {en:'Rabbit',hi:'खरगोश',pron:'रैबिट',exEn:'The rabbit hops fast.',exHi:'खरगोश तेज़ कूदता है।'},
+      {en:'Deer',hi:'हिरण',pron:'डियर',exEn:'The deer ran away.',exHi:'हिरण भाग गया।'},
+      {en:'Fox',hi:'लोमड़ी',pron:'फॉक्स',exEn:'The fox is clever.',exHi:'लोमड़ी चालाक है।'},
+      {en:'Owl',hi:'उल्लू',pron:'आउल',exEn:'The owl wakes at night.',exHi:'उल्लू रात में जागता है।'},
+      {en:'Bear',hi:'भालू',pron:'बेयर',exEn:'The bear is strong.',exHi:'भालू ताकतवर है।'},
+      {en:'Squirrel',hi:'गिलहरी',pron:'स्क्विरल',exEn:'The squirrel loves nuts.',exHi:'गिलहरी को मेवे पसंद हैं।'}
+    ]
+  },
+  {
+    key:'haunted', emoji:'👻', nameEn:'Haunted Forest', nameHi:'रहस्यमयी जंगल',
+    themeEn:'Spooky Words', themeHi:'डरावने शब्द',
+    sky:['#160822','#331544','#6a2f7a'], road:'#1f0e2e', roadLine:'#a45cff',
+    enemyEmoji:'👻', bossEmoji:'🧙', bossNameEn:'Dark Wizard', bossNameHi:'काला जादूगर',
+    storyHi:'कोहरे से ढका यह जंगल हल्की-हल्की आवाज़ों से भरा है। डरावने शब्द यहीं छिपे हैं।',
+    storyEn:'A misty forest full of whispers — the spooky words are hiding here.',
+    words:[
+      {en:'Ghost',hi:'भूत',pron:'घोस्ट',exEn:'The ghost is friendly.',exHi:'भूत दोस्ताना है।'},
+      {en:'Bat',hi:'चमगादड़',pron:'बैट',exEn:'The bat flies at night.',exHi:'चमगादड़ रात में उड़ता है।'},
+      {en:'Witch',hi:'चुड़ैल',pron:'विच',exEn:'The witch has a broom.',exHi:'चुड़ैल के पास झाड़ू है।'},
+      {en:'Skeleton',hi:'कंकाल',pron:'स्केलेटन',exEn:'The skeleton danced.',exHi:'कंकाल नाचा।'},
+      {en:'Pumpkin',hi:'कद्दू',pron:'पम्पकिन',exEn:'The pumpkin glows.',exHi:'कद्दू चमकता है।'},
+      {en:'Broom',hi:'झाड़ू',pron:'ब्रूम',exEn:'She flies on a broom.',exHi:'वह झाड़ू पर उड़ती है।'},
+      {en:'Spider',hi:'मकड़ी',pron:'स्पाइडर',exEn:'The spider spins webs.',exHi:'मकड़ी जाला बुनती है।'},
+      {en:'Moon',hi:'चाँद',pron:'मून',exEn:'The moon is bright.',exHi:'चाँद चमकीला है।'},
+      {en:'Candle',hi:'मोमबत्ती',pron:'कैंडल',exEn:'Light the candle.',exHi:'मोमबत्ती जलाओ।'},
+      {en:'Shadow',hi:'छाया',pron:'शैडो',exEn:'A shadow moved.',exHi:'एक छाया हिली।'}
+    ]
+  },
+  {
+    key:'fairy', emoji:'🧚', nameEn:'Fairy Kingdom', nameHi:'परियों की दुनिया',
+    themeEn:'Fantasy Words', themeHi:'जादुई शब्द',
+    sky:['#1a1046','#3d1f7a','#c15fd6'], road:'#2a1750', roadLine:'#ffd6f7',
+    enemyEmoji:'🦇', bossEmoji:'🐉', bossNameEn:'Mist Dragon', bossNameHi:'कोहरे का ड्रैगन',
+    storyHi:'चमकती धूल और गुलाबी बादलों की दुनिया — यहाँ हर सपना जादू बन जाता है।',
+    storyEn:'A world of sparkling dust and rosy clouds, where every dream turns to magic.',
+    words:[
+      {en:'Fairy',hi:'परी',pron:'फेयरी',exEn:'The fairy has wings.',exHi:'परी के पंख हैं।'},
+      {en:'Wand',hi:'जादू की छड़ी',pron:'वैंड',exEn:'Wave the wand.',exHi:'जादू की छड़ी घुमाओ।'},
+      {en:'Wing',hi:'पंख',pron:'विंग',exEn:'Its wing sparkles.',exHi:'इसका पंख चमकता है।'},
+      {en:'Sparkle',hi:'चमक',pron:'स्पार्कल',exEn:'I see a sparkle.',exHi:'मुझे एक चमक दिखती है।'},
+      {en:'Magic',hi:'जादू',pron:'मैजिक',exEn:'It is pure magic.',exHi:'यह शुद्ध जादू है।'},
+      {en:'Flower',hi:'फूल',pron:'फ्लावर',exEn:'The flower glows.',exHi:'फूल चमकता है।'},
+      {en:'Rainbow',hi:'इंद्रधनुष',pron:'रेनबो',exEn:'A rainbow appeared.',exHi:'इंद्रधनुष दिखा।'},
+      {en:'Star',hi:'तारा',pron:'स्टार',exEn:'Wish upon a star.',exHi:'तारे से मन्नत माँगो।'},
+      {en:'Dust',hi:'धूल',pron:'डस्ट',exEn:'Fairy dust is magic.',exHi:'परी की धूल जादुई है।'},
+      {en:'Butterfly',hi:'तितली',pron:'बटरफ्लाई',exEn:'The butterfly is colorful.',exHi:'तितली रंगीन है।'}
+    ]
+  },
+  {
+    key:'castle', emoji:'🏰', nameEn:'Forgotten Castle', nameHi:'भूला हुआ किला',
+    themeEn:'Royalty Words', themeHi:'राजसी शब्द',
+    sky:['#241226','#4a1f3a','#8a3a4c'], road:'#2e1420', roadLine:'#f4c95d',
+    enemyEmoji:'🪨', bossEmoji:'🗿', bossNameEn:'Stone Golem Guard', bossNameHi:'पत्थर का पहरेदार',
+    storyHi:'ऊँची मीनारें और टूटे सिंहासन — यह किला कभी राजाओं का घर था।',
+    storyEn:'Tall towers and a broken throne — this castle was once home to kings.',
+    words:[
+      {en:'King',hi:'राजा',pron:'किंग',exEn:'The king rules the land.',exHi:'राजा भूमि पर शासन करता है।'},
+      {en:'Queen',hi:'रानी',pron:'क्वीन',exEn:'The queen is wise.',exHi:'रानी बुद्धिमान है।'},
+      {en:'Prince',hi:'राजकुमार',pron:'प्रिंस',exEn:'The prince rides a horse.',exHi:'राजकुमार घोड़े पर सवार है।'},
+      {en:'Princess',hi:'राजकुमारी',pron:'प्रिंसेस',exEn:'The princess sings.',exHi:'राजकुमारी गाती है।'},
+      {en:'Throne',hi:'सिंहासन',pron:'थ्रोन',exEn:'He sits on the throne.',exHi:'वह सिंहासन पर बैठता है।'},
+      {en:'Sword',hi:'तलवार',pron:'सोर्ड',exEn:'The knight holds a sword.',exHi:'शूरवीर के पास तलवार है।'},
+      {en:'Shield',hi:'ढाल',pron:'शील्ड',exEn:'The shield protects him.',exHi:'ढाल उसकी रक्षा करती है।'},
+      {en:'Tower',hi:'मीनार',pron:'टावर',exEn:'The tower is tall.',exHi:'मीनार ऊँची है।'},
+      {en:'Crown',hi:'मुकुट',pron:'क्राउन',exEn:'She wears a crown.',exHi:'वह मुकुट पहनती है।'},
+      {en:'Knight',hi:'शूरवीर',pron:'नाइट',exEn:'The knight is brave.',exHi:'शूरवीर बहादुर है।'}
+    ]
+  },
+  {
+    key:'ice', emoji:'❄️', nameEn:'Ice Cave', nameHi:'बर्फ की गुफा',
+    themeEn:'Winter Words', themeHi:'सर्दी के शब्द',
+    sky:['#08182e','#123a5c','#5fc9e8'], road:'#0e2438', roadLine:'#bdf3ff',
+    enemyEmoji:'🥶', bossEmoji:'🧊', bossNameEn:'Frost Giant', bossNameHi:'बर्फ का दानव',
+    storyHi:'चमकती बर्फ की दीवारें और ठंडी हवा — यह गुफा सर्दी के राज़ छुपाती है।',
+    storyEn:'Glittering ice walls and a cold wind — this cave hides winter secrets.',
+    words:[
+      {en:'Snow',hi:'बर्फ',pron:'स्नो',exEn:'Snow is falling.',exHi:'बर्फ गिर रही है।'},
+      {en:'Ice',hi:'बर्फ का टुकड़ा',pron:'आइस',exEn:'The ice is slippery.',exHi:'बर्फ फिसलन भरी है।'},
+      {en:'Cold',hi:'ठंडा',pron:'कोल्ड',exEn:'It is very cold.',exHi:'यह बहुत ठंडा है।'},
+      {en:'Winter',hi:'सर्दी',pron:'विंटर',exEn:'Winter is here.',exHi:'सर्दी आ गई है।'},
+      {en:'Frost',hi:'पाला',pron:'फ्रॉस्ट',exEn:'Frost covers the window.',exHi:'खिड़की पर पाला जमा है।'},
+      {en:'Icicle',hi:'हिमलंब',pron:'आइसिकल',exEn:'An icicle hangs down.',exHi:'एक हिमलंब लटका है।'},
+      {en:'Snowman',hi:'बर्फ का आदमी',pron:'स्नोमैन',exEn:'We built a snowman.',exHi:'हमने बर्फ का आदमी बनाया।'},
+      {en:'Penguin',hi:'पेंगुइन',pron:'पेंग्विन',exEn:'The penguin waddles.',exHi:'पेंगुइन डगमगाता चलता है।'},
+      {en:'Mitten',hi:'दस्ताना',pron:'मिटन',exEn:'Wear your mittens.',exHi:'अपने दस्ताने पहनो।'},
+      {en:'Blizzard',hi:'बर्फ़ीला तूफ़ान',pron:'ब्लिज़र्ड',exEn:'A blizzard is coming.',exHi:'बर्फ़ीला तूफ़ान आ रहा है।'}
+    ]
+  },
+  {
+    key:'ocean', emoji:'🌊', nameEn:'Magic Ocean', nameHi:'जादुई समुद्र',
+    themeEn:'Ocean Words', themeHi:'समुद्री शब्द',
+    sky:['#031630','#0a3a5c','#1fb0c9'], road:'#052238', roadLine:'#7be8ff',
+    enemyEmoji:'🐙', bossEmoji:'🐙', bossNameEn:'Kraken of the Deep', bossNameHi:'गहरे समुद्र का दानव',
+    storyHi:'नीली लहरें और चमकते मोती — यह समुद्र आखिरी छुपे शब्दों का घर है।',
+    storyEn:'Blue waves and glowing pearls — this ocean holds the last hidden words.',
+    words:[
+      {en:'Fish',hi:'मछली',pron:'फिश',exEn:'The fish swims fast.',exHi:'मछली तेज़ तैरती है।'},
+      {en:'Wave',hi:'लहर',pron:'वेव',exEn:'A big wave came.',exHi:'एक बड़ी लहर आई।'},
+      {en:'Shell',hi:'सीप',pron:'शेल',exEn:'I found a shell.',exHi:'मुझे एक सीप मिली।'},
+      {en:'Whale',hi:'व्हेल',pron:'व्हेल',exEn:'The whale is huge.',exHi:'व्हेल विशाल है।'},
+      {en:'Coral',hi:'मूंगा',pron:'कोरल',exEn:'The coral is colorful.',exHi:'मूंगा रंगीन है।'},
+      {en:'Boat',hi:'नाव',pron:'बोट',exEn:'We sailed the boat.',exHi:'हमने नाव चलाई।'},
+      {en:'Island',hi:'द्वीप',pron:'आइलैंड',exEn:'The island is small.',exHi:'द्वीप छोटा है।'},
+      {en:'Pearl',hi:'मोती',pron:'पर्ल',exEn:'The pearl shines.',exHi:'मोती चमकता है।'},
+      {en:'Octopus',hi:'ऑक्टोपस',pron:'ऑक्टोपस',exEn:'The octopus has eight arms.',exHi:'ऑक्टोपस के आठ भुजाएँ हैं।'},
+      {en:'Anchor',hi:'लंगर',pron:'एंकर',exEn:'Drop the anchor.',exHi:'लंगर डालो।'}
+    ]
+  }
+];
+
+const WRONG_POOL = [
+  {en:'Table',hi:'मेज़'},{en:'Window',hi:'खिड़की'},{en:'Bottle',hi:'बोतल'},{en:'Chair',hi:'कुर्सी'},
+  {en:'Pencil',hi:'पेंसिल'},{en:'Book',hi:'किताब'},{en:'Car',hi:'कार'},{en:'Phone',hi:'फोन'},
+  {en:'Clock',hi:'घड़ी'},{en:'Shoe',hi:'जूता'},{en:'Spoon',hi:'चम्मच'},{en:'Lamp',hi:'दीपक'},
+  {en:'Door',hi:'दरवाज़ा'},{en:'Mirror',hi:'आईना'},{en:'Key',hi:'चाबी'},{en:'Bag',hi:'थैला'},
+  {en:'Hat',hi:'टोपी'},{en:'Ball',hi:'गेंद'},{en:'Cup',hi:'कप'},{en:'Plate',hi:'थाली'},
+  {en:'Bus',hi:'बस'},{en:'Train',hi:'ट्रेन'},{en:'Umbrella',hi:'छाता'},{en:'Ladder',hi:'सीढ़ी'},
+  {en:'Brush',hi:'ब्रश'},{en:'Ring',hi:'अंगूठी'},{en:'Camera',hi:'कैमरा'},{en:'Wallet',hi:'बटुआ'},
+  {en:'Guitar',hi:'गिटार'},{en:'Balloon',hi:'गुब्बारा'}
+];
+
+const CORRECT_THRESHOLD = 10; // correct words needed to trigger boss
+const BOSS_QUESTIONS = 4;
+
+/* ================= CANVAS / SIZE ================= */
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+let W=0,H=0,DPR=1;
+function resize(){
+  const wrap = document.getElementById('wrap');
+  DPR = Math.min(window.devicePixelRatio||1, 2);
+  W = wrap.clientWidth; H = wrap.clientHeight;
+  canvas.width = W*DPR; canvas.height = H*DPR;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+window.addEventListener('resize', resize);
+resize();
+
+/* ================= AUDIO ================= */
+const AudioEng = (function(){
+  let actx=null, muted=false;
+  function ensure(){ if(!actx){ try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return actx; }
+  function tone(freq, dur, type, vol, delay){
+    if(muted) return;
+    const ac = ensure(); if(!ac) return;
+    const t0 = ac.currentTime + (delay||0);
+    const osc = ac.createOscillator(); const gain = ac.createGain();
+    osc.type = type||'sine'; osc.frequency.setValueAtTime(freq, t0);
+    gain.gain.setValueAtTime(0, t0);
+    gain.gain.linearRampToValueAtTime(vol||0.15, t0+0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, t0+dur);
+    osc.connect(gain); gain.connect(ac.destination);
+    osc.start(t0); osc.stop(t0+dur+0.02);
+  }
+  return {
+    unlock(){ ensure(); if(actx && actx.state==='suspended') actx.resume(); },
+    setMuted(m){ muted=m; },
+    isMuted(){ return muted; },
+    collect(){ tone(880,0.12,'triangle',0.16); tone(1320,0.15,'triangle',0.12,0.05); },
+    wrong(){ tone(180,0.25,'sawtooth',0.15); tone(120,0.3,'sawtooth',0.12,0.08); },
+    jump(){ tone(520,0.1,'square',0.08); },
+    coin(){ tone(1500,0.08,'sine',0.1); },
+    dash(){ tone(300,0.15,'sawtooth',0.1); tone(700,0.15,'sawtooth',0.08,0.05); },
+    hit(){ tone(140,0.3,'sawtooth',0.18); },
+    bossHit(){ tone(220,0.18,'square',0.16); tone(440,0.2,'square',0.1,0.05); },
+    bossRoar(){ tone(90,0.4,'sawtooth',0.2); },
+    levelUp(){ [0,0.1,0.2].forEach((d,i)=>tone(523+ i*180,0.18,'triangle',0.15,d)); },
+    win(){ [0,0.12,0.24,0.36].forEach((d,i)=>tone(440+i*140,0.22,'triangle',0.16,d)); },
+    lose(){ tone(300,0.3,'sawtooth',0.15); tone(200,0.4,'sawtooth',0.15,0.15); tone(120,0.5,'sawtooth',0.15,0.3); }
+  };
+})();
+
+/* ================= STATE ================= */
+const S = {
+  screen:'menu', // menu, map, journal, story, playing, paused, boss, complete, gameover
+  worldIndex:0,
+  unlocked:1,
+  lane:1,
+  laneCount:3,
+  jumpV:0, jumpY:0, isJumping:false,
+  isSliding:false, slideT:0,
+  isDashing:false, dashT:0, dashCd:0,
+  lives:3, coins:0, xp:0, level:1,
+  correctCount:0,
+  entities:[],
+  spawnT:0, spawnInterval:1.05,
+  speed:0.34, // z progress per second
+  runT:0,
+  invuln:0,
+  boss:{active:false, hp:0, maxHp:0, qIndex:0, answering:false},
+  achievements:new Set(),
+  journal:new Map(), // en -> word obj
+  particles:[]
+};
+
+function currentWorld(){ return WORLDS[S.worldIndex]; }
+
+/* ================= UI HELPERS ================= */
+const $ = (id)=>document.getElementById(id);
+function show(id){ $(id).classList.remove('hidden'); }
+function hide(id){ $(id).classList.add('hidden'); }
+function setScreen(name){
+  ['menuScreen','mapScreen','journalScreen','storyScreen','pauseScreen','completeScreen','gameOverScreen'].forEach(hide);
+  S.screen = name;
+  if(name==='menu') show('menuScreen');
+  if(name==='map') show('mapScreen');
+  if(name==='journal') show('journalScreen');
+  if(name==='story') show('storyScreen');
+  if(name==='paused') show('pauseScreen');
+  if(name==='complete') show('completeScreen');
+  if(name==='gameover') show('gameOverScreen');
+}
+
+function updateHearts(){
+  const h = $('hearts'); h.innerHTML='';
+  for(let i=0;i<3;i++){
+    const s = document.createElement('span');
+    s.className = 'heart' + (i>=S.lives?' lost':'');
+    s.textContent = '❤️';
+    h.appendChild(s);
+  }
+}
+function updateHud(){
+  $('coinCount').textContent = S.coins;
+  $('xpCount').textContent = S.xp;
+  updateHearts();
+  const w = currentWorld();
+  $('worldTag').textContent = w.emoji+' '+w.nameHi+' / '+w.nameEn;
+  const pct = Math.min(100, Math.round((S.correctCount/CORRECT_THRESHOLD)*100));
+  $('energyBarInner').style.width = pct+'%';
+}
+
+function floatText(text, color){
+  const el = document.createElement('div');
+  el.className='floatText'; el.textContent=text; el.style.color = color||'var(--good)';
+  el.style.left = (40+Math.random()*20)+'%'; el.style.top='58%';
+  $('floatTextLayer').appendChild(el);
+  setTimeout(()=>el.remove(), 950);
+}
+
+function achieve(hi, en){
+  const id = hi;
+  if(S.achievements.has(id)) return;
+  S.achievements.add(id);
+  const t = $('achieveToast');
+  $('achieveText').textContent = hi+' / '+en;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ================= LANES / ROAD MATH ================= */
+function roadGeom(){
+  const horizonY = H*0.30, bottomY = H*0.90;
+  const centerX = W*0.5;
+  const laneOffH = W*0.035, laneOffB = W*0.27;
+  return {horizonY,bottomY,centerX,laneOffH,laneOffB};
+}
+function laneX(lane, z){
+  const g = roadGeom();
+  const offH = (lane-1)*g.laneOffH, offB = (lane-1)*g.laneOffB;
+  return g.centerX + offH + (offB-offH)*z;
+}
+function roadY(z){
+  const g = roadGeom();
+  const ez = Math.pow(z, 1.7);
+  return g.horizonY + (g.bottomY-g.horizonY)*ez;
+}
+function roadScale(z){ return 0.30 + 1.25*Math.pow(z,1.4); }
+
+/* ================= ENTITY SPAWN ================= */
+function pickWordForWorld(){
+  const w = currentWorld();
+  const useCorrect = Math.random() < 0.62;
+  if(useCorrect){
+    const word = w.words[Math.floor(Math.random()*w.words.length)];
+    return {kind:'word', correct:true, word};
+  } else {
+    const word = WRONG_POOL[Math.floor(Math.random()*WRONG_POOL.length)];
+    return {kind:'word', correct:false, word};
+  }
+}
+function spawnEntity(){
+  const lane = Math.floor(Math.random()*3);
+  const roll = Math.random();
+  let e;
+  if(roll < 0.62){
+    const wc = pickWordForWorld();
+    e = {kind:'word', lane, z:0, correct:wc.correct, word:wc.word, resolved:false};
+  } else {
+    const type = Math.random()<0.5 ? 'ground':'air';
+    e = {kind:'obstacle', lane, z:0, type, resolved:false};
+  }
+  S.entities.push(e);
+}
+
+/* ================= RESET / START ================= */
+function resetRunState(){
+  S.lane=1; S.jumpV=0; S.jumpY=0; S.isJumping=false; S.isSliding=false; S.slideT=0;
+  S.isDashing=false; S.dashT=0; S.dashCd=0; S.lives=3; S.correctCount=0;
+  S.entities=[]; S.spawnT=0; S.speed=0.34; S.runT=0; S.invuln=0;
+  S.boss={active:false,hp:0,maxHp:0,qIndex:0,answering:false};
+  hide('bossQuestionBox'); $('bossOverlay').classList.remove('active');
+  updateHud();
+}
+function startWorld(idx){
+  S.worldIndex = idx;
+  resetRunState();
+  const w = WORLDS[idx];
+  $('storyEmoji').textContent = w.emoji;
+  $('storyTitleHi').innerHTML = w.nameHi;
+  $('storyTitleEn').textContent = w.nameEn;
+  $('storyTextHi').textContent = w.storyHi;
+  $('storyTextEn').textContent = w.storyEn;
+  $('storyMissionHi').textContent = w.themeHi+' से जुड़े सही शब्द इकट्ठा करें';
+  $('storyMissionEn').textContent = 'Collect correct '+w.themeEn+' words';
+  setScreen('story');
+}
+function beginRunning(){
+  S.screen='playing';
+  ['menuScreen','mapScreen','journalScreen','storyScreen','pauseScreen','completeScreen','gameOverScreen'].forEach(hide);
+  updateHud();
+  lastTime = performance.now();
+}
+
+/* ================= CONTROLS ================= */
+function doJump(){
+  if(S.screen!=='playing') return;
+  if(!S.isJumping && !S.isSliding){
+    S.isJumping = true; S.jumpV = -560;
+    AudioEng.jump();
+  }
+}
+function doSlide(){
+  if(S.screen!=='playing') return;
+  if(!S.isJumping){
+    S.isSliding = true; S.slideT = 0.55;
+  }
+}
+function doLane(dir){
+  if(S.screen!=='playing') return;
+  S.lane = Math.max(0, Math.min(2, S.lane+dir));
+}
+function doDash(){
+  if(S.screen!=='playing') return;
+  if(S.dashCd<=0){
+    S.isDashing = true; S.dashT = 0.9; S.dashCd = 3.2;
+    AudioEng.dash();
+    floatText('डैश! Dash!','var(--gold)');
+  }
+}
+
+window.addEventListener('keydown', (e)=>{
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+  if(e.key==='ArrowUp'||e.key===' ') doJump();
+  else if(e.key==='ArrowDown') doSlide();
+  else if(e.key==='ArrowLeft') doLane(-1);
+  else if(e.key==='ArrowRight') doLane(1);
+  else if(e.key==='Shift') doDash();
+  else if(e.key==='Escape') togglePause();
+}, {passive:false});
+
+let touchStartX=0, touchStartY=0, touchActive=false;
+canvas.addEventListener('touchstart', (e)=>{
+  AudioEng.unlock();
+  const t = e.changedTouches[0]; touchStartX=t.clientX; touchStartY=t.clientY; touchActive=true;
+}, {passive:true});
+canvas.addEventListener('touchend', (e)=>{
+  if(!touchActive) return; touchActive=false;
+  const t = e.changedTouches[0];
+  const dx = t.clientX-touchStartX, dy = t.clientY-touchStartY;
+  if(Math.abs(dx)<24 && Math.abs(dy)<24) return;
+  if(Math.abs(dx) > Math.abs(dy)){
+    doLane(dx>0?1:-1);
+  } else {
+    if(dy<0) doJump(); else doSlide();
+  }
+}, {passive:true});
+
+function bindPad(id, fn){
+  const el = $(id);
+  el.addEventListener('touchstart', (e)=>{ e.preventDefault(); AudioEng.unlock(); fn(); }, {passive:false});
+  el.addEventListener('mousedown', (e)=>{ e.preventDefault(); AudioEng.unlock(); fn(); });
+}
+bindPad('btnLeft', ()=>doLane(-1));
+bindPad('btnRight', ()=>doLane(1));
+bindPad('btnJump', doJump);
+bindPad('btnSlide', doSlide);
+bindPad('dashBtn', doDash);
+
+function togglePause(){
+  if(S.screen==='playing'){ setScreen('paused'); }
+  else if(S.screen==='paused'){ setScreen(null); S.screen='playing'; ['pauseScreen'].forEach(hide); lastTime=performance.now(); }
+}
+$('pauseBtnTop').addEventListener('click', togglePause);
+$('resumeBtn').addEventListener('click', togglePause);
+
+/* ================= GAME LOGIC ================= */
+function loseLife(){
+  if(S.invuln>0) return;
+  S.lives--; S.invuln = 1.1;
+  AudioEng.hit();
+  floatText('-1 ❤️','var(--danger)');
+  updateHud();
+  if(S.lives<=0){ triggerGameOver(); }
+}
+function gainReward(word){
+  S.coins += 8; S.xp += 12; S.correctCount++;
+  const prevLevel = S.level;
+  S.level = 1+Math.floor(S.xp/150);
+  if(S.level>prevLevel){ AudioEng.levelUp(); achieve('स्तर बढ़ा! Level '+S.level, 'Level Up!'); }
+  S.journal.set(word.en, word);
+  showVocabPopup(word);
+  AudioEng.collect();
+  floatText('+8 🪙','var(--good)');
+  updateHud();
+  if(S.correctCount===1) achieve('पहला शब्द! First Word!','Collected your first word');
+  if(S.correctCount>=CORRECT_THRESHOLD && !S.boss.active){ startBoss(); }
+}
+function wrongPenalty(word){
+  AudioEng.wrong();
+  showWrongToast(word);
+  loseLife();
+}
+
+let vocabTimer=null;
+function showVocabPopup(word){
+  $('vpWord').textContent = '🌟 '+word.en;
+  $('vpMeaning').textContent = 'अर्थ: '+word.hi;
+  $('vpPron').textContent = 'उच्चारण: '+word.pron;
+  $('vpEx').innerHTML = word.exEn+'<br>'+word.exHi;
+  const el = $('vocabPopup');
+  el.classList.add('show');
+  clearTimeout(vocabTimer);
+  vocabTimer = setTimeout(()=>el.classList.remove('show'), 1700);
+}
+let wrongTimer=null;
+function showWrongToast(word){
+  $('wtWord').textContent = '❌ '+word.en+' ('+word.hi+')';
+  const w = currentWorld();
+  $('wtNote').innerHTML = 'यह "'+w.themeHi+'" से संबंधित नहीं है। / Not related to "'+w.themeEn+'".';
+  const el = $('wrongToast');
+  el.classList.add('show');
+  clearTimeout(wrongTimer);
+  wrongTimer = setTimeout(()=>el.classList.remove('show'), 1400);
+}
+
+/* ---- Boss ---- */
+function startBoss(){
+  S.boss.active = true; S.boss.maxHp = BOSS_QUESTIONS; S.boss.hp = BOSS_QUESTIONS; S.boss.qIndex=0; S.boss.answering=false;
+  S.entities = [];
+  const w = currentWorld();
+  $('bossName').textContent = w.bossEmoji+' '+w.bossNameHi+' / '+w.bossNameEn;
+  $('bossHpInner').style.width='100%';
+  $('bossOverlay').classList.add('active');
+  AudioEng.bossRoar();
+  achieve('बॉस प्रकट हुआ! Boss Appeared!', w.bossNameEn+' challenges you');
+  nextBossQuestion();
+}
+function nextBossQuestion(){
+  const w = currentWorld();
+  const correctWord = w.words[Math.floor(Math.random()*w.words.length)];
+  const opts = new Set([correctWord.hi]);
+  const pool = w.words.filter(x=>x.en!==correctWord.en).map(x=>x.hi)
+    .concat(WRONG_POOL.map(x=>x.hi));
+  while(opts.size<4 && pool.length){
+    const pick = pool[Math.floor(Math.random()*pool.length)];
+    opts.add(pick);
+  }
+  const arr = Array.from(opts).sort(()=>Math.random()-0.5);
+  $('bossQWord').textContent = correctWord.en;
+  const box = $('bossOptions'); box.innerHTML='';
+  arr.forEach(hi=>{
+    const b = document.createElement('button');
+    b.className='optBtn'; b.textContent = hi;
+    b.addEventListener('click', ()=>answerBoss(b, hi===correctWord.hi));
+    box.appendChild(b);
+  });
+  show('bossQuestionBox');
+  S.boss.answering = true;
+}
+function answerBoss(btn, correct){
+  if(!S.boss.answering) return;
+  S.boss.answering=false;
+  document.querySelectorAll('#bossOptions .optBtn').forEach(b=>b.disabled=true);
+  if(correct){
+    btn.classList.add('correct');
+    S.boss.hp--; AudioEng.bossHit();
+    floatText('बॉस को चोट लगी! Boss Hit!','var(--good)');
+  } else {
+    btn.classList.add('wrong');
+    AudioEng.wrong();
+    loseLife();
+  }
+  $('bossHpInner').style.width = Math.max(0,(S.boss.hp/S.boss.maxHp)*100)+'%';
+  setTimeout(()=>{
+    if(S.boss.hp<=0){ winBoss(); }
+    else if(S.lives<=0){ /* game over already triggered */ }
+    else { nextBossQuestion(); }
+  }, 750);
+}
+function winBoss(){
+  hide('bossQuestionBox');
+  $('bossOverlay').classList.remove('active');
+  S.boss.active=false;
+  AudioEng.win();
+  const coinsEarned = 60, xpEarned = 120;
+  S.coins += coinsEarned; S.xp += xpEarned;
+  S.unlocked = Math.max(S.unlocked, S.worldIndex+2);
+  achieve('राज्य पूर्ण! World Complete!', currentWorld().nameEn+' saved');
+  $('completeText').innerHTML = currentWorld().nameHi+' / '+currentWorld().nameEn+' <span class="hindi">बच गया!</span> <span class="eng">has been saved!</span>';
+  $('rewardCoins').textContent = '+'+coinsEarned;
+  $('rewardXp').textContent = '+'+xpEarned;
+  updateHud();
+  setScreen('complete');
+}
+function triggerGameOver(){
+  AudioEng.lose();
+  $('bossOverlay').classList.remove('active');
+  S.boss.active=false;
+  $('finalCoins').textContent = S.coins;
+  $('finalWords').textContent = S.journal.size;
+  setTimeout(()=>setScreen('gameover'), 350);
+}
+
+/* ================= UPDATE LOOP ================= */
+let lastTime = performance.now();
+function update(dt){
+  if(S.screen!=='playing') return;
+  S.runT += dt;
+  S.speed = Math.min(0.62, 0.34 + S.runT*0.004);
+  if(S.dashCd>0) S.dashCd -= dt;
+  if(S.isDashing){ S.dashT -= dt; if(S.dashT<=0) S.isDashing=false; }
+  if(S.invuln>0) S.invuln -= dt;
+  if(S.isSliding){ S.slideT -= dt; if(S.slideT<=0) S.isSliding=false; }
+  if(S.isJumping){
+    S.jumpV += 1500*dt;
+    S.jumpY += S.jumpV*dt;
+    if(S.jumpY>=0){ S.jumpY=0; S.jumpV=0; S.isJumping=false; }
+  }
+
+  // spawn
+  S.spawnT -= dt;
+  if(S.spawnT<=0){
+    spawnEntity();
+    S.spawnT = Math.max(0.55, S.spawnInterval - S.runT*0.006) + Math.random()*0.3;
+  }
+
+  // move entities
+  for(let i=S.entities.length-1;i>=0;i--){
+    const e = S.entities[i];
+    e.z += S.speed*dt*(S.isDashing?1.0:1.0);
+    if(!e.resolved && e.z>=0.86 && e.lane===S.lane){
+      resolveCollision(e);
+    }
+    if(e.z>1.15) S.entities.splice(i,1);
+  }
+}
+
+function resolveCollision(e){
+  e.resolved = true;
+  if(e.kind==='word'){
+    if(e.correct) gainReward(e.word); else wrongPenalty(e.word);
+    e.z = 1.3; // remove soon
+    return;
+  }
+  if(e.kind==='obstacle'){
+    if(S.isDashing){ S.coins+=2; updateHud(); return; }
+    const dodged = (e.type==='ground' && S.isJumping) || (e.type==='air' && S.isSliding);
+    if(!dodged){ loseLife(); }
+  }
+}
+
+/* ================= RENDER ================= */
+function lerp(a,b,t){ return a+(b-a)*t; }
+
+function drawBackground(){
+  const w = currentWorld();
+  const g = ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0, w.sky[0]); g.addColorStop(0.55, w.sky[1]); g.addColorStop(1, w.sky[2]);
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+
+  // stars/particles ambient
+  ctx.save();
+  const t = S.runT;
+  for(let i=0;i<24;i++){
+    const px = (i*97 + (t*8)%W*0)%W;
+    const py = (i*53)%(H*0.5);
+    const tw = 0.4+0.4*Math.sin(t*2+i);
+    ctx.fillStyle = 'rgba(255,255,255,'+(0.15+0.25*tw)+')';
+    ctx.beginPath(); ctx.arc((i*137+40)%W, (i*71+10)%(H*0.45), 1.4, 0, 7); ctx.fill();
+  }
+  ctx.restore();
+
+  const rg = roadGeom();
+  // road
+  ctx.beginPath();
+  ctx.moveTo(laneX(0,0)-8, rg.horizonY);
+  ctx.lineTo(laneX(2,0)+8, rg.horizonY);
+  ctx.lineTo(laneX(2,1)+40, rg.bottomY);
+  ctx.lineTo(laneX(0,1)-40, rg.bottomY);
+  ctx.closePath();
+  const rgrad = ctx.createLinearGradient(0,rg.horizonY,0,rg.bottomY);
+  rgrad.addColorStop(0, w.road); rgrad.addColorStop(1, '#00000022');
+  ctx.fillStyle = w.road; ctx.fill();
+
+  // lane dividers
+  ctx.strokeStyle = w.roadLine+'55';
+  for(let l=0; l<=3; l++){
+    const zTop=0, zBot=1;
+    const x0 = lerp(laneX(0,0)-8,laneX(2,0)+8,l/3);
+    const x1t = laneX(0,1)-40, x1b = laneX(2,1)+40;
+    const x1 = lerp(x1t,x1b,l/3);
+    ctx.beginPath(); ctx.moveTo(x0,rg.horizonY); ctx.lineTo(x1,rg.bottomY); ctx.lineWidth=2; ctx.stroke();
+  }
+  // scrolling rungs for motion feel
+  ctx.strokeStyle = w.roadLine+'33';
+  const cycles = 6;
+  for(let i=0;i<cycles;i++){
+    let z = ((i/cycles) + (t*S.speed*0.5))%1;
+    const y = roadY(z);
+    const xL = laneX(0,z)-20*roadScale(z), xR = laneX(2,z)+20*roadScale(z);
+    ctx.beginPath(); ctx.moveTo(xL,y); ctx.lineTo(xR,y); ctx.lineWidth=1.5; ctx.stroke();
+  }
+}
+
+function drawEmoji(txt, x, y, size){
+  ctx.font = size+'px sans-serif';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(txt, x, y);
+}
+
+function drawEntities(){
+  const sorted = S.entities.slice().sort((a,b)=>a.z-b.z);
+  for(const e of sorted){
+    if(e.z>1.1) continue;
+    const z = Math.min(1,Math.max(0,e.z));
+    const x = laneX(e.lane, z);
+    let y = roadY(z);
+    const scale = roadScale(z);
+    if(e.kind==='word'){
+      y -= 34*scale;
+      ctx.save();
+      ctx.globalAlpha = 0.95;
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(255,255,255,0.12)';
+      ctx.ellipse(x, y, 46*scale, 26*scale, 0,0,7);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(244,201,93,0.85)';
+      ctx.lineWidth=2*scale;
+      ctx.stroke();
+      ctx.font = (15*scale+8)+'px Trebuchet MS'; ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(e.word.en, x, y);
+      ctx.restore();
+    } else {
+      const emoji = e.type==='ground' ? currentWorld().enemyEmoji : '🦇';
+      drawEmoji(emoji, x, y-20*scale, 26+34*scale);
+      if(e.type==='ground'){
+        ctx.save(); ctx.globalAlpha=0.5;
+        drawEmoji('⬆️jump', x, y+18*scale, 9+6*scale);
+        ctx.restore();
+      } else {
+        ctx.save(); ctx.globalAlpha=0.5;
+        drawEmoji('⬇️slide', x, y+18*scale, 9+6*scale);
+        ctx.restore();
+      }
+    }
+  }
+}
+
+function drawPlayer(){
+  const x = laneX(S.lane,1);
+  let y = roadY(1) + S.jumpY;
+  const scale = 1.3;
+  ctx.save();
+  if(S.invuln>0 && Math.floor(S.runT*14)%2===0){ ctx.globalAlpha=0.35; }
+  if(S.isDashing){
+    ctx.shadowColor='#f4c95d'; ctx.shadowBlur=24;
+  }
+  // shadow
+  ctx.globalAlpha *= 0.5;
+  ctx.beginPath(); ctx.ellipse(x, roadY(1)+6, 26*scale*(S.isSliding?1.3:1), 8, 0,0,7);
+  ctx.fillStyle='#000'; ctx.fill();
+  ctx.globalAlpha = S.invuln>0 && Math.floor(S.runT*14)%2===0 ? 0.35:1;
+
+  const bob = Math.sin(S.runT*14)*4*(S.isJumping||S.isSliding?0:1);
+  let py = y-40*scale+bob;
+  if(S.isSliding) py += 16;
+  drawEmoji('🦸', x, py, S.isSliding? 40:52);
+  ctx.font='22px sans-serif'; ctx.textAlign='center';
+  ctx.fillText(S.isDashing?'💨':'', x-28, py+6);
+  ctx.restore();
+}
+
+function render(){
+  ctx.clearRect(0,0,W,H);
+  if(S.screen==='playing' || S.screen==='paused' || S.boss.active){
+    drawBackground();
+    drawEntities();
+    drawPlayer();
+  } else {
+    // subtle ambient bg for menus
+    const g = ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,'#160c28'); g.addColorStop(1,'#05030c');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  }
+}
+
+/* ================= MAIN LOOP ================= */
+function loop(now){
+  const dt = Math.min(0.033, (now-lastTime)/1000);
+  lastTime = now;
+  if(S.screen==='playing') update(dt);
+  render();
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* ================= WORLD MAP / JOURNAL RENDER ================= */
+function renderWorldGrid(){
+  const grid = $('worldGrid'); grid.innerHTML='';
+  WORLDS.forEach((w,i)=>{
+    const card = document.createElement('div');
+    const locked = i+1 > S.unlocked;
+    const done = i+1 < S.unlocked;
+    card.className = 'worldCard'+(locked?' locked':'')+(done?' done':'');
+    card.style.background = 'linear-gradient(160deg,'+w.sky[1]+'cc,'+w.sky[0]+'ee)';
+    card.style.borderColor = w.roadLine+'88';
+    card.innerHTML = '<div class="we">'+w.emoji+'</div><div class="wn hindi">'+w.nameHi+'<span class="eng">'+w.nameEn+'</span></div>';
+    if(!locked){
+      card.addEventListener('click', ()=>{ startWorld(i); });
+    }
+    grid.appendChild(card);
+  });
+}
+function renderJournal(){
+  const list = $('journalList'); list.innerHTML='';
+  if(S.journal.size===0){
+    list.innerHTML = '<div class="subtitle">अभी तक कोई शब्द नहीं / No words collected yet</div>';
+    return;
+  }
+  Array.from(S.journal.values()).forEach(word=>{
+    const d = document.createElement('div'); d.className='jItem';
+    d.innerHTML = '<b>'+word.en+'</b><span>'+word.hi+' · '+word.pron+'</span>';
+    list.appendChild(d);
+  });
+}
+
+/* ================= MUTE ================= */
+function refreshMuteLabels(){
+  const m = AudioEng.isMuted();
+  const hi = m? '🔇 ध्वनि बंद':'🔊 ध्वनि चालू';
+  const en = m? 'Sound Off':'Sound On';
+  $('muteLabelHi').textContent = hi; $('muteLabelEn').textContent = en;
+  $('muteLabelHi2').textContent = hi; $('muteLabelEn2').textContent = en;
+}
+function toggleMute(){ AudioEng.setMuted(!AudioEng.isMuted()); refreshMuteLabels(); }
+$('muteBtnMenu').addEventListener('click', toggleMute);
+$('muteBtnPause').addEventListener('click', toggleMute);
+refreshMuteLabels();
+
+/* ================= NAV BUTTONS ================= */
+$('startBtn').addEventListener('click', ()=>{ AudioEng.unlock(); startWorld(S.unlocked-1); });
+$('mapBtn').addEventListener('click', ()=>{ renderWorldGrid(); setScreen('map'); });
+$('mapBackBtn').addEventListener('click', ()=> setScreen('menu'));
+$('journalBtn').addEventListener('click', ()=>{ renderJournal(); setScreen('journal'); });
+$('journalBackBtn').addEventListener('click', ()=> setScreen('menu'));
+$('journalBtnPause').addEventListener('click', ()=>{ renderJournal(); setScreen('journal'); });
+$('storyGoBtn').addEventListener('click', ()=>{ AudioEng.unlock(); beginRunning(); });
+$('quitBtn').addEventListener('click', ()=> setScreen('menu'));
+$('completeMapBtn').addEventListener('click', ()=>{ renderWorldGrid(); setScreen('map'); });
+$('nextWorldBtn').addEventListener('click', ()=>{
+  const next = Math.min(WORLDS.length-1, S.worldIndex+1);
+  startWorld(next);
+});
+$('retryBtn').addEventListener('click', ()=> startWorld(S.worldIndex));
+$('gameOverMenuBtn').addEventListener('click', ()=> setScreen('menu'));
+
+/* init */
+updateHud();
+setScreen('menu');
+
+})();
+</script>
+</body>
+</html>

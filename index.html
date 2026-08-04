@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hitarthi Arcade — Team Games</title>
+<meta name="description" content="A growing arcade of small browser games built by the Hitarthi team. A new game every week — play free, no install.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%95%B9%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05030c;
+    --panel:#1c1136;
+    --panel-2:#241645;
+    --gold:#f4c95d;
+    --gold-deep:#c9932e;
+    --magic:#8b6bff;
+    --teal:#39d6c4;
+    --text:#f4ecff;
+    --text-dim:#c4b8e6;
+    --text-dim-2:#9184b8;
+    --ease:cubic-bezier(.22,1,.36,1);
+    --px:'Press Start 2P', monospace;
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:'Trebuchet MS','Segoe UI',Verdana,sans-serif;
+    overflow-x:hidden; -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit; text-decoration:none;}
+  ::selection{background:var(--magic); color:#fff;}
+
+  /* ---------- ambient background ---------- */
+  .bg-glow{
+    position:fixed; inset:0; z-index:-2; pointer-events:none;
+    background:
+      radial-gradient(600px 500px at 12% -5%, #8b6bff33, transparent 60%),
+      radial-gradient(700px 600px at 90% 10%, #39d6c422, transparent 60%),
+      radial-gradient(800px 700px at 50% 100%, #f4c95d1a, transparent 60%),
+      var(--bg);
+  }
+  .bg-stars{
+    position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.5;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20px 30px, #ffffff88, transparent),
+      radial-gradient(1.5px 1.5px at 120px 90px, #ffffff66, transparent),
+      radial-gradient(1px 1px at 200px 40px, #ffffff77, transparent),
+      radial-gradient(1.5px 1.5px at 300px 140px, #ffffff55, transparent),
+      radial-gradient(1px 1px at 400px 60px, #ffffff66, transparent),
+      radial-gradient(1.5px 1.5px at 480px 180px, #ffffff55, transparent);
+    background-repeat:repeat; background-size:520px 220px;
+    animation:starDrift 90s linear infinite;
+  }
+  @keyframes starDrift{from{background-position:0 0;} to{background-position:-1040px 220px;}}
+
+  .container{width:100%; max-width:1080px; margin:0 auto; padding:0 24px;}
+
+  /* ---------- marquee header ---------- */
+  .marquee{padding:72px 0 40px; text-align:center;}
+  .marquee .coin{
+    font-family:var(--px); font-size:.6rem; color:var(--teal); letter-spacing:2px;
+    animation:blink 1.6s steps(2) infinite;
+  }
+  @keyframes blink{50%{opacity:.25;}}
+  .marquee h1{
+    font-family:var(--px); font-size:clamp(1.15rem, 4.5vw, 2.1rem);
+    color:var(--gold); margin:22px 0 18px; line-height:1.5;
+    text-shadow:0 0 18px #f4c95d66, 0 0 50px #8b6bff55;
+  }
+  .marquee .tagline{
+    color:var(--text-dim); font-size:1rem; margin:0 auto; max-width:520px; line-height:1.6;
+  }
+  .marquee .tagline .hi{color:var(--teal); font-weight:700;}
+  .marquee .count{
+    display:inline-flex; align-items:center; gap:8px; margin-top:22px;
+    font-family:var(--px); font-size:.55rem; color:var(--text-dim);
+    background:rgba(28,17,54,.7); border:1px solid rgba(139,107,255,.4);
+    border-radius:20px; padding:9px 16px; letter-spacing:1px;
+  }
+  .marquee .count b{color:var(--gold);}
+
+  /* ---------- featured cabinet ---------- */
+  .featured{
+    display:grid; grid-template-columns:0.9fr 1.1fr; gap:0; overflow:hidden;
+    background:linear-gradient(160deg,rgba(36,22,69,.85),rgba(10,6,22,.92));
+    border:1.5px solid rgba(244,201,93,.45); border-radius:26px;
+    box-shadow:0 20px 60px rgba(0,0,0,.55), 0 0 60px #8b6bff22;
+    margin-bottom:56px;
+  }
+  .featured-screen{
+    position:relative; min-height:290px; display:flex; align-items:center; justify-content:center;
+    background:
+      radial-gradient(ellipse at 50% 20%, #8b6bff44, transparent 60%),
+      linear-gradient(180deg,#160c28,#241645);
+    border-right:1.5px solid rgba(244,201,93,.25);
+  }
+  .featured-screen::after{ /* scanlines */
+    content:''; position:absolute; inset:0; pointer-events:none; opacity:.5;
+    background:repeating-linear-gradient(0deg, transparent 0 3px, #00000033 3px 4px);
+  }
+  .featured-screen .big-emoji{
+    font-size:clamp(4.5rem, 10vw, 7rem);
+    filter:drop-shadow(0 10px 24px #000c) drop-shadow(0 0 30px #f4c95d44);
+    animation:bob 2.4s ease-in-out infinite;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0);} 50%{transform:translateY(-12px);}}
+  .featured-info{padding:36px 34px 34px;}
+  .badge-now{
+    display:inline-block; font-family:var(--px); font-size:.55rem; letter-spacing:1.5px;
+    color:#1a0f33; background:linear-gradient(90deg,var(--gold),#ffe9a8);
+    border-radius:8px; padding:7px 12px; margin-bottom:16px;
+    box-shadow:0 0 20px #f4c95d55;
+  }
+  .featured-info h2{font-size:clamp(1.4rem,3vw,1.9rem); margin:0 0 4px; font-weight:800; line-height:1.25;}
+  .featured-info .hindi-title{color:var(--gold); font-weight:800; font-size:.95rem; margin-bottom:14px;}
+  .featured-info p.desc{color:var(--text-dim); line-height:1.65; font-size:.98rem; margin:0 0 20px;}
+  .meta-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px;}
+  .chip{
+    font-size:.74rem; font-weight:700; color:var(--text-dim);
+    background:rgba(28,17,54,.8); border:1px solid rgba(139,107,255,.35);
+    border-radius:20px; padding:5px 12px;
+  }
+  .chip.date{color:var(--teal); border-color:rgba(57,214,196,.4);}
+
+  .btn-play{
+    display:inline-flex; flex-direction:column; align-items:center; gap:3px;
+    font-family:var(--px); font-size:.72rem; color:#1a0f33; cursor:pointer;
+    background:linear-gradient(180deg,#ffe9a8,var(--gold) 55%,var(--gold-deep));
+    border:none; border-radius:14px; padding:16px 30px;
+    box-shadow:0 4px 0 #8a611c, 0 10px 24px #f4c95d33;
+    transition:transform .15s var(--ease), box-shadow .2s var(--ease);
+  }
+  .btn-play small{font-family:'Trebuchet MS','Segoe UI',sans-serif; font-size:.72rem; font-weight:700; color:#3c2a12; opacity:.85;}
+  .btn-play:hover{transform:translateY(-2px); box-shadow:0 4px 0 #8a611c, 0 14px 30px #f4c95d55;}
+  .btn-play:active{transform:translateY(2px); box-shadow:0 1px 0 #8a611c, 0 4px 10px #0006;}
+
+  /* ---------- section label ---------- */
+  .shelf-label{
+    display:flex; align-items:center; gap:14px; margin:0 0 22px;
+    font-family:var(--px); font-size:.62rem; color:var(--text-dim); letter-spacing:2px;
+  }
+  .shelf-label::after{content:''; flex:1; height:1px; background:linear-gradient(90deg,rgba(139,107,255,.5),transparent);}
+
+  /* ---------- cabinet grid ---------- */
+  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:80px;}
+  .cab{
+    display:flex; flex-direction:column; overflow:hidden; position:relative;
+    background:linear-gradient(160deg,rgba(36,22,69,.75),rgba(22,12,40,.88));
+    border:1px solid rgba(139,107,255,.3); border-radius:18px;
+    transition:transform .3s var(--ease), border-color .3s, box-shadow .3s;
+  }
+  .cab:hover{transform:translateY(-6px); border-color:rgba(244,201,93,.55); box-shadow:0 16px 40px rgba(0,0,0,.45), 0 0 30px #8b6bff22;}
+  .cab:focus-within{border-color:var(--gold);}
+  .cab-screen{
+    position:relative; height:130px; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(ellipse at 50% 30%, #8b6bff33, transparent 65%), linear-gradient(180deg,#160c28,#1c1136);
+    border-bottom:1px solid rgba(139,107,255,.25);
+  }
+  .cab-screen::after{
+    content:''; position:absolute; inset:0; opacity:.45; pointer-events:none;
+    background:repeating-linear-gradient(0deg, transparent 0 3px, #00000030 3px 4px);
+  }
+  .cab-screen .emoji{font-size:3rem; filter:drop-shadow(0 6px 14px #000b); transition:transform .3s var(--ease);}
+  .cab:hover .cab-screen .emoji{transform:scale(1.15);}
+  .cab-press{
+    position:absolute; bottom:8px; left:0; right:0; text-align:center;
+    font-family:var(--px); font-size:.5rem; color:var(--gold); letter-spacing:1.5px;
+    opacity:0; transition:opacity .25s;
+  }
+  .cab:hover .cab-press{opacity:1; animation:blink 1s steps(2) infinite;}
+  .cab-body{padding:16px 18px 18px; display:flex; flex-direction:column; gap:8px; flex:1;}
+  .cab-body h3{margin:0; font-size:1.02rem; font-weight:800; line-height:1.3;}
+  .cab-body .hindi-title{color:var(--gold); font-size:.8rem; font-weight:800;}
+  .cab-body p{margin:0; color:var(--text-dim); font-size:.85rem; line-height:1.5; flex:1;}
+  .cab-foot{display:flex; align-items:center; justify-content:space-between; margin-top:6px;}
+  .cab-foot .chip{font-size:.68rem; padding:4px 10px;}
+  .cab-foot .play-link{
+    font-family:var(--px); font-size:.55rem; color:var(--gold); letter-spacing:1px;
+    border:1px solid rgba(244,201,93,.5); border-radius:10px; padding:8px 12px;
+    transition:background .2s, color .2s;
+  }
+  .cab-foot .play-link:hover{background:var(--gold); color:#1a0f33;}
+  .cab > a.cab-cover{position:absolute; inset:0; z-index:1;}
+  .cab .cab-foot .play-link{position:relative; z-index:2;}
+
+  /* coming-soon slot */
+  .cab.soon{
+    border:1.5px dashed rgba(139,107,255,.4); background:rgba(28,17,54,.35);
+    align-items:center; justify-content:center; text-align:center; min-height:280px; gap:10px;
+  }
+  .cab.soon:hover{transform:none; box-shadow:none; border-color:rgba(139,107,255,.6);}
+  .cab.soon .emoji{font-size:2.6rem; opacity:.75;}
+  .cab.soon .soon-en{font-family:var(--px); font-size:.6rem; color:var(--text-dim); letter-spacing:1px; line-height:1.9;}
+  .cab.soon .soon-hi{color:var(--text-dim-2); font-size:.85rem; font-weight:700;}
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top:1px solid rgba(139,107,255,.18); padding:30px 0 40px; text-align:center;
+    color:var(--text-dim-2); font-size:.82rem;
+  }
+  footer .px{font-family:var(--px); font-size:.5rem; letter-spacing:1.5px; color:var(--text-dim); display:block; margin-bottom:10px;}
+
+  a:focus-visible, button:focus-visible{outline:2px solid var(--teal); outline-offset:3px; border-radius:6px;}
+
+  @media (max-width:860px){
+    .featured{grid-template-columns:1fr;}
+    .featured-screen{min-height:200px; border-right:none; border-bottom:1.5px solid rgba(244,201,93,.25);}
+    .grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:560px){
+    .marquee{padding:52px 0 32px;}
+    .grid{grid-template-columns:1fr;}
+    .featured-info{padding:26px 22px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+  }
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="bg-stars"></div>
+
+<header class="marquee container">
+  <div class="coin">◆ INSERT COIN ◆</div>
+  <h1>HITARTHI<br>ARCADE</h1>
+  <p class="tagline">
+    Small browser games built by the team — play free, right here, no install.<br>
+    <span class="hi">हर हफ्ते एक नया खेल · A new game every week</span>
+  </p>
+  <div class="count">🕹️ <span><b id="gameCount">0</b> GAME(S) LIVE</span></div>
+</header>
+
+<main class="container">
+  <section id="featuredSlot" aria-label="Newest game"></section>
+
+  <h2 class="shelf-label">ALL GAMES</h2>
+  <section class="grid" id="gridSlot" aria-label="All games"></section>
+</main>
+
+<footer>
+  <span class="px">GAME OVER? PLAY AGAIN.</span>
+  Made with ❤️ by the Hitarthi team · © <span id="year"></span>
+</footer>
+
+<script>
+/* =====================================================================
+   ADD NEW GAMES HERE — one object per game, newest date shows on top.
+   Steps for a new game:
+     1. Copy the game's folder into this repo (e.g. "snake-dash/").
+     2. Add one entry below with its folder path.
+     3. Commit + push. Done — it appears on the site in ~1 minute.
+   ===================================================================== */
+const GAMES = [
+  {
+    title: "Word Runner: The Lost Kingdom",
+    hindi: "शब्द धावक: खोया हुआ जादुई राज्य",
+    emoji: "🏃",
+    path: "word-runner/",
+    desc: "A bilingual (Hindi + English) endless runner — collect real vocabulary, dodge obstacles, and beat boss word-quizzes across six magical worlds.",
+    added: "2026-08-04",
+    tags: ["runner", "bilingual", "learning"]
+  }
+];
+/* ===================================================================== */
+
+function fmtDate(iso){
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"});
+}
+
+const sorted = [...GAMES].sort((a,b)=> b.added.localeCompare(a.added));
+document.getElementById("gameCount").textContent = sorted.length;
+document.getElementById("year").textContent = new Date().getFullYear();
+
+/* featured = newest game */
+const f = sorted[0];
+if (f){
+  document.getElementById("featuredSlot").innerHTML = `
+  <article class="featured">
+    <div class="featured-screen"><span class="big-emoji">${f.emoji}</span></div>
+    <div class="featured-info">
+      <span class="badge-now">★ NOW PLAYING</span>
+      <h2>${f.title}</h2>
+      ${f.hindi ? `<div class="hindi-title">${f.hindi}</div>` : ""}
+      <p class="desc">${f.desc}</p>
+      <div class="meta-row">
+        <span class="chip date">Added ${fmtDate(f.added)}</span>
+        ${(f.tags||[]).map(t=>`<span class="chip">${t}</span>`).join("")}
+      </div>
+      <a class="btn-play" href="${f.path}">▶ PLAY NOW <small>अभी खेलें</small></a>
+    </div>
+  </article>`;
+}
+
+/* grid = every game + a coming-soon slot */
+const grid = document.getElementById("gridSlot");
+grid.innerHTML = sorted.map(g => `
+  <article class="cab">
+    <a class="cab-cover" href="${g.path}" aria-label="Play ${g.title}"></a>
+    <div class="cab-screen">
+      <span class="emoji">${g.emoji}</span>
+      <span class="cab-press">▶ PRESS START</span>
+    </div>
+    <div class="cab-body">
+      <h3>${g.title}</h3>
+      ${g.hindi ? `<div class="hindi-title">${g.hindi}</div>` : ""}
+      <p>${g.desc}</p>
+      <div class="cab-foot">
+        <span class="chip date">${fmtDate(g.added)}</span>
+        <a class="play-link" href="${g.path}">PLAY</a>
+      </div>
+    </div>
+  </article>`).join("") + `
+  <article class="cab soon" aria-label="Next game coming soon">
+    <span class="emoji">🕹️</span>
+    <span class="soon-en">NEXT CABINET<br>ARRIVING SOON</span>
+    <span class="soon-hi">नया खेल जल्द आ रहा है</span>
+  </article>`;
+</script>
+</body>
+</html>
