@@ -636,7 +636,10 @@
     .featured-card::after{display:none}
     body::before{left:14px}
   }
-  @media (max-width:400px){
+  /* The compact header fits on one line down to ~340px, so switch to it well
+     before the full-size one would run out of room (~425px) — otherwise the
+     412px Android widths wrap to two lines. */
+  @media (max-width:430px){
     .wordmark .brand{font-size:1.1rem}
     .wordmark .arcade{font-size:1.05rem}
     .wordmark .logo{width:32px;height:32px}
