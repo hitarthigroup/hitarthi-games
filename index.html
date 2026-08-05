@@ -63,8 +63,10 @@
     --cs-bg:rgba(241,245,249,.55);
     --tape-amber:rgba(245,158,11,.28);
     --tape-blue:rgba(59,130,246,.18);
+    /* button fill deliberately keeps the same value in dark mode, and hover
+       darkens rather than brightens — white text needs 4.5:1 in both states */
     --btn-bg:#2563eb;
-    --btn-bg-hover:#3b82f6;
+    --btn-bg-hover:#1d4ed8;
     --shadow-soft:0 10px 24px rgba(15,23,41,.06);
   }
   /* dark mode: the classroom chalkboard — chalk lines, glowing stickers */
@@ -162,7 +164,10 @@
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:1rem;
+    /* wraps instead of pushing the page sideways on very narrow screens
+       or when the reader has enlarged their default font size */
+    flex-wrap:wrap;
+    gap:.4rem 1rem;
     padding:.85rem 0;
   }
   .wordmark{
@@ -228,7 +233,6 @@
     font-weight:600;
     color:var(--teal);
     text-decoration:none;
-    white-space:nowrap;
   }
   .header-link:hover{text-decoration:underline}
 
@@ -293,6 +297,7 @@
   .chip{
     display:inline-flex;
     align-items:center;
+    flex-wrap:wrap;
     gap:.5em;
     background:var(--chip-bg);
     border:1.5px solid var(--border);
@@ -687,7 +692,7 @@
       Bas kholo, khelo, aur seekhte jao.
     </p>
     <div class="chip-row">
-      <span class="chip chip-amber">🎮 <strong id="live-count">…</strong>&nbsp;· sab free, sab yahin</span>
+      <span class="chip chip-amber">🎮 <span><strong id="live-count">…</strong> · sab free, sab yahin</span></span>
       <span class="chip">📅 हर हफ्ते एक नया खेल · A new game every week</span>
     </div>
   </section>
@@ -746,6 +751,16 @@ const GAMES = [
 (function () {
   "use strict";
 
+  /* Dates must be a quoted, zero-padded "YYYY-MM-DD". A bare 2026-8-11 (or an
+     unquoted 2026-08-11, which JavaScript reads as a number) would otherwise
+     sort wrongly and silently steal the featured slot from a newer game. */
+  var DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+  function addedTime(value) {
+    if (typeof value !== "string" || !DATE_RE.test(value)) return NaN;
+    return new Date(value + "T00:00:00").getTime();
+  }
+
   /* The list above lives in its own <script> on purpose. If it ever has a typo
      (a missing comma is the classic one) that block fails to parse and GAMES
      never exists — but this block still runs, so the page explains itself
@@ -760,9 +775,22 @@ const GAMES = [
                     typeof g.path === "string" && g.path;
       if (!ok) skipped++;
       return ok;
+    }).map(function (g) {
+      var time = addedTime(g.added);
+      if (isNaN(time)) {
+        console.warn('Hitarthi Arcade: "' + g.title + '" has an unreadable "added" date (' +
+          JSON.stringify(g.added) + '). Write it quoted and zero-padded, like "2026-08-11".' +
+          ' Until then it is listed last and shows no date.');
+      }
+      return { game: g, time: time };
     }).sort(function (a, b) {
-      return String(b.added || "").localeCompare(String(a.added || "")) ||
-             a.title.localeCompare(b.title);
+      var aBad = isNaN(a.time), bBad = isNaN(b.time);
+      /* anything with an unreadable date goes last, so it can never be featured */
+      if (aBad !== bBad) return aBad ? 1 : -1;
+      if (!aBad && a.time !== b.time) return b.time - a.time;
+      return a.game.title.localeCompare(b.game.title);
+    }).map(function (entry) {
+      return entry.game;
     });
     if (skipped) {
       console.warn("Hitarthi Arcade: skipped " + skipped +
@@ -771,10 +799,10 @@ const GAMES = [
   }
 
   function formatDate(iso) {
-    if (!iso) return null;
-    var d = new Date(iso + "T00:00:00");
-    if (isNaN(d.getTime())) return null;
-    return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+    var t = addedTime(iso);
+    if (isNaN(t)) return null;
+    return new Date(t).toLocaleDateString("en-IN",
+      { day: "numeric", month: "short", year: "numeric" });
   }
 
   function el(tag, className, text) {

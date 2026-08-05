@@ -26,6 +26,10 @@
     --ink-muted:#5b6474;
     --blue:#2563eb;
     --blue-bright:#3b82f6;
+    /* button fill is its own token, deliberately NOT lightened in dark mode —
+       white label on the lightened blue would fall below WCAG AA */
+    --btn-bg:#2563eb;
+    --btn-bg-hover:#1d4ed8;
     --amber:#f59e0b;
     --teal:#1e6b5e;
     --border:#e2e8f0;
@@ -109,12 +113,12 @@
   p.note{margin-top:.9rem;color:var(--ink-body);font-size:.95rem}
   .btn{
     display:inline-block;margin-top:1.5rem;
-    background:var(--blue);color:#fff;font-weight:700;font-size:.95rem;
+    background:var(--btn-bg);color:#fff;font-weight:700;font-size:.95rem;
     text-decoration:none;border-radius:999px;padding:.7em 1.6em;
     box-shadow:0 4px 12px rgba(37,99,235,.3);
     transition:background .2s ease,transform .2s ease;
   }
-  .btn:hover{background:var(--blue-bright);transform:translateY(-2px)}
+  .btn:hover{background:var(--btn-bg-hover);transform:translateY(-2px)}
   .btn:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
   @media (prefers-reduced-motion: reduce){
     *{transition:none !important}
