@@ -5,6 +5,26 @@
 <!-- Hitarthi Arcade homepage — "Recess / Classroom": a notebook page where every game is a sticker pinned up at recess. Dark mode = the classroom chalkboard. -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hitarthi Arcade — Team Games</title>
+<meta name="description" content="Free browser games built by the Hitarthi team. हर हफ्ते एक नया खेल — a new game every week. No install, no login, just play.">
+<link rel="canonical" href="https://hitarthigroup.github.io/hitarthi-games/">
+
+<!-- Link preview (WhatsApp, Slack, LinkedIn, X) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hitarthi Arcade">
+<meta property="og:title" content="Hitarthi Arcade — free games by the Hitarthi team">
+<meta property="og:description" content="हर हफ्ते एक नया खेल · A new game every week. No install, no login — bas kholo aur khelo.">
+<meta property="og:url" content="https://hitarthigroup.github.io/hitarthi-games/">
+<meta property="og:image" content="https://hitarthigroup.github.io/hitarthi-games/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hitarthi Arcade — free browser games built by the Hitarthi team">
+<meta property="og:locale" content="en_IN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hitarthi Arcade — free games by the Hitarthi team">
+<meta name="twitter:description" content="हर हफ्ते एक नया खेल · A new game every week. No install, no login — bas kholo aur khelo.">
+<meta name="twitter:image" content="https://hitarthigroup.github.io/hitarthi-games/assets/og-image.png">
+<meta name="theme-color" content="#ffffff">
+
 <script>
 /* set theme before first paint to avoid a flash: saved choice, else light */
 (function () {
@@ -532,6 +552,26 @@
   .sticker-card .tag-list{margin-top:.7rem}
   .sticker-card .tag-list li{font-size:.7rem}
 
+  /* shown only when the games list can't be read */
+  .list-error{
+    border:2px dashed rgba(245,158,11,.6);
+    border-radius:1.25rem;
+    background:var(--cs-bg);
+    padding:1.75rem 1.5rem;
+    text-align:center;
+  }
+  .list-error .le-hi{
+    font-family:"Kalam",cursive;
+    font-weight:700;
+    font-size:1.2rem;
+    color:var(--ink);
+  }
+  .list-error .le-en{
+    margin-top:.4rem;
+    font-size:.9rem;
+    color:var(--ink-muted);
+  }
+
   /* coming-soon sticker */
   .coming-soon{
     display:flex;
@@ -699,16 +739,41 @@ const GAMES = [
     tags: ["runner", "bilingual", "learning"]
   }
 ];
+</script>
 
+<!-- Rendering. You don't need to edit anything below this line. -->
+<script>
 (function () {
   "use strict";
 
-  var games = GAMES.slice().sort(function (a, b) {
-    return b.added.localeCompare(a.added) || a.title.localeCompare(b.title);
-  });
+  /* The list above lives in its own <script> on purpose. If it ever has a typo
+     (a missing comma is the classic one) that block fails to parse and GAMES
+     never exists — but this block still runs, so the page explains itself
+     instead of going blank. */
+  var source = (typeof GAMES !== "undefined" && Array.isArray(GAMES)) ? GAMES : null;
+
+  var games = [];
+  if (source) {
+    var skipped = 0;
+    games = source.filter(function (g) {
+      var ok = g && typeof g.title === "string" && g.title &&
+                    typeof g.path === "string" && g.path;
+      if (!ok) skipped++;
+      return ok;
+    }).sort(function (a, b) {
+      return String(b.added || "").localeCompare(String(a.added || "")) ||
+             a.title.localeCompare(b.title);
+    });
+    if (skipped) {
+      console.warn("Hitarthi Arcade: skipped " + skipped +
+        " game entry/entries — each one needs a title and a path.");
+    }
+  }
 
   function formatDate(iso) {
+    if (!iso) return null;
     var d = new Date(iso + "T00:00:00");
+    if (isNaN(d.getTime())) return null;
     return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
   }
 
@@ -728,10 +793,30 @@ const GAMES = [
   }
 
   function buildTime(iso) {
+    var pretty = formatDate(iso);
+    if (!pretty) return null;
     var time = document.createElement("time");
     time.dateTime = iso;
-    time.textContent = "Added " + formatDate(iso);
+    time.textContent = "Added " + pretty;
     return time;
+  }
+
+  /* Shown only if the games list can't be read or rendered. */
+  function showListError() {
+    var slot = document.getElementById("featured-slot");
+    if (slot) {
+      slot.innerHTML = "";
+      var box = el("div", "list-error");
+      box.appendChild(el("p", "le-hi", "अभी games की list नहीं खुल पा रही।"));
+      box.appendChild(el("p", "le-en",
+        "We couldn't load the games list. Please refresh the page — thodi der baad" +
+        " sab theek ho jayega."));
+      slot.appendChild(box);
+    }
+    var live = document.getElementById("live-count");
+    if (live) live.textContent = "games loading";
+    var shelf = document.getElementById("shelf-count");
+    if (shelf) shelf.textContent = "list unavailable right now";
   }
 
   /* ---- Featured (newest) ---- */
@@ -760,7 +845,8 @@ const GAMES = [
     body.appendChild(buildTags(game.tags));
 
     var foot = el("div", "f-foot");
-    foot.appendChild(buildTime(game.added));
+    var fTime = buildTime(game.added);
+    if (fTime) foot.appendChild(fTime);
     var play = el("a", "btn-play", "खेलो · Play now →");
     play.href = game.path;
     foot.appendChild(play);
@@ -801,7 +887,8 @@ const GAMES = [
       card.appendChild(buildTags(game.tags));
 
       var meta = el("div", "card-meta");
-      meta.appendChild(buildTime(game.added));
+      var cTime = buildTime(game.added);
+      if (cTime) meta.appendChild(cTime);
       meta.appendChild(el("span", "play-hint", "Play →"));
       card.appendChild(meta);
 
@@ -820,11 +907,23 @@ const GAMES = [
       n + " " + (n === 1 ? "sticker" : "stickers") + " on the board — aur aate rahenge";
   }
 
-  if (games.length > 0) {
-    renderFeatured(games[0]);
-    renderShelf(games);
+  if (!source) {
+    console.error("Hitarthi Arcade: the GAMES list didn't load. Check the block" +
+      " above for a missing comma or bracket.");
+    showListError();
+  } else {
+    try {
+      if (games.length > 0) {
+        renderFeatured(games[0]);
+        renderShelf(games);
+      }
+      renderCounts(games.length);
+    } catch (err) {
+      console.error("Hitarthi Arcade: could not render the games.", err);
+      showListError();
+    }
   }
-  renderCounts(games.length);
+
   document.getElementById("year").textContent = new Date().getFullYear();
 
   /* ---- Dark mode toggle (lights on / lights off) ---- */
