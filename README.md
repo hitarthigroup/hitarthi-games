@@ -21,8 +21,10 @@ Small browser games built by the Hitarthi team. Pure HTML/CSS/JS — no backend,
    full-screen play surface where it would cover the controls (put it on the page
    the arcade links to instead).
 
-3. Open `index.html` (the gallery page at the repo root) and add one entry to the
-   `GAMES` list near the bottom:
+3. Open `index.html` (the gallery page at the repo root) and add one entry **at
+   the top of the `GAMES` list**. The newest date is featured; when two games
+   share the same date, the one higher in the list wins — so adding at the top
+   always puts the new game in the spotlight:
 
    ```js
    {

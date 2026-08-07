@@ -740,6 +740,15 @@
    ===================================================================== */
 const GAMES = [
   {
+    title: "Prefix Master",
+    hindi: "अंग्रेज़ी Prefix सीखें खेल-खेल में",
+    emoji: "🧩",
+    path: "prefix-master/",
+    desc: "Build English words with prefixes — 112 words across 8 levels, 8 game modes with Hindi hints, a daily challenge, and automatic review of the words you get wrong.",
+    added: "2026-08-07",
+    tags: ["prefixes", "bilingual", "learning"]
+  },
+  {
     title: "English Master",
     hindi: "अंग्रेज़ी सीखिए — अपनी भाषा में",
     emoji: "🔤",
@@ -802,7 +811,9 @@ const GAMES = [
       /* anything with an unreadable date goes last, so it can never be featured */
       if (aBad !== bBad) return aBad ? 1 : -1;
       if (!aBad && a.time !== b.time) return b.time - a.time;
-      return a.game.title.localeCompare(b.game.title);
+      /* same date: keep list order — new entries are added at the top, so the
+         newest of several same-day games still takes the featured slot */
+      return 0;
     }).map(function (entry) {
       return entry.game;
     });

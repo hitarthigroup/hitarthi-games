@@ -1,0 +1,2612 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B2545">
+<meta name="description" content="Hitarthi Prefix Master — learn English prefixes through an interactive bilingual game.">
+<title>Hitarthi Prefix Master</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   styles.css — Hitarthi Prefix Master
+   Deep navy · white · orange accent · soft green · soft red.
+   Premium, professional, mobile-first. No cartoon styling.
+   ========================================================================== */
+
+:root{
+  --navy-900:#071A33;
+  --navy-800:#0B2545;
+  --navy-700:#123563;
+  --navy-600:#1B4A85;
+  --orange:#FF7A1A;
+  --orange-deep:#E4650B;
+  --orange-soft:#FFF1E5;
+  --green:#2FBF71;
+  --green-soft:#E7F8EF;
+  --red:#E5484D;
+  --red-soft:#FDECEC;
+
+  --bg:#F2F6FC;
+  --surface:#FFFFFF;
+  --surface-2:#F7FAFD;
+  --text:#0B2545;
+  --text-2:#3D557A;
+  --muted:#5F7799;
+  --line:#E2E9F4;
+
+  --shadow:0 10px 30px rgba(11,37,69,.08);
+  --shadow-lg:0 20px 46px rgba(11,37,69,.16);
+  --r:18px; --r-sm:12px; --r-lg:26px;
+  --ease:cubic-bezier(.22,.85,.3,1);
+  --font:"Manrope","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-hi:"Noto Sans Devanagari","Nirmala UI","Mangal",sans-serif;
+}
+html[data-theme="dark"]{
+  --bg:#050F1E; --surface:#0C2340; --surface-2:#0A1C33;
+  --text:#E9F1FB; --text-2:#B9CBE4; --muted:#8AA3C2; --line:#17385E;
+  --orange-soft:#3A2210; --green-soft:#0E3324; --red-soft:#3A1618;
+  --shadow:0 10px 30px rgba(0,0,0,.40); --shadow-lg:0 20px 46px rgba(0,0,0,.55);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font); background:var(--bg); color:var(--text);
+  line-height:1.55; min-height:100vh; overflow-x:hidden; -webkit-font-smoothing:antialiased;
+  padding-bottom:28px; transition:background .3s var(--ease),color .3s var(--ease);
+}
+button,input{font-family:inherit;font-size:inherit;color:inherit}
+button{border:0;background:none;cursor:pointer;text-align:left}
+button:disabled{cursor:default;opacity:.5}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px;border-radius:8px}
+.hi{font-family:var(--font-hi)}
+.dim{color:var(--muted)}
+.hidden{display:none !important}
+.wrap{width:100%;max-width:760px;margin:0 auto;padding:0 16px}
+
+/* ---------- appbar ---------- */
+.appbar{
+  position:sticky;top:0;z-index:40;
+  background:linear-gradient(135deg,var(--navy-800),var(--navy-600));
+  color:#fff;padding:calc(12px + env(safe-area-inset-top,0px)) 0 12px;
+  box-shadow:0 6px 24px rgba(7,26,51,.28);
+}
+.appbar .wrap{display:flex;align-items:center;gap:12px}
+.logo{
+  width:42px;height:42px;flex:none;border-radius:12px;
+  background:linear-gradient(140deg,var(--orange),#FFB067);
+  display:grid;place-items:center;font-weight:800;font-size:19px;color:#3A1B02;
+  box-shadow:0 6px 16px rgba(255,122,26,.40);
+}
+.brand{flex:1;min-width:0}
+.brand h1{font-size:16px;font-weight:800;letter-spacing:-.2px;line-height:1.2}
+.brand p{font-size:10.5px;opacity:.78;font-weight:500;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{
+  min-width:38px;height:38px;padding:0 10px;border-radius:11px;flex:none;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.15);color:#fff;font-size:13px;font-weight:700;
+  transition:background .2s var(--ease),transform .15s var(--ease);
+}
+.icon-btn:hover{background:rgba(255,255,255,.27)}
+.icon-btn:active{transform:scale(.92)}
+
+.screen{display:none;padding:18px 0 26px}
+.screen.is-on{display:block;animation:fadeUp .34s var(--ease)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.screen-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.screen-head h2{font-size:19px;font-weight:800;letter-spacing:-.3px}
+.back{
+  width:36px;height:36px;flex:none;border-radius:10px;background:var(--surface);
+  border:1px solid var(--line);display:grid;place-items:center;font-size:16px;color:var(--text);
+}
+.back:hover{border-color:var(--orange);color:var(--orange)}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+.eyebrow:first-child{margin-top:0}
+.card-title{display:block;font-size:14px;font-weight:800;margin-bottom:8px}
+.grow{flex:1;min-width:0}
+.note{font-size:12.5px;color:var(--muted)}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;overflow:hidden;color:#fff;margin-bottom:18px;
+  background:linear-gradient(140deg,var(--navy-800) 0%,var(--navy-600) 60%,#20599C 100%);
+  border-radius:var(--r-lg);padding:26px 22px;box-shadow:var(--shadow-lg);text-align:center;
+}
+.hero::after{
+  content:"";position:absolute;right:-40px;top:-50px;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,122,26,.5),transparent 70%);
+}
+.hero h2{position:relative;font-size:clamp(21px,5.5vw,28px);font-weight:800;letter-spacing:-.5px}
+.hero p{position:relative;font-size:13px;opacity:.88;margin-top:8px}
+
+.stat-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:18px}
+@media (max-width:520px){.stat-strip{grid-template-columns:repeat(3,1fr)}}
+.stat-mini{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:10px 5px;text-align:center}
+.stat-mini b{display:block;font-size:16px;font-weight:800}
+.stat-mini span{font-size:9px;font-weight:700;letter-spacing:.2px;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- tiles ---------- */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px 14px;box-shadow:var(--shadow);text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s var(--ease);
+}
+.tile:hover{transform:translateY(-3px);border-color:var(--orange);box-shadow:var(--shadow-lg)}
+.tile:active{transform:scale(.97)}
+.tile .ico{
+  display:grid;place-items:center;width:46px;height:46px;border-radius:14px;
+  font-size:21px;background:var(--orange-soft);color:var(--orange);
+}
+.tile.blue .ico{background:rgba(27,74,133,.12);color:var(--navy-600)}
+html[data-theme="dark"] .tile.blue .ico{background:rgba(120,180,255,.15);color:#8CC0FF}
+.tile.green .ico{background:var(--green-soft);color:var(--green)}
+.tile b{font-size:14px;font-weight:800;letter-spacing:-.1px}
+.tile small{font-size:11px;color:var(--muted)}
+
+/* ---------- level grid ---------- */
+.level-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.level-card{
+  position:relative;background:var(--surface);border:1.5px solid var(--line);border-radius:var(--r);
+  padding:18px 14px;text-align:left;box-shadow:var(--shadow);
+  transition:transform .2s var(--ease),border-color .2s var(--ease);
+}
+.level-card:hover:not(.locked){transform:translateY(-3px);border-color:var(--orange)}
+.level-card.locked{opacity:.55}
+.level-card.done{border-color:var(--green)}
+.level-card .num{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.level-card .title{font-size:17px;font-weight:800;margin-top:4px;letter-spacing:-.2px}
+.level-card .badge{
+  position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:8px;
+  display:grid;place-items:center;font-size:13px;background:var(--surface-2);color:var(--muted);
+}
+.level-card.done .badge{background:var(--green-soft);color:var(--green)}
+.level-card.locked .badge{background:var(--surface-2);color:var(--muted)}
+.level-card .lockline{font-size:10.5px;color:var(--muted);margin-top:8px}
+
+/* ---------- lesson ---------- */
+.lesson-intro{text-align:center}
+.lesson-body{font-size:14.5px;color:var(--text-2);margin-top:8px;line-height:1.6}
+.formula{
+  display:inline-block;margin-top:16px;padding:10px 20px;border-radius:12px;
+  background:var(--navy-800);color:#fff;font-weight:800;letter-spacing:.5px;font-size:15px;
+}
+.lesson-example{margin-top:16px;display:grid;gap:8px;text-align:left}
+.lex-row{display:flex;align-items:center;gap:10px;font-size:14px;flex-wrap:wrap;justify-content:center}
+.lex-row .tag{background:var(--orange-soft);color:var(--orange-deep);font-weight:800;padding:5px 11px;border-radius:8px}
+.lex-row .plus, .lex-row .eq{color:var(--muted);font-weight:700}
+
+.prefix-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-top:14px;box-shadow:var(--shadow)}
+.prefix-card .head{display:flex;align-items:baseline;gap:10px}
+.prefix-card .head b{font-size:20px;font-weight:800;color:var(--orange)}
+.prefix-card .head span{font-size:13px;color:var(--muted)}
+.prefix-card .words{display:grid;gap:8px;margin-top:12px}
+.pw-row{
+  display:grid;grid-template-columns:auto auto 1fr;gap:8px;align-items:center;
+  padding:9px 10px;border-radius:10px;background:var(--surface-2);font-size:13.5px;
+}
+.pw-row .arrow{color:var(--muted)}
+.pw-row .new{font-weight:800}
+.pw-row .meaning{color:var(--muted);font-size:12px;text-align:right}
+
+/* ---------- buttons & chips ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  background:var(--orange);color:#fff;font-weight:800;font-size:15px;text-align:center;
+  padding:14px 22px;border-radius:14px;box-shadow:0 8px 20px rgba(255,122,26,.28);
+  transition:transform .18s var(--ease),background .18s var(--ease);
+}
+.btn:hover{background:var(--orange-deep)}
+.btn:active{transform:scale(.97)}
+.btn.next{margin-top:16px}
+.btn.spaced{margin-top:16px}
+.btn.wide{margin-top:10px}
+.btn.ghost{background:transparent;color:var(--text);border:1.5px solid var(--line);box-shadow:none}
+.btn.ghost:hover{background:transparent;border-color:var(--orange);color:var(--orange)}
+.btn-row{display:flex;gap:10px;margin-top:16px}
+.btn-row .btn{flex:1;width:auto}
+
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;white-space:nowrap;background:var(--surface);border:1.5px solid var(--line);
+  color:var(--text-2);padding:8px 14px;border-radius:999px;font-size:12.5px;font-weight:700;
+  transition:background .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease);
+}
+.chip:hover:not(:disabled){border-color:var(--orange)}
+.chip.is-on{background:var(--navy-700);border-color:var(--navy-700);color:#fff}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);margin-top:14px}
+.card:first-child{margin-top:0}
+
+/* ---------- session ---------- */
+.progress{height:7px;border-radius:99px;background:var(--line);overflow:hidden;margin-bottom:18px}
+.progress span{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--orange),#FFB067);transition:width .5s var(--ease)}
+
+.wordstage{
+  position:relative;overflow:hidden;text-align:center;color:#fff;
+  background:linear-gradient(150deg,var(--navy-800),var(--navy-600));
+  border-radius:var(--r-lg);padding:32px 20px;box-shadow:var(--shadow-lg);
+}
+.wordstage::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 0%,rgba(255,122,26,.28),transparent 55%)}
+.wordstage .big{position:relative;font-size:clamp(28px,8.5vw,44px);font-weight:800;letter-spacing:-1px;word-break:break-word;line-height:1.1}
+.wordstage .sub{position:relative;font-size:13px;opacity:.85;margin-top:8px}
+.wordstage .prompt{position:relative;display:inline-block;margin-top:14px;font-size:13px;background:rgba(255,255,255,.15);padding:7px 14px;border-radius:999px}
+.wordstage .readhint{position:relative;font-size:13px;opacity:.92;margin-top:8px;background:rgba(255,255,255,.12);display:inline-block;padding:5px 12px;border-radius:999px}
+.wordstage .readhint b{font-weight:800;color:#FFD9AE}
+.wordstage .parts{position:relative;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;font-weight:800}
+.wordstage .parts .pfx{font-size:clamp(24px,7vw,34px);color:var(--orange);background:rgba(255,122,26,.18);padding:6px 14px;border-radius:12px}
+.wordstage .parts .plus{font-size:20px;opacity:.7}
+.wordstage .parts .base{font-size:clamp(24px,7vw,34px)}
+
+.options{display:grid;gap:10px;margin-top:16px}
+.opt{
+  display:flex;align-items:center;gap:12px;width:100%;
+  background:var(--surface);border:1.5px solid var(--line);border-radius:14px;
+  padding:14px 15px;font-size:15px;font-weight:600;
+  transition:transform .15s var(--ease),border-color .15s var(--ease),background .2s var(--ease);
+}
+.opt:hover:not(:disabled){transform:translateY(-2px);border-color:var(--orange)}
+.opt .k{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--surface-2);border:1px solid var(--line);font-size:12px;font-weight:800;color:var(--muted)}
+.opt.right{background:var(--green-soft);border-color:var(--green)}
+.opt.right .k{background:var(--green);border-color:var(--green);color:#fff}
+.opt.wrong{background:var(--red-soft);border-color:var(--red)}
+.opt.wrong .k{background:var(--red);border-color:var(--red);color:#fff}
+.opt.fade{opacity:.5}
+.opt.tried{opacity:.4;text-decoration:line-through}
+
+.hint-box{
+  margin-top:14px;padding:13px 15px;border-radius:14px;background:var(--orange-soft);
+  border:1px solid rgba(255,122,26,.35);font-size:13.5px;color:var(--orange-deep);font-weight:600;
+  animation:fadeUp .3s var(--ease);
+}
+
+.explain{margin-top:14px;padding:15px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);animation:fadeUp .3s var(--ease)}
+.explain.ok{border-color:var(--green);background:var(--green-soft)}
+.explain.no{border-color:var(--red);background:var(--red-soft)}
+.explain h4{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800}
+.explain.ok h4{color:var(--green)}
+.explain.no h4{color:var(--red)}
+.explain h4 .xp{margin-left:auto;font-size:12px;font-weight:700}
+.explain .line{font-size:14px;margin-top:8px}
+.explain .btn{margin-top:12px}
+
+/* ---------- spell / transform tiles ---------- */
+.spellword{font-size:22px;font-weight:800;margin-top:2px}
+.spellbox{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:20px 0}
+.slot{
+  width:44px;height:52px;border-radius:12px;display:grid;place-items:center;
+  background:var(--surface);border:1.5px solid var(--line);font-size:20px;font-weight:800;text-transform:uppercase;
+}
+.slot.fixed{background:var(--surface-2);color:var(--muted)}
+.slot.blank{border-color:var(--orange);border-style:dashed;cursor:pointer}
+.slot.blank.good{border-style:solid;border-color:var(--green);background:var(--green-soft);color:var(--green)}
+.slot.blank.bad{border-style:solid;border-color:var(--red);background:var(--red-soft);color:var(--red)}
+.letterbank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.lkey{
+  min-width:42px;height:44px;padding:0 10px;border-radius:11px;text-align:center;
+  background:var(--surface);border:1.5px solid var(--line);font-size:17px;font-weight:800;text-transform:uppercase;
+  transition:transform .15s var(--ease),border-color .15s var(--ease),opacity .2s var(--ease);
+}
+.lkey:hover{border-color:var(--orange)}
+.lkey:active{transform:scale(.9)}
+.lkey.used{opacity:.32;pointer-events:none}
+
+/* ---------- match mode ---------- */
+.match-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.match-col b{display:block;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;text-align:center}
+.match-item{
+  width:100%;margin-bottom:8px;padding:12px;border-radius:12px;background:var(--surface);
+  border:1.5px solid var(--line);font-weight:700;font-size:14px;text-align:center;
+  transition:border-color .15s var(--ease),background .2s var(--ease),transform .12s var(--ease);
+}
+.match-item:hover:not(:disabled){border-color:var(--orange)}
+.match-item.sel{border-color:var(--orange);background:var(--orange-soft)}
+.match-item.matched{border-color:var(--green);background:var(--green-soft);color:var(--green);opacity:.75}
+.match-item.wrongflash{border-color:var(--red);background:var(--red-soft)}
+.match-reveal{margin-top:16px;display:grid;gap:8px}
+
+/* ---------- pronunciation ---------- */
+.mic-wrap{text-align:center;padding:18px 0}
+.mic{
+  width:100px;height:100px;margin:0 auto;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--orange),#FFB067);color:#fff;font-size:38px;
+  box-shadow:0 14px 34px rgba(255,122,26,.42);transition:transform .2s var(--ease),opacity .2s var(--ease);
+}
+.mic:active{transform:scale(.93)}
+.mic.rec{animation:pulse 1.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,122,26,.55)}70%{box-shadow:0 0 0 26px rgba(255,122,26,0)}100%{box-shadow:0 0 0 0 rgba(255,122,26,0)}}
+.mic-state{margin-top:14px;font-size:13.5px;font-weight:600;color:var(--muted);min-height:22px}
+
+/* ---------- result ---------- */
+.result-hero{text-align:center;padding:14px 0}
+.result-emoji{font-size:48px}
+.result-hero h2{font-size:22px;font-weight:800;margin-top:6px}
+.unlocked-note{margin-top:8px;font-size:13.5px;font-weight:700;color:var(--green)}
+.result-band{text-align:center;font-size:14.5px;font-weight:700;color:var(--text-2);margin:6px 0 4px}
+
+/* ---------- rows ---------- */
+.row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .who{flex:1;min-width:0}
+.row .who b{display:block;font-size:14.5px;font-weight:800}
+.row .who small{display:block;font-size:11.5px;color:var(--muted)}
+.rank{flex:none;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:var(--surface-2);font-size:12px;font-weight:800;color:var(--muted)}
+
+/* ---------- progress ---------- */
+.bigstats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bigstat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.bigstat b{display:block;font-size:26px;font-weight:800;letter-spacing:-.5px}
+.bigstat span{display:block;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--muted)}
+.lvl-progress-row{margin-bottom:12px}
+.lvl-progress-row .lbl{display:flex;font-size:12.5px;font-weight:700;margin-bottom:6px}
+.lvl-progress-row .lbl span:last-child{margin-left:auto;color:var(--muted)}
+.lvl-bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.lvl-bar span{display:block;height:100%;border-radius:99px;background:var(--navy-600);transition:width .6s var(--ease)}
+.lvl-bar.done span{background:var(--green)}
+
+/* ---------- daily ---------- */
+.daily-card{text-align:center}
+.daily-ico{font-size:40px}
+
+/* ---------- toast ---------- */
+.toast{
+  position:fixed;left:50%;bottom:24px;z-index:80;transform:translateX(-50%) translateY(20px);
+  opacity:0;pointer-events:none;max-width:90vw;text-align:center;padding:11px 18px;border-radius:12px;
+  background:var(--navy-800);color:#fff;font-size:13.5px;font-weight:700;box-shadow:var(--shadow-lg);
+  transition:opacity .3s var(--ease),transform .3s var(--ease);
+}
+.toast.is-on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.bad{background:var(--red)}
+.toast.good{background:var(--green)}
+
+@media (min-width:760px){
+  .level-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+
+</style>
+</head>
+<body>
+
+<header class="appbar">
+  <div class="wrap">
+    <div class="logo">H</div>
+    <div class="brand">
+      <h1 id="brandName">Hitarthi Prefix Master</h1>
+      <p id="brandTag">Build Words. Understand English. Speak with Confidence.</p>
+    </div>
+    <button class="icon-btn" id="btnLang" type="button" aria-label="Switch language">हिंदी</button>
+    <button class="icon-btn" id="btnTheme" type="button" aria-label="Switch light or dark theme">🌙</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ================= HOME ================= -->
+  <section class="screen is-on" id="s-home">
+    <div class="hero">
+      <h2 id="gameName">Hitarthi Prefix Master</h2>
+      <p id="tagline">शब्द बनाइए, अंग्रेज़ी समझिए और आत्मविश्वास से बोलिए।</p>
+    </div>
+
+    <div class="stat-strip">
+      <div class="stat-mini"><b id="statLevel">1</b><span id="lblLevel">Level</span></div>
+      <div class="stat-mini"><b id="statXp">0</b><span id="lblXp">XP</span></div>
+      <div class="stat-mini"><b id="statStreak">0</b><span id="lblStreak">Streak</span></div>
+      <div class="stat-mini"><b id="statWords">0</b><span id="lblWords">Words Learned</span></div>
+      <div class="stat-mini"><b id="statAcc">0%</b><span id="lblAcc">Accuracy</span></div>
+    </div>
+
+    <div class="tiles">
+      <button class="tile" type="button" data-go="levels">
+        <span class="ico">▶</span><b id="tStart">Start Learning</b>
+      </button>
+      <button class="tile blue" type="button" data-go="challenge">
+        <span class="ico">🎯</span><b id="tChallenge">Prefix Challenge</b>
+      </button>
+      <button class="tile green" type="button" data-go="practice">
+        <span class="ico">🧠</span><b id="tPractice">Practice</b>
+        <small><span id="tileReviewCount">0</span></small>
+      </button>
+      <button class="tile" type="button" data-go="daily">
+        <span class="ico">🏆</span><b id="tDaily">Daily Challenge</b>
+      </button>
+      <button class="tile blue" type="button" data-go="progress">
+        <span class="ico">📊</span><b id="tProgress">My Progress</b>
+      </button>
+    </div>
+  </section>
+
+  <!-- ================= LEVELS ================= -->
+  <section class="screen" id="s-levels">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2 id="levelsTitle">Start Learning</h2></div>
+    </div>
+    <div id="levelGrid" class="level-grid"></div>
+  </section>
+
+  <!-- ================= LESSON ================= -->
+  <section class="screen" id="s-lesson">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="levels" aria-label="Back">←</button>
+      <div><h2 id="lessonLevelTitle">Level 1</h2></div>
+    </div>
+
+    <div class="card lesson-intro">
+      <p class="eyebrow" id="lessonHeading">What is a Prefix?</p>
+      <p id="lessonBody" class="lesson-body">A prefix is a letter or group of letters added to the beginning of a word to change its meaning.</p>
+      <p class="formula" id="lessonFormula">PREFIX + WORD = NEW WORD</p>
+      <div id="lessonExample" class="lesson-example"></div>
+    </div>
+
+    <div id="prefixCards"></div>
+
+    <button class="btn next" type="button" id="btnStartLevelQuiz">Start Level Quiz</button>
+  </section>
+
+  <!-- ================= CHALLENGE PICKER ================= -->
+  <section class="screen" id="s-challenge">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2 id="challengeTitle">Prefix Challenge</h2></div>
+    </div>
+
+    <p class="eyebrow" id="pickLevelLabel">Level</p>
+    <div class="chips" id="challengeLevelChips"></div>
+
+    <p class="eyebrow" id="pickLenLabel">Questions</p>
+    <div class="chips" id="challengeLenChips">
+      <button class="chip" type="button" data-len="5">5</button>
+      <button class="chip is-on" type="button" data-len="10">10</button>
+      <button class="chip" type="button" data-len="15">15</button>
+    </div>
+
+    <p class="eyebrow" id="pickModeLabel">Mode</p>
+    <div class="tiles" id="challengeModeGrid"></div>
+  </section>
+
+  <!-- ================= SESSION ================= -->
+  <section class="screen" id="s-session">
+    <div class="screen-head">
+      <button class="back" type="button" id="sessBack" aria-label="Leave session">←</button>
+      <div class="grow"><h2 id="sessTitle">Practice</h2><p class="sub" id="sessSub">1 of 10</p></div>
+      <button class="icon-btn accent" type="button" id="sessSpeak" aria-label="Listen">🔊</button>
+    </div>
+    <div class="progress"><span id="sessBar"></span></div>
+    <div id="stage"></div>
+  </section>
+
+  <!-- ================= RESULT ================= -->
+  <section class="screen" id="s-result">
+    <div class="result-hero">
+      <div class="result-emoji">🎉</div>
+      <h2 id="resultTitle">Challenge Complete!</h2>
+      <p id="resultUnlocked" class="unlocked-note hidden"></p>
+    </div>
+    <div class="stat-strip">
+      <div class="stat-mini"><b id="rScore">0/0</b><span id="lblRScore">Score</span></div>
+      <div class="stat-mini"><b id="rAcc">0%</b><span id="lblRAcc">Accuracy</span></div>
+      <div class="stat-mini"><b id="rXp">0</b><span id="lblRXp">XP Earned</span></div>
+      <div class="stat-mini"><b id="rWords">0</b><span id="lblRWords">Words Learned</span></div>
+      <div class="stat-mini"><b id="rStreak">0</b><span id="lblRStreak">Streak</span></div>
+    </div>
+    <p id="resultBand" class="result-band"></p>
+    <div class="btn-row">
+      <button class="btn" type="button" id="btnNextLevel">Next Level</button>
+      <button class="btn ghost" type="button" id="btnAgain">Practice Again</button>
+    </div>
+    <button class="btn ghost wide" type="button" data-go="home" id="btnResultHome">Home</button>
+
+    <div class="card" id="reviewCard">
+      <b class="card-title" id="reviewHeading">Words to Review</b>
+      <div id="reviewList"></div>
+      <button class="btn next" type="button" id="btnPracticeReview">Practice Again</button>
+    </div>
+  </section>
+
+  <!-- ================= PRACTICE ================= -->
+  <section class="screen" id="s-practice">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2 id="practiceTitle">Practice</h2></div>
+    </div>
+    <div id="practiceBody"></div>
+  </section>
+
+  <!-- ================= DAILY ================= -->
+  <section class="screen" id="s-daily">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2 id="dailyTitle">Daily Challenge</h2></div>
+    </div>
+    <div class="card daily-card">
+      <span class="daily-ico">🏆</span>
+      <p id="dailySub" class="dim">10 mixed prefix questions, refreshed every day</p>
+      <p id="dailyDoneNote" class="hidden note"></p>
+      <button class="btn next" type="button" id="btnStartDaily">Daily Challenge</button>
+    </div>
+  </section>
+
+  <!-- ================= PROGRESS ================= -->
+  <section class="screen" id="s-progress">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2 id="progressTitle">My Progress</h2></div>
+    </div>
+    <div class="bigstats">
+      <div class="bigstat"><b id="pgWords">0</b><span id="pgWordsLbl">of 112 words</span></div>
+      <div class="bigstat"><b id="pgAcc">0%</b><span id="pgAccLbl">Accuracy</span></div>
+      <div class="bigstat"><b id="pgStreak">0</b><span id="pgStreakLbl">Current Streak</span></div>
+      <div class="bigstat"><b id="pgBest">0</b><span id="pgBestLbl">Best Streak</span></div>
+      <div class="bigstat"><b id="pgXp">0</b><span id="pgXpLbl">Total XP</span></div>
+      <div class="bigstat"><b id="pgLevel">1</b><span id="pgLevelLbl">Level</span></div>
+    </div>
+    <div class="card">
+      <b class="card-title" id="progressLevelsHeading">Level Progress</b>
+      <div id="levelProgress"></div>
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ==========================================================================
+   data.js — Hitarthi Prefix Master word bank
+   Attaches to the single HPM namespace. Declares no global identifiers.
+
+   Row format:
+   [ level, prefix, root, rootPronHi, rootMeaningHi, rootMeaningEn,
+     word, wordPronHi, wordMeaningHi, wordMeaningEn, exampleEn, exampleHi ]
+   ========================================================================== */
+(function (HPM) {
+  "use strict";
+
+  var ROWS = [
+    /* ---------------- LEVEL 1 · UN- (15) ---------------- */
+    [1,"un","happy","हैपी","खुश","glad","unhappy","अनहैपी","दुखी, खुश नहीं","not happy, sad","She looked unhappy after the exam.","परीक्षा के बाद वह दुखी लग रही थी।"],
+    [1,"un","fair","फ़ेयर","न्यायसंगत","just","unfair","अनफ़ेयर","अनुचित","not fair or just","The referee's decision was unfair.","रेफ़री का फ़ैसला अनुचित था।"],
+    [1,"un","kind","काइंड","दयालु","gentle","unkind","अनकाइंड","निर्दयी","not kind, cruel in speech","It was unkind to laugh at him.","उस पर हँसना निर्दयी बात थी।"],
+    [1,"un","known","नोन","ज्ञात","recognised","unknown","अननोन","अज्ञात","not known or identified","The cause of the fire is still unknown.","आग का कारण अभी भी अज्ञात है।"],
+    [1,"un","able","एबल","सक्षम","capable","unable","अनएबल","असमर्थ","not able to do something","He was unable to attend the meeting.","वह बैठक में शामिल होने में असमर्थ था।"],
+    [1,"un","lock","लॉक","ताला","fastener","unlock","अनलॉक","ताला खोलना","to open something locked","Unlock the door with this key.","इस चाबी से दरवाज़ा खोलो।"],
+    [1,"un","comfortable","कंफ़र्टेबल","आरामदायक","cosy","uncomfortable","अनकंफ़र्टेबल","असहज","not comfortable, causing unease","The chair felt uncomfortable after an hour.","एक घंटे बाद कुर्सी असहज लगने लगी।"],
+    [1,"un","certain","सर्टेन","निश्चित","sure","uncertain","अनसर्टेन","अनिश्चित","not sure or certain","The future of the project is uncertain.","परियोजना का भविष्य अनिश्चित है।"],
+    [1,"un","aware","अवेयर","सजग","conscious","unaware","अनअवेयर","अनजान","not knowing about something","She was unaware of the new rule.","वह नए नियम से अनजान थी।"],
+    [1,"un","common","कॉमन","आम","usual","uncommon","अनकॉमन","असामान्य","not common, rare","Snow is uncommon in this region.","इस क्षेत्र में बर्फ़ असामान्य है।"],
+    [1,"un","expected","एक्सपेक्टेड","अपेक्षित","anticipated","unexpected","अनएक्सपेक्टेड","अप्रत्याशित","not expected, surprising","We had an unexpected guest today.","आज हमारे यहाँ एक अप्रत्याशित मेहमान आए।"],
+    [1,"un","limited","लिमिटेड","सीमित","restricted","unlimited","अनलिमिटेड","असीमित","without any limit","This plan offers unlimited calls.","यह प्लान असीमित कॉल देता है।"],
+    [1,"un","natural","नैचुरल","प्राकृतिक","organic","unnatural","अननैचुरल","अस्वाभाविक","not natural, forced","His smile looked unnatural in the photo.","फ़ोटो में उसकी मुस्कान अस्वाभाविक लग रही थी।"],
+    [1,"un","official","ऑफ़िशियल","आधिकारिक","formal","unofficial","अनऑफ़िशियल","अनाधिकारिक","not official or formal","This is only an unofficial estimate.","यह केवल एक अनाधिकारिक अनुमान है।"],
+    [1,"un","usual","यूज़ुअल","सामान्य","normal","unusual","अनयूज़ुअल","विचित्र, असाधारण","not usual, out of the ordinary","It is unusual for him to be late.","उसका देर से आना असाधारण है।"],
+
+    /* ---------------- LEVEL 2 · DIS- (13) ---------------- */
+    [2,"dis","agree","अग्री","सहमत होना","concur","disagree","डिसअग्री","असहमत होना","to not agree","I disagree with that decision.","मैं उस फ़ैसले से असहमत हूँ।"],
+    [2,"dis","like","लाइक","पसंद करना","favour","dislike","डिसलाइक","नापसंद करना","to not like something","She does not dislike the plan, just the timing.","उसे योजना नापसंद नहीं, सिर्फ़ समय पसंद नहीं है।"],
+    [2,"dis","appear","अपियर","दिखाई देना","show up","disappear","डिसअपियर","गायब हो जाना","to go out of sight","The sun disappeared behind the clouds.","सूरज बादलों के पीछे गायब हो गया।"],
+    [2,"dis","honest","ऑनेस्ट","ईमानदार","truthful","dishonest","डिसऑनेस्ट","बेईमान","not honest, deceitful","Cheating in the exam is dishonest.","परीक्षा में नकल करना बेईमानी है।"],
+    [2,"dis","connect","कनेक्ट","जोड़ना","link","disconnect","डिसकनेक्ट","संपर्क तोड़ना","to break a connection","Disconnect the charger before travelling.","यात्रा से पहले चार्जर काट दें।"],
+    [2,"dis","obey","ओबे","आज्ञा मानना","comply","disobey","डिसओबे","आज्ञा न मानना","to not follow an order or rule","Soldiers cannot disobey their commander.","सैनिक अपने कमांडर की आज्ञा नहीं टाल सकते।"],
+    [2,"dis","trust","ट्रस्ट","भरोसा","confidence","distrust","डिसट्रस्ट","अविश्वास","a lack of trust in someone","Years of lies led to deep distrust.","वर्षों के झूठ ने गहरे अविश्वास को जन्म दिया।"],
+    [2,"dis","comfort","कंफ़र्ट","आराम","ease","discomfort","डिसकंफ़र्ट","बेचैनी","a feeling of physical or mental unease","The tight shoes caused some discomfort.","तंग जूतों से थोड़ी बेचैनी हुई।"],
+    [2,"dis","continue","कंटिन्यू","जारी रखना","proceed","discontinue","डिसकंटिन्यू","बंद कर देना","to stop doing or making something","The company will discontinue this model.","कंपनी इस मॉडल को बंद कर देगी।"],
+    [2,"dis","qualify","क्वालिफ़ाई","योग्य होना","be eligible","disqualify","डिसक्वालिफ़ाई","अयोग्य ठहराना","to officially rule someone out","A false start can disqualify a runner.","गलत शुरुआत धावक को अयोग्य ठहरा सकती है।"],
+    [2,"dis","respect","रिस्पेक्ट","सम्मान","regard","disrespect","डिसरिस्पेक्ट","अनादर","a lack of respect shown to someone","Shouting at elders shows disrespect.","बड़ों पर चिल्लाना अनादर दिखाता है।"],
+    [2,"dis","satisfy","सैटिस्फ़ाई","संतुष्ट करना","please","dissatisfy","डिसैटिस्फ़ाई","असंतुष्ट करना","to fail to please someone","Poor service will dissatisfy customers.","खराब सेवा ग्राहकों को असंतुष्ट कर देगी।"],
+    [2,"dis","advantage","एडवांटेज","लाभ","benefit","disadvantage","डिसएडवांटेज","नुकसान, हानि","a condition that causes difficulty","Being short is a disadvantage in basketball.","छोटा कद बास्केटबॉल में एक नुकसान है।"],
+
+    /* ---------------- LEVEL 3 · RE- (13) ---------------- */
+    [3,"re","do","डू","करना","perform","redo","रीडू","दोबारा करना","to do something again","Please redo this page, it has errors.","कृपया यह पन्ना दोबारा करो, इसमें गलतियाँ हैं।"],
+    [3,"re","write","राइट","लिखना","compose","rewrite","रीराइट","फिर से लिखना","to write something again","I had to rewrite the whole essay.","मुझे पूरा निबंध फिर से लिखना पड़ा।"],
+    [3,"re","start","स्टार्ट","शुरू करना","begin","restart","रीस्टार्ट","फिर से शुरू करना","to start again","Restart the computer and try again.","कंप्यूटर फिर से चालू करो और कोशिश करो।"],
+    [3,"re","fill","फ़िल","भरना","top up","refill","रीफ़िल","फिर से भरना","to fill again","Can you refill my water bottle?","क्या आप मेरी पानी की बोतल फिर से भर सकते हैं?"],
+    [3,"re","build","बिल्ड","बनाना","construct","rebuild","रीबिल्ड","फिर से बनाना","to build again after damage","The village had to rebuild after the flood.","बाढ़ के बाद गाँव को फिर से बनाना पड़ा।"],
+    [3,"re","read","रीड","पढ़ना","study","reread","रीरीड","दोबारा पढ़ना","to read again","I want to reread that chapter.","मैं वह अध्याय दोबारा पढ़ना चाहता हूँ।"],
+    [3,"re","pay","पे","भुगतान करना","settle","repay","रीपे","चुकाना, वापस देना","to pay money back","He promised to repay the loan soon.","उसने जल्द ही कर्ज़ चुकाने का वादा किया।"],
+    [3,"re","play","प्ले","खेलना","perform","replay","रीप्ले","फिर से चलाना","to play again, especially a recording","Let's replay that video in slow motion.","आओ उस वीडियो को धीमी गति में फिर से चलाएँ।"],
+    [3,"re","new","न्यू","नया","fresh","renew","रीन्यू","नवीनीकरण करना","to make valid again","You must renew your passport this year.","आपको इस साल अपना पासपोर्ट नवीनीकृत कराना होगा।"],
+    [3,"re","place","प्लेस","जगह","location","replace","रीप्लेस","बदलना, स्थान लेना","to put a new thing in place of an old one","We need to replace the broken chair.","हमें टूटी हुई कुर्सी बदलनी होगी।"],
+    [3,"re","view","व्यू","देखना","look at","review","रिव्यू","पुनरावलोकन करना","to look at something again carefully","Please review my answers before submitting.","जमा करने से पहले कृपया मेरे उत्तर देख लें।"],
+    [3,"re","tell","टेल","बताना","narrate","retell","रीटेल","फिर से सुनाना","to tell a story again","Grandmother loves to retell old tales.","दादी को पुरानी कहानियाँ फिर से सुनाना पसंद है।"],
+    [3,"re","appear","अपियर","दिखाई देना","show up","reappear","रीअपियर","फिर से प्रकट होना","to appear again after being gone","The moon reappeared from behind the clouds.","चाँद बादलों के पीछे से फिर प्रकट हुआ।"],
+
+    /* ---------------- LEVEL 4 · PRE- (12) ---------------- */
+    [4,"pre","view","व्यू","देखना","look at","preview","प्रीव्यू","पूर्वावलोकन","to see something before the main showing","We watched a preview of the new film.","हमने नई फ़िल्म का पूर्वावलोकन देखा।"],
+    [4,"pre","pay","पे","भुगतान करना","settle","prepay","प्रीपे","पहले भुगतान करना","to pay before receiving something","You must prepay for the delivery.","डिलीवरी के लिए आपको पहले भुगतान करना होगा।"],
+    [4,"pre","heat","हीट","गरम करना","warm","preheat","प्रीहीट","पहले से गरम करना","to heat something in advance","Preheat the oven before baking.","बेक करने से पहले ओवन को गरम कर लें।"],
+    [4,"pre","school","स्कूल","विद्यालय","academy","preschool","प्रीस्कूल","बाल विद्यालय","school before regular school age","My daughter starts preschool this year.","इस साल मेरी बेटी बाल विद्यालय शुरू करेगी।"],
+    [4,"pre","historic","हिस्टॉरिक","ऐतिहासिक","ancient","prehistoric","प्रीहिस्टॉरिक","प्रागैतिहासिक","belonging to a time before written history","Dinosaurs lived in prehistoric times.","डायनासोर प्रागैतिहासिक काल में रहते थे।"],
+    [4,"pre","caution","कॉशन","सावधानी","care","precaution","प्रीकॉशन","एहतियात, सावधानी","a measure taken in advance to prevent harm","Wearing a helmet is a good precaution.","हेलमेट पहनना एक अच्छा एहतियात है।"],
+    [4,"pre","determine","डिटरमिन","निर्धारित करना","decide","predetermine","प्रीडिटरमिन","पहले से तय करना","to decide something in advance","The route was predetermined by the guide.","रास्ता गाइड ने पहले से तय कर रखा था।"],
+    [4,"pre","arrange","अरेंज","व्यवस्था करना","organise","prearrange","प्रीअरेंज","पहले से व्यवस्था करना","to arrange something beforehand","The seating was prearranged for the guests.","मेहमानों के लिए बैठने की व्यवस्था पहले से की गई थी।"],
+    [4,"pre","mature","मेच्योर","परिपक्व","ripe","premature","प्रीमेच्योर","समय से पहले","happening before the natural or right time","The baby was born premature.","बच्चा समय से पहले पैदा हुआ था।"],
+    [4,"pre","plan","प्लान","योजना","scheme","preplan","प्रीप्लान","पहले से योजना बनाना","to plan something well in advance","We preplanned the whole trip in detail.","हमने पूरी यात्रा की योजना पहले से बना ली थी।"],
+    [4,"pre","occupy","ऑक्युपाई","व्यस्त रखना","engage","preoccupy","प्रीऑक्युपाई","व्यस्त कर देना","to fill someone's mind so much they think of little else","Exam worries preoccupied her all week.","परीक्षा की चिंता ने उसे पूरे हफ़्ते व्यस्त रखा।"],
+    [4,"pre","judge","जज","आँकना","assess","prejudge","प्रीजज","पहले से राय बना लेना","to form an opinion before knowing the facts","Do not prejudge someone by their looks.","किसी को उसके रूप से पहले ही मत आँको।"],
+
+    /* ---------------- LEVEL 5 · MIS- (12) ---------------- */
+    [5,"mis","understand","अंडरस्टैंड","समझना","comprehend","misunderstand","मिसअंडरस्टैंड","गलत समझना","to understand incorrectly","Please don't misunderstand my intention.","कृपया मेरे इरादे को गलत मत समझिए।"],
+    [5,"mis","spell","स्पेल","वर्तनी लिखना","write","misspell","मिसस्पेल","गलत वर्तनी लिखना","to spell a word incorrectly","He often misspells long words.","वह अक्सर लंबे शब्दों की गलत वर्तनी लिखता है।"],
+    [5,"mis","lead","लीड","ले जाना","guide","mislead","मिसलीड","गुमराह करना","to give a false impression","The advertisement was designed to mislead buyers.","विज्ञापन खरीदारों को गुमराह करने के लिए बनाया गया था।"],
+    [5,"mis","behave","बिहेव","व्यवहार करना","act","misbehave","मिसबिहेव","बुरा व्यवहार करना","to behave badly","The children misbehaved at the party.","पार्टी में बच्चों ने बुरा व्यवहार किया।"],
+    [5,"mis","place","प्लेस","रखना","put","misplace","मिसप्लेस","गलत जगह रखना","to put something where you cannot find it","I always misplace my keys.","मैं हमेशा अपनी चाबियाँ गलत जगह रख देता हूँ।"],
+    [5,"mis","judge","जज","आँकना","assess","misjudge","मिसजज","गलत अंदाज़ा लगाना","to judge someone or something wrongly","I misjudged the distance and missed the bus.","मैंने दूरी का गलत अंदाज़ा लगाया और बस छूट गई।"],
+    [5,"mis","trust","ट्रस्ट","भरोसा करना","rely on","mistrust","मिसट्रस्ट","शक करना, अविश्वास","a feeling of doubt about someone","He has a deep mistrust of strangers.","उसे अजनबियों पर गहरा अविश्वास है।"],
+    [5,"mis","inform","इनफ़ॉर्म","सूचित करना","tell","misinform","मिसइनफ़ॉर्म","गलत सूचना देना","to give someone false information","The report misinformed the public.","रिपोर्ट ने जनता को गलत सूचना दी।"],
+    [5,"mis","manage","मैनेज","प्रबंध करना","handle","mismanage","मिसमैनेज","कुप्रबंध करना","to manage something badly","Poor leaders often mismanage funds.","कमज़ोर नेता अक्सर धन का कुप्रबंध करते हैं।"],
+    [5,"mis","use","यूज़","उपयोग करना","utilise","misuse","मिसयूज़","दुरुपयोग करना","to use something in the wrong way","Do not misuse public property.","सार्वजनिक संपत्ति का दुरुपयोग मत करो।"],
+    [5,"mis","match","मैच","मेल खाना","fit","mismatch","मिसमैच","बेमेल","a combination of things that do not fit well","There was a mismatch between the socks.","मोजों में बेमेल था।"],
+    [5,"mis","guide","गाइड","मार्गदर्शन करना","direct","misguide","मिसगाइड","गलत मार्गदर्शन करना","to give someone poor or wrong direction","Bad advice can misguide young students.","बुरी सलाह युवा छात्रों को गलत राह दिखा सकती है।"],
+
+    /* ---------------- LEVEL 6 · IN- / IM- / IL- / IR- (16) ---------------- */
+    [6,"in","correct","करेक्ट","सही","right","incorrect","इनकरेक्ट","गलत","not correct, wrong","Two of your answers are incorrect.","आपके दो उत्तर गलत हैं।"],
+    [6,"in","active","एक्टिव","सक्रिय","working","inactive","इनएक्टिव","निष्क्रिय","not active","This account has been inactive for a year.","यह खाता एक साल से निष्क्रिय है।"],
+    [6,"in","visible","विज़िबल","दिखाई देने वाला","seen","invisible","इनविज़िबल","अदृश्य","not able to be seen","Germs are invisible to the naked eye.","कीटाणु नंगी आँखों से अदृश्य होते हैं।"],
+    [6,"in","complete","कंप्लीट","पूरा","whole","incomplete","इनकंप्लीट","अधूरा","not finished, partial","The report is still incomplete.","रिपोर्ट अभी भी अधूरी है।"],
+    [6,"im","possible","पॉसिबल","संभव","achievable","impossible","इम्पॉसिबल","असंभव","not possible","Nothing is impossible with practice.","अभ्यास से कुछ भी असंभव नहीं है।"],
+    [6,"im","patient","पेशेंट","धैर्यवान","tolerant","impatient","इम्पेशेंट","अधीर","not patient, restless","The children grew impatient during the wait.","इंतज़ार के दौरान बच्चे अधीर हो गए।"],
+    [6,"im","mature","मेच्योर","परिपक्व","ripe","immature","इम्मेच्योर","अपरिपक्व","not fully grown or sensible","That was an immature way to react.","वह प्रतिक्रिया देने का अपरिपक्व तरीका था।"],
+    [6,"im","polite","पोलाइट","विनम्र","courteous","impolite","इम्पोलाइट","असभ्य","not polite, rude","It is impolite to interrupt someone.","किसी की बात काटना असभ्य है।"],
+    [6,"il","legal","लीगल","कानूनी","lawful","illegal","इललीगल","गैरकानूनी","not allowed by law","Parking here is illegal.","यहाँ पार्किंग करना गैरकानूनी है।"],
+    [6,"il","legible","लेजिबल","पढ़ने योग्य","readable","illegible","इललेजिबल","अपठनीय","not clear enough to read","His handwriting is almost illegible.","उसकी लिखावट लगभग अपठनीय है।"],
+    [6,"il","literate","लिटरेट","साक्षर","educated","illiterate","इललिटरेट","अनपढ़, निरक्षर","not able to read or write","The programme helps illiterate adults learn to read.","यह कार्यक्रम निरक्षर वयस्कों को पढ़ना सिखाने में मदद करता है।"],
+    [6,"il","logical","लॉजिकल","तार्किक","reasonable","illogical","इललॉजिकल","अतार्किक","not logical or reasonable","His argument seemed illogical to everyone.","उसका तर्क सबको अतार्किक लगा।"],
+    [6,"ir","regular","रेगुलर","नियमित","routine","irregular","इर्रेगुलर","अनियमित","not regular, uneven","His work hours are quite irregular.","उसके काम के घंटे काफ़ी अनियमित हैं।"],
+    [6,"ir","responsible","रिस्पॉन्सिबल","ज़िम्मेदार","accountable","irresponsible","इर्रिस्पॉन्सिबल","गैर-ज़िम्मेदार","not responsible, careless","Driving fast near a school is irresponsible.","स्कूल के पास तेज़ गाड़ी चलाना गैर-ज़िम्मेदाराना है।"],
+    [6,"ir","relevant","रेलिवेंट","प्रासंगिक","related","irrelevant","इर्रेलिवेंट","अप्रासंगिक","not connected to the matter at hand","That question is irrelevant to our topic.","वह सवाल हमारे विषय से अप्रासंगिक है।"],
+    [6,"ir","rational","रैशनल","तर्कसंगत","sensible","irrational","इर्रैशनल","अतार्किक, अविवेकी","not based on clear reasoning","Fear can lead to irrational decisions.","डर अतार्किक फ़ैसलों की ओर ले जा सकता है।"],
+
+    /* ---------------- LEVEL 7 · NON- / OVER- / UNDER- (15) ---------------- */
+    [7,"non","fiction","फ़िक्शन","कल्पित कथा","story","nonfiction","नॉनफ़िक्शन","तथ्यात्मक साहित्य","writing based on facts, not imagination","She prefers nonfiction over novels.","वह उपन्यासों से ज़्यादा तथ्यात्मक किताबें पसंद करती है।"],
+    [7,"non","stop","स्टॉप","रुकना","halt","nonstop","नॉनस्टॉप","लगातार, बिना रुके","without stopping or pausing","We took a nonstop flight to Delhi.","हमने दिल्ली के लिए लगातार उड़ान भरने वाली फ़्लाइट ली।"],
+    [7,"non","sense","सेंस","समझ","meaning","nonsense","नॉनसेंस","बकवास, अर्थहीन बात","words or ideas that have no meaning","He is talking complete nonsense.","वह बिल्कुल बकवास बोल रहा है।"],
+    [7,"non","violent","वायलेंट","हिंसक","aggressive","nonviolent","नॉनवायलेंट","अहिंसक","not using force or violence","Gandhi led a nonviolent movement.","गांधी ने एक अहिंसक आंदोलन चलाया।"],
+    [7,"non","profit","प्रॉफ़िट","लाभ","earning","nonprofit","नॉनप्रॉफ़िट","गैर-लाभकारी","not existing to make money","She works for a nonprofit organisation.","वह एक गैर-लाभकारी संस्था में काम करती है।"],
+    [7,"over","eat","ईट","खाना","consume","overeat","ओवरईट","ज़्यादा खाना","to eat more than needed","Do not overeat at festival dinners.","त्योहार के खाने में ज़्यादा मत खाओ।"],
+    [7,"over","sleep","स्लीप","सोना","rest","oversleep","ओवरस्लीप","देर तक सो जाना","to sleep longer than intended","I overslept and missed the bus.","मैं देर तक सो गया और बस छूट गई।"],
+    [7,"over","load","लोड","भार","weight","overload","ओवरलोड","अधिक भार डालना","to load with too much","Do not overload the small cart.","छोटी गाड़ी पर अधिक भार मत डालो।"],
+    [7,"over","work","वर्क","काम","labour","overwork","ओवरवर्क","अत्यधिक काम करना","to work too much or too hard","Do not overwork yourself before the exam.","परीक्षा से पहले खुद को अत्यधिक काम में मत झोंको।"],
+    [7,"over","confident","कॉन्फ़िडेंट","आत्मविश्वासी","assured","overconfident","ओवरकॉन्फ़िडेंट","अति आत्मविश्वासी","too sure of oneself","Being overconfident can lead to careless mistakes.","अति आत्मविश्वास लापरवाह गलतियों की वजह बन सकता है।"],
+    [7,"under","cook","कुक","पकाना","prepare","undercook","अंडरकुक","कम पकाना","to cook less than needed","Undercooked rice is hard to digest.","कम पका हुआ चावल पचाना मुश्किल होता है।"],
+    [7,"under","pay","पे","भुगतान करना","compensate","underpay","अंडरपे","कम भुगतान करना","to pay less than deserved","Workers should not be underpaid.","मज़दूरों को कम भुगतान नहीं करना चाहिए।"],
+    [7,"under","estimate","एस्टिमेट","अनुमान लगाना","assess","underestimate","अंडरएस्टिमेट","कम आँकना","to judge something as smaller or less than it is","Never underestimate your own ability.","अपनी क्षमता को कभी कम मत आँको।"],
+    [7,"under","ground","ग्राउंड","ज़मीन","land","underground","अंडरग्राउंड","भूमिगत","below the surface of the ground","The pipes run underground.","पाइप भूमिगत बिछे हैं।"],
+    [7,"under","weight","वेट","वज़न","mass","underweight","अंडरवेट","कम वज़न वाला","having less than the normal or healthy weight","The doctor said the baby was underweight.","डॉक्टर ने कहा कि बच्चे का वज़न कम है।"],
+
+    /* ---------------- LEVEL 8 · ANTI- / AUTO- / SUPER- / TRANS- (16) ---------------- */
+    [8,"anti","clockwise","क्लॉकवाइज़","घड़ी की दिशा में","forward-turning","anticlockwise","एंटीक्लॉकवाइज़","घड़ी की उलटी दिशा में","moving opposite to clock hands","Turn the cap anticlockwise to open it.","खोलने के लिए ढक्कन को घड़ी की उलटी दिशा में घुमाओ।"],
+    [8,"anti","social","सोशल","सामाजिक","friendly","antisocial","एंटीसोशल","समाज-विरोधी","avoiding or against normal social contact","Staring at your phone all evening is antisocial.","पूरी शाम फ़ोन में लगे रहना समाज-विरोधी व्यवहार है।"],
+    [8,"anti","biotic","बायोटिक","जैविक","organic","antibiotic","एंटीबायोटिक","रोगाणुरोधी दवा","a medicine that fights bacterial infection","The doctor gave her an antibiotic for the infection.","डॉक्टर ने संक्रमण के लिए उसे रोगाणुरोधी दवा दी।"],
+    [8,"anti","freeze","फ़्रीज़","जमना","icing up","antifreeze","एंटीफ़्रीज़","हिमरोधी द्रव","a liquid added to stop water from freezing","Add antifreeze to the car before winter.","सर्दियों से पहले कार में हिमरोधी द्रव डालें।"],
+    [8,"auto","mobile","मोबाइल","चलायमान","moving","automobile","ऑटोमोबाइल","स्वचालित वाहन","a self-powered road vehicle","The automobile industry is growing fast.","वाहन उद्योग तेज़ी से बढ़ रहा है।"],
+    [8,"auto","graph","ग्राफ़","हस्ताक्षर लेख","signature","autograph","ऑटोग्राफ़","स्वहस्ताक्षर","a person's own signature, often of a celebrity","Fans lined up for the actor's autograph.","प्रशंसक अभिनेता के स्वहस्ताक्षर के लिए कतार में लगे।"],
+    [8,"auto","biography","बायोग्राफ़ी","जीवनी","life story","autobiography","ऑटोबायोग्राफ़ी","आत्मकथा","the story of a person's life written by themself","She is writing her autobiography this year.","वह इस साल अपनी आत्मकथा लिख रही है।"],
+    [8,"auto","pilot","पायलट","विमानचालक","flier","autopilot","ऑटोपायलट","स्वचालित नियंत्रण","a system that steers a vehicle without a human","The plane switched to autopilot over the ocean.","समुद्र के ऊपर विमान स्वचालित नियंत्रण पर चला गया।"],
+    [8,"super","market","मार्केट","बाज़ार","store","supermarket","सुपरमार्केट","बड़ा बाज़ार","a large store selling many goods","We buy groceries from the supermarket.","हम किराना सामान सुपरमार्केट से खरीदते हैं।"],
+    [8,"super","human","ह्यूमन","मानव","person","superhuman","सुपरह्यूमन","अलौकिक शक्ति वाला","having power beyond normal human ability","He showed superhuman strength that day.","उस दिन उसने असाधारण शक्ति दिखाई।"],
+    [8,"super","star","स्टार","तारा","celebrity","superstar","सुपरस्टार","महातारा, बड़ा सितारा","an extremely famous performer","The whole stadium cheered for the superstar.","पूरा स्टेडियम उस बड़े सितारे के लिए जयकार कर उठा।"],
+    [8,"super","power","पॉवर","शक्ति","strength","superpower","सुपरपॉवर","महाशक्ति","a very powerful and influential nation","India is becoming a major economic superpower.","भारत एक बड़ी आर्थिक महाशक्ति बनता जा रहा है।"],
+    [8,"trans","port","पोर्ट","बंदरगाह","harbour","transport","ट्रांसपोर्ट","परिवहन","to carry goods or people from one place to another","Trucks transport goods across the country.","ट्रक देश भर में सामान ले जाते हैं।"],
+    [8,"trans","form","फ़ॉर्म","रूप","shape","transform","ट्रांसफ़ॉर्म","पूरी तरह बदलना","to change completely in form or appearance","Education can transform a person's life.","शिक्षा किसी व्यक्ति का जीवन पूरी तरह बदल सकती है।"],
+    [8,"trans","plant","प्लांट","पौधा","sapling","transplant","ट्रांसप्लांट","प्रत्यारोपण करना","to move a plant or organ to a new place","Doctors performed a kidney transplant.","डॉक्टरों ने किडनी प्रत्यारोपण किया।"],
+    [8,"trans","action","एक्शन","कार्य","deed","transaction","ट्रांज़ैक्शन","लेन-देन","an instance of buying or selling something","The bank confirmed the transaction.","बैंक ने लेन-देन की पुष्टि की।"]
+  ];
+
+  var LEVEL_KEY = { 1:"un", 2:"dis", 3:"re", 4:"pre", 5:"mis", 6:"in", 7:"non", 8:"anti" };
+
+  var PREFIX_INFO = [
+    { key:"un",    display:"UN-",    level:1, meaningEn:"not / opposite of",       meaningHi:"नहीं / विपरीत अर्थ" },
+    { key:"dis",   display:"DIS-",   level:2, meaningEn:"not / reverse of",        meaningHi:"नहीं / उलटा" },
+    { key:"re",    display:"RE-",    level:3, meaningEn:"again",                   meaningHi:"फिर से, दोबारा" },
+    { key:"pre",   display:"PRE-",   level:4, meaningEn:"before",                  meaningHi:"पहले" },
+    { key:"mis",   display:"MIS-",   level:5, meaningEn:"wrongly / badly",         meaningHi:"गलत तरीके से" },
+    { key:"in",    display:"IN-",    level:6, meaningEn:"not",                     meaningHi:"नहीं" },
+    { key:"im",    display:"IM-",    level:6, meaningEn:"not",                     meaningHi:"नहीं" },
+    { key:"il",    display:"IL-",    level:6, meaningEn:"not",                     meaningHi:"नहीं" },
+    { key:"ir",    display:"IR-",    level:6, meaningEn:"not",                     meaningHi:"नहीं" },
+    { key:"non",   display:"NON-",   level:7, meaningEn:"not",                     meaningHi:"नहीं" },
+    { key:"over",  display:"OVER-",  level:7, meaningEn:"too much",                meaningHi:"बहुत अधिक" },
+    { key:"under", display:"UNDER-", level:7, meaningEn:"too little / below",      meaningHi:"बहुत कम, नीचे" },
+    { key:"anti",  display:"ANTI-",  level:8, meaningEn:"against",                 meaningHi:"के विरुद्ध" },
+    { key:"auto",  display:"AUTO-",  level:8, meaningEn:"self",                    meaningHi:"स्वयं" },
+    { key:"super", display:"SUPER-", level:8, meaningEn:"above / beyond normal",   meaningHi:"ऊपर, असाधारण" },
+    { key:"trans", display:"TRANS-", level:8, meaningEn:"across / change",         meaningHi:"पार, परिवर्तन" }
+  ];
+
+  var LEVEL_INFO = [
+    { level:1, titleEn:"UN-",    titleHi:"UN-",    prefixes:["un"] },
+    { level:2, titleEn:"DIS-",   titleHi:"DIS-",   prefixes:["dis"] },
+    { level:3, titleEn:"RE-",    titleHi:"RE-",    prefixes:["re"] },
+    { level:4, titleEn:"PRE-",   titleHi:"PRE-",   prefixes:["pre"] },
+    { level:5, titleEn:"MIS-",   titleHi:"MIS-",   prefixes:["mis"] },
+    { level:6, titleEn:"IN- / IM- / IL- / IR-", titleHi:"IN- / IM- / IL- / IR-", prefixes:["in","im","il","ir"] },
+    { level:7, titleEn:"NON- / OVER- / UNDER-", titleHi:"NON- / OVER- / UNDER-", prefixes:["non","over","under"] },
+    { level:8, titleEn:"ANTI- / AUTO- / SUPER- / TRANS-", titleHi:"ANTI- / AUTO- / SUPER- / TRANS-", prefixes:["anti","auto","super","trans"] }
+  ];
+
+  HPM.WORDS = ROWS.map(function (r, i) {
+    return {
+      id: i, level: r[0], prefix: r[1],
+      root: r[2], rootPron: r[3], rootMeaningHi: r[4], rootMeaningEn: r[5],
+      word: r[6], wordPron: r[7], wordMeaningHi: r[8], wordMeaningEn: r[9],
+      exampleEn: r[10], exampleHi: r[11]
+    };
+  });
+
+  HPM.PREFIX_INFO = PREFIX_INFO;
+  HPM.LEVEL_INFO = LEVEL_INFO;
+  HPM.LEVEL_KEY = LEVEL_KEY;
+  HPM.TOTAL_LEVELS = LEVEL_INFO.length;
+
+  HPM.prefixInfo = function (key) {
+    for (var i = 0; i < PREFIX_INFO.length; i++) if (PREFIX_INFO[i].key === key) return PREFIX_INFO[i];
+    return null;
+  };
+  HPM.wordsForLevel = function (level) {
+    return HPM.WORDS.filter(function (w) { return w.level === level; });
+  };
+})(typeof window !== "undefined" ? (window.HPM = window.HPM || {}) : (global.HPM = global.HPM || {}));
+
+</script>
+<script>
+/* ==========================================================================
+   i18n.js — bilingual dictionary for Hitarthi Prefix Master
+   Attaches to the single HPM namespace. Declares no global identifiers.
+   Every UI string the learner sees (buttons, labels, prompts, feedback)
+   lives here in both languages. Word content itself (prefix/root/word
+   meanings, examples) is bilingual by design already and is not part
+   of this dictionary — see data.js.
+   ========================================================================== */
+(function (HPM) {
+  "use strict";
+
+  var DICT = {
+    en: {
+      brand_name: "Hitarthi English Master",
+      game_name: "Hitarthi Prefix Master",
+      tagline: "Build Words. Understand English. Speak with Confidence.",
+      lang_toggle: "हिंदी",
+
+      nav_start: "Start Learning",
+      nav_challenge: "Prefix Challenge",
+      nav_practice: "Practice",
+      nav_daily: "Daily Challenge",
+      nav_progress: "My Progress",
+
+      stat_level: "Level",
+      stat_xp: "XP",
+      stat_streak: "Streak",
+      stat_words: "Words Learned",
+      stat_accuracy: "Accuracy",
+
+      lesson_heading: "What is a Prefix?",
+      lesson_body: "A prefix is a letter or group of letters added to the beginning of a word to change its meaning.",
+      lesson_formula: "PREFIX + WORD = NEW WORD",
+      lesson_example_heading: "Example",
+      btn_continue: "Continue",
+      btn_start_level_quiz: "Start Level Quiz",
+      btn_back: "Back",
+      btn_home: "Home",
+      btn_next: "Next",
+      btn_finish: "Finish",
+      btn_listen: "Listen",
+      btn_repeat: "Repeat the word",
+      btn_check: "Check",
+      btn_reveal: "Reveal Answer",
+      btn_next_level: "Next Level",
+      btn_practice_again: "Practice Again",
+      btn_retry: "Try Again",
+
+      level_locked: "Complete the previous level to unlock this one",
+      level_completed: "Completed",
+      level_current: "Level",
+
+      mode_meaning: "Guess the Meaning",
+      mode_build: "Build the Word",
+      mode_find: "Find the Prefix",
+      mode_transform: "Word Transformation",
+      mode_match: "Prefix Match",
+      mode_spell: "Spelling Challenge",
+      mode_pronounce: "Pronunciation",
+      mode_sentence: "Sentence Challenge",
+
+      q_meaning: "What does {word} mean?",
+      q_build: "Add the correct prefix to make the opposite meaning.",
+      q_build_general: "Add the correct prefix to complete the word.",
+      q_find: "Which prefix is used in this word?",
+      q_transform: "Add {prefix}- to {root} to make a new word.",
+      q_match: "Match each prefix with the correct word.",
+      q_spell: "Complete the spelling.",
+      q_pronounce_intro: "Listen carefully, then say the word yourself.",
+      q_sentence: "Which sentence correctly uses \"{word}\"?",
+
+      feedback_correct: "Correct!",
+      feedback_first_try: "Correct on the first try!",
+      feedback_wrong: "Almost there! Think once more.",
+      feedback_reveal_prompt: "Here is the answer:",
+
+      hint_negative: "This prefix is used to give a negative or opposite meaning.",
+      hint_again: "This prefix means \"again\".",
+      hint_before: "This prefix means \"before\".",
+      hint_wrongly: "This prefix means \"wrongly\" or \"badly\".",
+      hint_too_much: "This prefix means \"too much\".",
+      hint_too_little: "This prefix means \"too little\" or \"below\".",
+      hint_against: "This prefix means \"against\".",
+      hint_self: "This prefix means \"self\".",
+      hint_beyond: "This prefix means \"above\" or \"beyond normal\".",
+      hint_across: "This prefix means \"across\" or \"change\".",
+      hint_sentence: "Look for the sentence that uses this exact word.",
+
+      label_prefix: "Prefix",
+      label_root: "Root Word",
+      label_new_word: "New Word",
+      label_meaning: "Meaning",
+      label_pronunciation: "Pronunciation",
+      label_example: "Example Sentence",
+      label_correct_spelling: "Correct Spelling",
+
+      result_title: "Challenge Complete!",
+      result_score: "Score",
+      result_accuracy: "Accuracy",
+      result_xp_earned: "XP Earned",
+      result_words_learned: "Words Learned",
+      result_streak: "Streak",
+      result_band_excellent: "10/10 — Excellent!",
+      result_band_great: "Great effort!",
+      result_band_good: "Good work!",
+      result_band_practice: "Practice again — you can do even better!",
+      result_review_heading: "Words to Review",
+      result_level_unlocked: "New level unlocked!",
+
+      daily_title: "Daily Challenge",
+      daily_sub: "10 mixed prefix questions, refreshed every day",
+      daily_done_today: "You've completed today's challenge — replaying it now.",
+
+      practice_title: "Practice",
+      practice_empty_heading: "No mistakes yet",
+      practice_empty_body: "Words you answer incorrectly will appear here for extra practice.",
+      practice_start: "Practice these words",
+
+      progress_words_of: "of 112 words",
+      progress_levels_heading: "Level Progress",
+      progress_families_heading: "Prefix Families Learned",
+
+      search_placeholder: "Search a prefix or word…",
+      no_results: "No matching word found.",
+
+      toast_no_words: "No words available for this selection",
+      toast_level_locked: "Finish the previous level first",
+      toast_fill_all: "Fill every letter box first",
+
+      mic_tap: "Tap and say the word",
+      mic_listening: "Listening… now say it",
+      mic_unsupported: "This browser cannot listen. Rate yourself below.",
+      mic_blocked: "Microphone blocked. Allow it, or rate yourself below.",
+      rate_excellent: "Excellent",
+      rate_good: "Good",
+      rate_try_again: "Try Again",
+
+      label_questions: "Questions",
+      label_mode: "Mode",
+      label_current_streak: "Current Streak",
+      label_best_streak: "Best Streak",
+      label_total_xp: "Total XP",
+      label_of_112: "of 112 words"
+    },
+
+    hi: {
+      brand_name: "हितार्थी इंग्लिश मास्टर",
+      game_name: "हितार्थी प्रीफ़िक्स मास्टर",
+      tagline: "शब्द बनाइए, अंग्रेज़ी समझिए और आत्मविश्वास से बोलिए।",
+      lang_toggle: "English",
+
+      nav_start: "सीखना शुरू करें",
+      nav_challenge: "प्रीफ़िक्स चुनौती",
+      nav_practice: "अभ्यास",
+      nav_daily: "आज की चुनौती",
+      nav_progress: "मेरी प्रगति",
+
+      stat_level: "स्तर",
+      stat_xp: "एक्सपी",
+      stat_streak: "श्रृंखला",
+      stat_words: "सीखे शब्द",
+      stat_accuracy: "शुद्धता",
+
+      lesson_heading: "Prefix क्या है?",
+      lesson_body: "Prefix वह अक्षर या अक्षरों का समूह है जो किसी शब्द के आगे लगाया जाता है और उसके अर्थ में बदलाव कर सकता है।",
+      lesson_formula: "PREFIX + WORD = NEW WORD",
+      lesson_example_heading: "उदाहरण",
+      btn_continue: "आगे बढ़ें",
+      btn_start_level_quiz: "स्तर प्रश्नोत्तरी शुरू करें",
+      btn_back: "वापस",
+      btn_home: "होम",
+      btn_next: "अगला",
+      btn_finish: "समाप्त करें",
+      btn_listen: "सुनिए",
+      btn_repeat: "शब्द दोहराइए",
+      btn_check: "जाँचिए",
+      btn_reveal: "उत्तर दिखाइए",
+      btn_next_level: "अगला स्तर",
+      btn_practice_again: "फिर अभ्यास करें",
+      btn_retry: "फिर कोशिश करें",
+
+      level_locked: "इसे खोलने के लिए पिछला स्तर पूरा करें",
+      level_completed: "पूर्ण",
+      level_current: "स्तर",
+
+      mode_meaning: "अर्थ पहचानिए",
+      mode_build: "शब्द बनाइए",
+      mode_find: "Prefix खोजिए",
+      mode_transform: "शब्द रूपांतरण",
+      mode_match: "Prefix मिलान",
+      mode_spell: "वर्तनी चुनौती",
+      mode_pronounce: "उच्चारण",
+      mode_sentence: "वाक्य चुनौती",
+
+      q_meaning: "{word} का अर्थ क्या है?",
+      q_build: "विपरीत अर्थ बनाने के लिए सही Prefix लगाइए।",
+      q_build_general: "शब्द पूरा करने के लिए सही Prefix लगाइए।",
+      q_find: "इस शब्द में कौन-सा Prefix लगा है?",
+      q_transform: "{root} में {prefix}- लगाकर नया शब्द बनाइए।",
+      q_match: "हर Prefix को सही शब्द से मिलाइए।",
+      q_spell: "वर्तनी पूरी कीजिए।",
+      q_pronounce_intro: "पहले ध्यान से सुनिए, फिर खुद बोलिए।",
+      q_sentence: "\"{word}\" का सही प्रयोग किस वाक्य में है?",
+
+      feedback_correct: "सही जवाब!",
+      feedback_first_try: "पहली ही कोशिश में सही!",
+      feedback_wrong: "लगभग सही! एक बार फिर सोचिए।",
+      feedback_reveal_prompt: "सही उत्तर यह है:",
+
+      hint_negative: "यह Prefix नकारात्मक या विपरीत अर्थ देने के लिए प्रयोग होता है।",
+      hint_again: "इस Prefix का अर्थ है \"फिर से\"।",
+      hint_before: "इस Prefix का अर्थ है \"पहले\"।",
+      hint_wrongly: "इस Prefix का अर्थ है \"गलत तरीके से\"।",
+      hint_too_much: "इस Prefix का अर्थ है \"बहुत अधिक\"।",
+      hint_too_little: "इस Prefix का अर्थ है \"बहुत कम\" या \"नीचे\"।",
+      hint_against: "इस Prefix का अर्थ है \"के विरुद्ध\"।",
+      hint_self: "इस Prefix का अर्थ है \"स्वयं\"।",
+      hint_beyond: "इस Prefix का अर्थ है \"असाधारण\" या \"परे\"।",
+      hint_across: "इस Prefix का अर्थ है \"पार\" या \"परिवर्तन\"।",
+      hint_sentence: "वह वाक्य खोजिए जिसमें यही शब्द प्रयोग हुआ है।",
+
+      label_prefix: "Prefix",
+      label_root: "मूल शब्द",
+      label_new_word: "नया शब्द",
+      label_meaning: "अर्थ",
+      label_pronunciation: "उच्चारण",
+      label_example: "उदाहरण वाक्य",
+      label_correct_spelling: "सही वर्तनी",
+
+      result_title: "चुनौती पूर्ण!",
+      result_score: "स्कोर",
+      result_accuracy: "शुद्धता",
+      result_xp_earned: "एक्सपी अर्जित",
+      result_words_learned: "सीखे गए शब्द",
+      result_streak: "श्रृंखला",
+      result_band_excellent: "10/10 — शानदार!",
+      result_band_great: "बहुत बढ़िया!",
+      result_band_good: "अच्छा काम!",
+      result_band_practice: "फिर अभ्यास करें — आप और बेहतर कर सकते हैं!",
+      result_review_heading: "दोहराने योग्य शब्द",
+      result_level_unlocked: "नया स्तर खुल गया!",
+
+      daily_title: "आज की चुनौती",
+      daily_sub: "10 मिश्रित प्रश्न, हर दिन नए",
+      daily_done_today: "आज की चुनौती पहले ही पूरी हो चुकी है — दोबारा खेल रहे हैं।",
+
+      practice_title: "अभ्यास",
+      practice_empty_heading: "अभी कोई गलती नहीं",
+      practice_empty_body: "जिन शब्दों में गलती होगी, वे यहाँ अतिरिक्त अभ्यास के लिए दिखेंगे।",
+      practice_start: "इन शब्दों का अभ्यास करें",
+
+      progress_words_of: "/ 112 शब्द",
+      progress_levels_heading: "स्तर प्रगति",
+      progress_families_heading: "सीखे गए Prefix समूह",
+
+      search_placeholder: "कोई Prefix या शब्द खोजिए…",
+      no_results: "कोई मेल खाता शब्द नहीं मिला।",
+
+      toast_no_words: "इस चयन के लिए कोई शब्द उपलब्ध नहीं",
+      toast_level_locked: "पहले पिछला स्तर पूरा करें",
+      toast_fill_all: "पहले हर अक्षर बॉक्स भरें",
+
+      mic_tap: "माइक दबाकर शब्द बोलिए",
+      mic_listening: "सुन रहे हैं… अब बोलिए",
+      mic_unsupported: "यह ब्राउज़र सुन नहीं सकता। नीचे खुद रेटिंग दीजिए।",
+      mic_blocked: "माइक्रोफ़ोन अवरुद्ध है। अनुमति दें, या नीचे खुद रेटिंग दीजिए।",
+      rate_excellent: "उत्कृष्ट",
+      rate_good: "अच्छा",
+      rate_try_again: "फिर कोशिश करें",
+
+      label_questions: "प्रश्न",
+      label_mode: "तरीका",
+      label_current_streak: "वर्तमान श्रृंखला",
+      label_best_streak: "सर्वश्रेष्ठ श्रृंखला",
+      label_total_xp: "कुल एक्सपी",
+      label_of_112: "/ 112 शब्द"
+    }
+  };
+
+  var lang = "en";
+
+  function t(key, vars) {
+    var table = DICT[lang] || DICT.en;
+    var s = table[key] !== undefined ? table[key] : (DICT.en[key] !== undefined ? DICT.en[key] : key);
+    if (vars) {
+      Object.keys(vars).forEach(function (k) {
+        s = s.split("{" + k + "}").join(vars[k]);
+      });
+    }
+    return s;
+  }
+
+  HPM.i18n = {
+    dict: DICT,
+    t: t,
+    get: function () { return lang; },
+    set: function (v) { if (v === "en" || v === "hi") lang = v; },
+    toggle: function () { lang = lang === "en" ? "hi" : "en"; return lang; }
+  };
+})(typeof window !== "undefined" ? (window.HPM = window.HPM || {}) : (global.HPM = global.HPM || {}));
+
+</script>
+<script>
+/* ==========================================================================
+   store.js — persistence and game rules for Hitarthi Prefix Master
+   Attaches to the single HPM namespace. Declares no global identifiers.
+   All decision logic lives here as pure functions so it is testable
+   without a browser.
+   ========================================================================== */
+(function (HPM) {
+  "use strict";
+
+  var KEY = "hitarthi_prefix_master_v1";
+
+  /* ---------------- storage backend with automatic fallback ------------- */
+  var backend = "memory";
+  var mem = {};
+  try {
+    if (typeof window !== "undefined" && window.localStorage) {
+      window.localStorage.setItem("__hpm__", "1");
+      window.localStorage.removeItem("__hpm__");
+      backend = "local";
+    }
+  } catch (e) { backend = "memory"; }
+
+  function readRaw() {
+    try { return backend === "local" ? window.localStorage.getItem(KEY) : (mem[KEY] || null); }
+    catch (e) { return null; }
+  }
+  function writeRaw(str) {
+    try {
+      if (backend === "local") window.localStorage.setItem(KEY, str);
+      else mem[KEY] = str;
+      return true;
+    } catch (e) { return false; }
+  }
+  function clearRaw() {
+    try { if (backend === "local") window.localStorage.removeItem(KEY); else delete mem[KEY]; }
+    catch (e) {}
+  }
+
+  /* ---------------- default state ---------------------------------------- */
+  function freshState() {
+    return {
+      xp: 0,
+      coins: 0,
+      lang: "en",
+      theme: "light",
+      unlockedLevel: 1,          // highest level currently playable
+      completedLevels: [],       // levels the learner has finished at least once
+      learnedWords: [],          // word ids answered correctly at least once
+      wrongWords: [],            // word ids currently queued for review
+      answers: 0,
+      correct: 0,
+      dayStreak: 0,
+      bestStreak: 0,
+      lastDay: "",
+      timeMs: 0,
+      daily: { date: "", ids: [], done: false, score: 0 },
+      scores: []
+    };
+  }
+
+  var state = freshState();
+
+  function load() {
+    var raw = readRaw(), saved = null;
+    try { saved = raw ? JSON.parse(raw) : null; } catch (e) { saved = null; }
+    var base = freshState();
+    if (saved && typeof saved === "object") {
+      Object.keys(base).forEach(function (k) {
+        if (saved[k] === undefined || saved[k] === null) return;
+        if (k === "daily") base[k] = Object.assign(base[k], saved[k]);
+        else base[k] = saved[k];
+      });
+    }
+    state = base;
+    if (HPM.i18n) HPM.i18n.set(state.lang);
+    return state;
+  }
+  function save() { return writeRaw(JSON.stringify(state)); }
+  function reset() { clearRaw(); state = freshState(); save(); return state; }
+
+  /* ---------------- dates ------------------------------------------------- */
+  function pad(n) { return n < 10 ? "0" + n : "" + n; }
+  function todayKey(d) {
+    d = d || new Date();
+    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  }
+  function daysBetween(a, b) {
+    return Math.round((new Date(b + "T00:00:00") - new Date(a + "T00:00:00")) / 86400000);
+  }
+  function touchDay(now) {
+    var t = todayKey(now);
+    if (state.lastDay === t) return state.dayStreak;
+    if (!state.lastDay) state.dayStreak = 1;
+    else state.dayStreak = daysBetween(state.lastDay, t) === 1 ? state.dayStreak + 1 : 1;
+    state.lastDay = t;
+    if (state.dayStreak > state.bestStreak) state.bestStreak = state.dayStreak;
+    save();
+    return state.dayStreak;
+  }
+
+  /* ---------------- level system ------------------------------------------ */
+  function isLevelUnlocked(level) { return level <= state.unlockedLevel; }
+
+  function completeLevel(level) {
+    var firstTime = state.completedLevels.indexOf(level) === -1;
+    if (firstTime) {
+      state.completedLevels.push(level);
+      state.xp += 50;               // "Complete a level: +50 XP"
+      if (level === state.unlockedLevel && level < HPM.TOTAL_LEVELS) {
+        state.unlockedLevel = level + 1;
+      }
+      save();
+    }
+    return firstTime;
+  }
+
+  /* ---------------- XP rules ----------------------------------------------
+     Correct answer                 : +10 XP
+     Correct answer, first attempt  : +15 XP (replaces the +10, not additive)
+     Level completed (first time)   : +50 XP  (see completeLevel)
+     Daily Challenge finished       : +100 XP (see finishDaily)
+     -------------------------------------------------------------------- */
+  function xpForAnswer(ok, firstTry) {
+    if (!ok) return 0;
+    return firstTry ? 15 : 10;
+  }
+
+  function recordAnswer(wordId, ok, firstTry) {
+    state.answers += 1;
+    var xp = xpForAnswer(ok, firstTry);
+    if (ok) {
+      state.correct += 1;
+      state.coins += 1;
+      state.xp += xp;
+      if (state.learnedWords.indexOf(wordId) === -1) state.learnedWords.push(wordId);
+      var wi = state.wrongWords.indexOf(wordId);
+      if (wi !== -1) state.wrongWords.splice(wi, 1);
+    } else {
+      if (state.wrongWords.indexOf(wordId) === -1) state.wrongWords.push(wordId);
+    }
+    save();
+    return xp;
+  }
+
+  function accuracy() {
+    return state.answers ? Math.round((state.correct / state.answers) * 100) : 0;
+  }
+
+  /* ---------------- review queue ------------------------------------------- */
+  function reviewWords() {
+    return state.wrongWords
+      .map(function (id) { return HPM.WORDS[id]; })
+      .filter(Boolean);
+  }
+
+  /* ---------------- daily challenge ---------------------------------------
+     10 questions mixing: meaning, build, find, spell, pronounce, sentence
+     (the six categories named in the spec), drawn only from words in
+     already-unlocked levels, deterministic per calendar date.
+     -------------------------------------------------------------------- */
+  function seeded(seed) {
+    var x = seed % 2147483647;
+    if (x <= 0) x += 2147483646;
+    return function () { x = (x * 16807) % 2147483647; return (x - 1) / 2147483646; };
+  }
+  function shuffle(arr, rnd) {
+    var a = arr.slice(), r = rnd || Math.random;
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(r() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  var DAILY_MODES = ["meaning", "build", "find", "spell", "pronounce", "sentence"];
+
+  function dailySet(dateKey) {
+    var t = dateKey || todayKey();
+    if (state.daily.date === t && state.daily.ids.length === 10) {
+      return state.daily.ids.map(function (id, i) {
+        return { w: HPM.WORDS[id], m: DAILY_MODES[i % DAILY_MODES.length] };
+      });
+    }
+    var pool = HPM.WORDS.filter(function (w) { return w.level <= state.unlockedLevel; });
+    if (pool.length < 10) pool = HPM.WORDS.filter(function (w) { return w.level === 1; });
+    var rnd = seeded(Number(t.replace(/-/g, "")));
+    var picked = shuffle(pool, rnd).slice(0, 10);
+    state.daily = { date: t, ids: picked.map(function (w) { return w.id; }), done: false, score: 0 };
+    save();
+    return picked.map(function (w, i) { return { w: w, m: DAILY_MODES[i % DAILY_MODES.length] }; });
+  }
+
+  function finishDaily(score) {
+    state.daily.done = true;
+    state.daily.score = score;
+    state.xp += 100;               // "Daily Challenge: +100 XP"
+    save();
+  }
+
+  function resultBand(right, total) {
+    if (right >= total) return "excellent";
+    if (right >= total - 1) return "great";
+    if (right / total >= 0.7) return "good";
+    return "practice";
+  }
+
+  /* ---------------- leaderboard-style score log ---------------------------- */
+  function addScore(score) {
+    state.scores.push({ score: score, date: todayKey() });
+    state.scores.sort(function (a, b) { return b.score - a.score; });
+    state.scores = state.scores.slice(0, 10);
+    save();
+  }
+
+  /* ---------------- option builders used by the game modes ---------------- */
+  function buildMeaningOptions(word, rnd) {
+    var correct = word.wordMeaningHi;
+    var pool = shuffle(HPM.WORDS.filter(function (x) { return x.id !== word.id && x.wordMeaningHi !== correct; }), rnd);
+    var seen = {}; seen[correct] = true;
+    var opts = [correct];
+    for (var i = 0; i < pool.length && opts.length < 4; i++) {
+      var v = pool[i].wordMeaningHi;
+      if (!seen[v]) { seen[v] = true; opts.push(v); }
+    }
+    return { correct: correct, options: shuffle(opts, rnd) };
+  }
+
+  function buildPrefixOptionsForBuild(word, rnd) {
+    var correct = word.prefix;
+    var family = HPM.PREFIX_INFO.map(function (p) { return p.key; });
+    var pool = shuffle(family.filter(function (p) { return p !== correct; }), rnd);
+    var opts = [correct].concat(pool.slice(0, 3));
+    return { correct: correct, options: shuffle(opts, rnd) };
+  }
+
+  function buildFindPrefixOptions(word, rnd) {
+    return buildPrefixOptionsForBuild(word, rnd);
+  }
+
+  function buildSentenceOptions(word, rnd) {
+    var correct = word.exampleEn;
+    var pool = shuffle(HPM.WORDS.filter(function (x) { return x.id !== word.id; }), rnd);
+    var opts = [correct].concat(pool.slice(0, 3).map(function (x) { return x.exampleEn; }));
+    return { correct: correct, options: shuffle(opts, rnd) };
+  }
+
+  function spellBlanks(word, rnd) {
+    var w = word.toLowerCase();
+    var idx = [];
+    for (var i = 0; i < w.length; i++) if (/[a-z]/.test(w.charAt(i))) idx.push(i);
+    var count = Math.max(1, Math.min(4, Math.round(idx.length * 0.35)));
+    return shuffle(idx, rnd).slice(0, count).sort(function (a, b) { return a - b; });
+  }
+
+  function buildMatchSet(words) {
+    return {
+      prefixes: shuffle(words.map(function (w) { return { id: w.id, prefix: w.prefix }; })),
+      roots: shuffle(words.map(function (w) { return { id: w.id, root: w.root }; }))
+    };
+  }
+
+  /* ---------------- public surface --------------------------------------- */
+  HPM.store = {
+    backend: backend,
+    get: function () { return state; },
+    load: load,
+    save: save,
+    reset: reset,
+    todayKey: todayKey,
+    daysBetween: daysBetween,
+    touchDay: touchDay,
+    isLevelUnlocked: isLevelUnlocked,
+    completeLevel: completeLevel,
+    xpForAnswer: xpForAnswer,
+    recordAnswer: recordAnswer,
+    accuracy: accuracy,
+    reviewWords: reviewWords,
+    dailySet: dailySet,
+    finishDaily: finishDaily,
+    resultBand: resultBand,
+    addScore: addScore,
+    shuffle: shuffle,
+    seeded: seeded,
+    buildMeaningOptions: buildMeaningOptions,
+    buildPrefixOptionsForBuild: buildPrefixOptionsForBuild,
+    buildFindPrefixOptions: buildFindPrefixOptions,
+    buildSentenceOptions: buildSentenceOptions,
+    spellBlanks: spellBlanks,
+    buildMatchSet: buildMatchSet,
+    freshState: freshState
+  };
+})(typeof window !== "undefined" ? (window.HPM = window.HPM || {}) : (global.HPM = global.HPM || {}));
+
+</script>
+<script>
+/* ==========================================================================
+   speech.js — text-to-speech, pronunciation listening, sound effects
+   Attaches to the single HPM namespace. Declares no global identifiers.
+   Every browser API is feature-detected; nothing here can throw.
+   ========================================================================== */
+(function (HPM) {
+  "use strict";
+
+  var synth = (typeof window !== "undefined" && window.speechSynthesis) || null;
+  var voices = [];
+
+  function refreshVoices() {
+    if (!synth || !synth.getVoices) return;
+    try { voices = synth.getVoices() || []; } catch (e) { voices = []; }
+  }
+  refreshVoices();
+  if (synth && typeof synth.addEventListener === "function") {
+    synth.addEventListener("voiceschanged", refreshVoices);
+  }
+
+  function pickVoice() {
+    if (!voices.length) refreshVoices();
+    var find = function (re) {
+      for (var i = 0; i < voices.length; i++) if (re.test(voices[i].lang || "")) return voices[i];
+      return null;
+    };
+    return find(/^en-IN/i) || find(/^en-GB/i) || find(/^en/i);
+  }
+
+  HPM.speech = {
+    supported: !!synth,
+    voices: function () { return voices.slice(); },
+    say: function (text) {
+      if (!synth || !text) return false;
+      try {
+        synth.cancel();
+        var u = new window.SpeechSynthesisUtterance(String(text));
+        var v = pickVoice();
+        if (v) u.voice = v;
+        u.lang = v ? v.lang : "en-IN";
+        u.rate = 0.88;
+        u.pitch = 1;
+        synth.speak(u);
+        return true;
+      } catch (e) { return false; }
+    },
+    stop: function () { try { if (synth) synth.cancel(); } catch (e) {} }
+  };
+
+  /* ---------------- sound effects ---------------------------------------- */
+  var ctx = null;
+  function tone(freqs, dur) {
+    var AC = (typeof window !== "undefined") && (window.AudioContext || window.webkitAudioContext);
+    if (!AC) return;
+    try {
+      ctx = ctx || new AC();
+      var t0 = ctx.currentTime, slice = dur / freqs.length;
+      freqs.forEach(function (f, i) {
+        var o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = "sine"; o.frequency.value = f;
+        o.connect(g); g.connect(ctx.destination);
+        var s = t0 + i * slice;
+        g.gain.setValueAtTime(0.0001, s);
+        g.gain.exponentialRampToValueAtTime(0.09, s + 0.015);
+        g.gain.exponentialRampToValueAtTime(0.0001, s + slice);
+        o.start(s); o.stop(s + slice + 0.02);
+      });
+    } catch (e) {}
+  }
+  HPM.sfx = {
+    right: function () { tone([660, 880], 0.26); },
+    wrong: function () { tone([300, 200], 0.30); },
+    tap:   function () { tone([520], 0.08); },
+    levelup: function () { tone([523, 659, 784, 1046], 0.5); }
+  };
+
+  /* ---------------- speech recognition ------------------------------------ */
+  var SR = (typeof window !== "undefined") && (window.SpeechRecognition || window.webkitSpeechRecognition);
+  var rec = null;
+
+  HPM.listener = {
+    supported: !!SR,
+    start: function (onResult, onError, onEnd) {
+      if (!SR) { if (onError) onError("unsupported"); return; }
+      try {
+        rec = new SR();
+        rec.lang = "en-IN";
+        rec.interimResults = false;
+        rec.maxAlternatives = 5;
+        rec.onresult = function (e) {
+          var out = [];
+          for (var i = 0; i < e.results[0].length; i++) out.push(e.results[0][i].transcript);
+          if (onResult) onResult(out);
+        };
+        rec.onerror = function (e) { if (onError) onError((e && e.error) || "error"); };
+        rec.onend = function () { if (onEnd) onEnd(); };
+        rec.start();
+      } catch (e) { if (onError) onError("error"); }
+    },
+    stop: function () { try { if (rec) rec.stop(); } catch (e) {} }
+  };
+
+  function levenshtein(a, b) {
+    if (!a.length) return b.length;
+    if (!b.length) return a.length;
+    var prev = [], i, j;
+    for (j = 0; j <= b.length; j++) prev[j] = j;
+    for (i = 1; i <= a.length; i++) {
+      var last = prev[0];
+      prev[0] = i;
+      for (j = 1; j <= b.length; j++) {
+        var tmp = prev[j];
+        prev[j] = Math.min(prev[j] + 1, prev[j - 1] + 1, last + (a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1));
+        last = tmp;
+      }
+    }
+    return prev[b.length];
+  }
+  HPM.similarity = function (a, b) {
+    var clean = function (s) { return String(s).toLowerCase().replace(/[^a-z]/g, ""); };
+    var A = clean(a), B = clean(b);
+    if (!A.length && !B.length) return 100;
+    if (!A.length || !B.length) return 0;
+    return Math.max(0, Math.round((1 - levenshtein(A, B) / Math.max(A.length, B.length)) * 100));
+  };
+})(typeof window !== "undefined" ? (window.HPM = window.HPM || {}) : (global.HPM = global.HPM || {}));
+
+</script>
+<script>
+/* ==========================================================================
+   app.js — Hitarthi Prefix Master
+   Router, i18n application, level system, 8 game-mode engines, results.
+   Wrapped in a single IIFE. Declares no global identifiers other than the
+   shared HPM namespace, so it can never collide with another script and
+   is safe even if included twice.
+   ========================================================================== */
+(function (HPM) {
+  "use strict";
+
+  if (HPM.app && HPM.app.booted) return;
+
+  var store  = HPM.store;
+  var speech = HPM.speech;
+  var sfx    = HPM.sfx;
+  var listen = HPM.listener;
+  var t      = function (key, vars) { return HPM.i18n.t(key, vars); };
+
+  /* ---------------- dom helpers --------------------------------------- */
+  function byId(id) { return document.getElementById(id); }
+  function all(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+  function make(tag, cls, html) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined && html !== null) n.innerHTML = html;
+    return n;
+  }
+  function esc(s) {
+    return String(s === undefined || s === null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function setText(id, txt) { var n = byId(id); if (n) n.textContent = txt; }
+  function on(node, evt, fn) { if (node && node.addEventListener) node.addEventListener(evt, fn); }
+
+  var toastTimer = null;
+  function toast(msg, kind) {
+    var el = byId("toast");
+    if (!el) return;
+    el.textContent = msg;
+    el.className = "toast is-on" + (kind ? " " + kind : "");
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.className = "toast"; }, 2300);
+  }
+
+  /* ---------------- router --------------------------------------------- */
+  var SCREENS = ["home", "levels", "lesson", "challenge", "session", "result", "practice", "daily", "progress"];
+  var current = "home";
+  var RENDER = {};
+
+  function go(name) {
+    if (SCREENS.indexOf(name) === -1) return;
+    speech.stop();
+    current = name;
+    SCREENS.forEach(function (s) {
+      var node = byId("s-" + s);
+      if (node) node.classList.toggle("is-on", s === name);
+    });
+    if (RENDER[name]) RENDER[name]();
+    if (typeof window !== "undefined" && window.scrollTo) window.scrollTo(0, 0);
+  }
+
+  /* ---------------- static i18n application ----------------------------
+     Every fixed-position label in index.html has a stable id. Toggling
+     language rewrites all of them, then re-renders whichever screen is
+     open so its dynamically generated content (question text, options,
+     level cards) is rebuilt in the new language too. */
+  var STATIC_MAP = {
+    brandName: "brand_name", gameName: "game_name",
+    brandTag: "tagline", tagline: "tagline",
+    lblLevel: "stat_level", lblXp: "stat_xp", lblStreak: "stat_streak",
+    lblWords: "stat_words", lblAcc: "stat_accuracy",
+    tStart: "nav_start", tChallenge: "nav_challenge", tPractice: "nav_practice",
+    tDaily: "nav_daily", tProgress: "nav_progress",
+    levelsTitle: "nav_start",
+    lessonHeading: "lesson_heading", lessonFormula: "lesson_formula",
+    btnStartLevelQuiz: "btn_start_level_quiz",
+    challengeTitle: "nav_challenge", pickLevelLabel: "stat_level",
+    pickLenLabel: "label_questions", pickModeLabel: "label_mode",
+    resultTitle: "result_title", lblRScore: "result_score", lblRAcc: "result_accuracy",
+    lblRXp: "result_xp_earned", lblRWords: "result_words_learned", lblRStreak: "result_streak",
+    btnNextLevel: "btn_next_level", btnAgain: "btn_practice_again", btnResultHome: "btn_home",
+    reviewHeading: "result_review_heading", btnPracticeReview: "btn_practice_again",
+    practiceTitle: "nav_practice",
+    dailyTitle: "nav_daily", dailySub: "daily_sub", btnStartDaily: "nav_daily",
+    progressTitle: "nav_progress", pgWordsLbl: "label_of_112",
+    pgAccLbl: "stat_accuracy", pgStreakLbl: "label_current_streak", pgBestLbl: "label_best_streak",
+    pgXpLbl: "label_total_xp", pgLevelLbl: "stat_level",
+    progressLevelsHeading: "progress_levels_heading"
+  };
+
+  function applyStaticI18n() {
+    Object.keys(STATIC_MAP).forEach(function (id) { setText(id, t(STATIC_MAP[id])); });
+    var langBtn = byId("btnLang");
+    if (langBtn) langBtn.textContent = t("lang_toggle");
+    document.documentElement.setAttribute("lang", HPM.i18n.get());
+  }
+
+  function toggleLanguage() {
+    var lang = HPM.i18n.toggle();
+    store.get().lang = lang;
+    store.save();
+    applyStaticI18n();
+    if (RENDER[current]) RENDER[current]();
+  }
+
+  /* ---------------- home -------------------------------------------------- */
+  RENDER.home = function () {
+    var st = store.get();
+    setText("statLevel", st.unlockedLevel);
+    setText("statXp", st.xp);
+    setText("statStreak", st.dayStreak);
+    setText("statWords", st.learnedWords.length);
+    setText("statAcc", store.accuracy() + "%");
+    var reviewN = st.wrongWords.length;
+    var reviewEl = byId("tileReviewCount");
+    if (reviewEl) reviewEl.textContent = reviewN ? String(reviewN) : "";
+  };
+
+  /* ---------------- levels ------------------------------------------------ */
+  RENDER.levels = function () {
+    var st = store.get();
+    var host = byId("levelGrid");
+    if (!host) return;
+    host.innerHTML = "";
+    HPM.LEVEL_INFO.forEach(function (lv) {
+      var unlocked = store.isLevelUnlocked(lv.level);
+      var done = st.completedLevels.indexOf(lv.level) !== -1;
+      var card = make("button", "level-card" + (unlocked ? "" : " locked") + (done ? " done" : ""),
+        "<span class='num'>" + t("level_current") + " " + lv.level + "</span>" +
+        "<span class='title'>" + esc(lv.titleEn) + "</span>" +
+        "<span class='badge'>" + (done ? "✓" : (unlocked ? lv.level : "🔒")) + "</span>" +
+        (unlocked ? "" : "<span class='lockline'>" + t("level_locked") + "</span>"));
+      card.setAttribute("type", "button");
+      card.disabled = !unlocked;
+      on(card, "click", function () {
+        if (!unlocked) { toast(t("toast_level_locked"), "bad"); return; }
+        openLesson(lv.level);
+      });
+      host.appendChild(card);
+    });
+  };
+
+  /* ---------------- lesson ------------------------------------------------ */
+  var lessonLevel = 1;
+
+  function openLesson(level) {
+    lessonLevel = level;
+    go("lesson");
+  }
+
+  RENDER.lesson = function () {
+    var lv = HPM.LEVEL_INFO.filter(function (l) { return l.level === lessonLevel; })[0];
+    if (!lv) return;
+    setText("lessonLevelTitle", t("level_current") + " " + lessonLevel + " · " + lv.titleEn);
+
+    var families = lv.prefixes.map(function (k) { return HPM.prefixInfo(k); }).filter(Boolean);
+    var demo = HPM.wordsForLevel(lessonLevel)[0];
+    var ex = byId("lessonExample");
+    if (ex && demo) {
+      ex.innerHTML =
+        "<p class='eyebrow' style='margin-top:14px'>" + t("lesson_example_heading") + "</p>" +
+        "<div class='lex-row'>" +
+        "<span class='tag'>" + esc(demo.prefix.toUpperCase()) + "-</span>" +
+        "<span class='plus'>+</span>" +
+        "<span class='tag'>" + esc(demo.root.toUpperCase()) + "</span>" +
+        "<span class='eq'>=</span>" +
+        "<span class='tag'>" + esc(demo.word.toUpperCase()) + "</span></div>" +
+        "<div class='lex-row hi'>" + esc(demo.root) + " = " + esc(demo.rootMeaningHi) +
+        " &nbsp;·&nbsp; " + esc(demo.word) + " = " + esc(demo.wordMeaningHi) + "</div>" +
+        "<div class='lex-row'>🔊 <b>" + esc(demo.root) + "</b> → " + esc(demo.rootPron) +
+        " &nbsp;·&nbsp; <b>" + esc(demo.word) + "</b> → " + esc(demo.wordPron) + "</div>";
+    }
+
+    var host = byId("prefixCards");
+    host.innerHTML = "";
+    families.forEach(function (fam) {
+      var words = HPM.WORDS.filter(function (w) { return w.prefix === fam.key; }).slice(0, 6);
+      var card = make("div", "prefix-card",
+        "<div class='head'><b>" + esc(fam.display) + "</b><span>" +
+        esc(fam.meaningEn) + " · " + esc(fam.meaningHi) + "</span></div>");
+      var list = make("div", "words");
+      words.forEach(function (w) {
+        list.appendChild(make("div", "pw-row",
+          "<span>" + esc(w.root) + "</span><span class='arrow'>→</span>" +
+          "<span class='new'>" + esc(w.word) + " <span class='meaning'>" + esc(w.wordMeaningHi) + "</span></span>"));
+      });
+      card.appendChild(list);
+      host.appendChild(card);
+    });
+
+    var btn = byId("btnStartLevelQuiz");
+    if (btn) {
+      btn.onclick = function () {
+        var words = HPM.wordsForLevel(lessonLevel);
+        startLevelQuiz(words, lessonLevel);
+      };
+    }
+  };
+
+  /* ---------------- challenge picker --------------------------------------- */
+  var pick = { level: 0, len: 10 };   // level 0 = all unlocked levels
+
+  var MODE_LIST = ["meaning", "build", "find", "transform", "match", "spell", "pronounce", "sentence"];
+  var MODE_ICON = { meaning:"❓", build:"🧩", find:"🔎", transform:"🔁", match:"🔗", spell:"✍", pronounce:"🎤", sentence:"📝" };
+  var MODE_LABEL_KEY = {
+    meaning:"mode_meaning", build:"mode_build", find:"mode_find", transform:"mode_transform",
+    match:"mode_match", spell:"mode_spell", pronounce:"mode_pronounce", sentence:"mode_sentence"
+  };
+
+  RENDER.challenge = function () {
+    var st = store.get();
+    var lvlHost = byId("challengeLevelChips");
+    lvlHost.innerHTML = "";
+    var allChip = make("button", "chip" + (pick.level === 0 ? " is-on" : ""), t("nav_challenge") === "" ? "All" : "All");
+    allChip.setAttribute("type", "button");
+    allChip.setAttribute("data-lvl", "0");
+    lvlHost.appendChild(allChip);
+    HPM.LEVEL_INFO.forEach(function (lv) {
+      if (!store.isLevelUnlocked(lv.level)) return;
+      var b = make("button", "chip" + (pick.level === lv.level ? " is-on" : ""), t("level_current") + " " + lv.level);
+      b.setAttribute("type", "button");
+      b.setAttribute("data-lvl", String(lv.level));
+      lvlHost.appendChild(b);
+    });
+
+    var modeHost = byId("challengeModeGrid");
+    modeHost.innerHTML = "";
+    MODE_LIST.forEach(function (m) {
+      var b = make("button", "tile", "<span class='ico'>" + MODE_ICON[m] + "</span><b>" + t(MODE_LABEL_KEY[m]) + "</b>");
+      b.setAttribute("type", "button");
+      b.setAttribute("data-mode", m);
+      modeHost.appendChild(b);
+    });
+    void st;
+  };
+
+  function wireChallengeChips() {
+    on(byId("challengeLevelChips"), "click", function (e) {
+      var b = e.target.closest ? e.target.closest(".chip") : null;
+      if (!b) return;
+      all(".chip", byId("challengeLevelChips")).forEach(function (c) { c.classList.remove("is-on"); });
+      b.classList.add("is-on");
+      pick.level = Number(b.getAttribute("data-lvl"));
+    });
+    on(byId("challengeLenChips"), "click", function (e) {
+      var b = e.target.closest ? e.target.closest(".chip") : null;
+      if (!b) return;
+      all(".chip", byId("challengeLenChips")).forEach(function (c) { c.classList.remove("is-on"); });
+      b.classList.add("is-on");
+      pick.len = Number(b.getAttribute("data-len"));
+    });
+    on(byId("challengeModeGrid"), "click", function (e) {
+      var b = e.target.closest ? e.target.closest("[data-mode]") : null;
+      if (!b) return;
+      var mode = b.getAttribute("data-mode");
+      var pool = pick.level === 0
+        ? HPM.WORDS.filter(function (w) { return store.isLevelUnlocked(w.level); })
+        : HPM.wordsForLevel(pick.level);
+      if (!pool.length) { toast(t("toast_no_words"), "bad"); return; }
+      startFreeSession(pool, mode, pick.len);
+    });
+  }
+
+  /* ---------------- session engine -----------------------------------------
+     sess.steps is an array of { w, m, attempts, done }. Multiple-choice
+     modes (meaning/build/find/sentence) allow one retry after a hint
+     before the answer is revealed. Spell/transform allow one retry via
+     the Check button. Pronounce and Match are single-attempt / single
+     mega-step respectively (see their functions for details). */
+  var sess = null;
+  var lastSessionConfig = null;
+  var keyHandler = null;
+
+  function newStep(w, m) { return { w: w, m: m, attempts: 0, done: false }; }
+
+  function beginSession(steps, opts) {
+    var st = store.get();
+    sess = {
+      steps: steps,
+      i: 0,
+      right: 0,
+      wrong: 0,
+      xp: 0,
+      isLevelQuiz: !!opts.isLevelQuiz,
+      levelQuizLevel: opts.level || null,
+      isDaily: !!opts.isDaily,
+      title: opts.title || "",
+      subLabel: opts.subLabel || "",
+      results: [],
+      learnedBefore: st.learnedWords.length,
+      newlyLearned: 0,
+      t0: Date.now()
+    };
+    setText("sessTitle", opts.title || "");
+    go("session");
+    renderStep();
+  }
+
+  function startFreeSession(pool, mode, len) {
+    var words = store.shuffle(pool).slice(0, Math.min(len, pool.length));
+    if (mode === "match") {
+      var setWords = words.slice(0, Math.min(5, words.length));
+      beginSession([newStep(setWords, "match")], { title: t(MODE_LABEL_KEY.match) });
+      return;
+    }
+    var steps = words.map(function (w) { return newStep(w, mode); });
+    beginSession(steps, { title: t(MODE_LABEL_KEY[mode]) || "" });
+  }
+
+  function startLevelQuiz(words, level) {
+    var steps = store.shuffle(words).map(function (w) { return newStep(w, "meaning"); });
+    beginSession(steps, {
+      title: t("level_current") + " " + level + " · " + t("mode_meaning"),
+      isLevelQuiz: true,
+      level: level
+    });
+  }
+
+  function startDailySession() {
+    var pairs = store.dailySet();
+    var replay = store.get().daily.done;
+    var steps = pairs.map(function (p) { return newStep(p.w, p.m); });
+    beginSession(steps, { title: t("daily_title"), isDaily: true });
+    if (replay) toast(t("daily_done_today"));
+  }
+
+  function startPracticeSession() {
+    var words = store.reviewWords();
+    if (!words.length) { toast(t("practice_empty_body")); return; }
+    var modes = ["meaning", "find", "spell", "sentence"];
+    var steps = words.map(function (w, i) { return newStep(w, modes[i % modes.length]); });
+    beginSession(steps, { title: t("practice_title") });
+  }
+
+  function renderStep() {
+    keyHandler = null;
+    if (!sess) return;
+    if (sess.i >= sess.steps.length) { finishSession(); return; }
+
+    var step = sess.steps[sess.i];
+    setText("sessSub", (sess.i + 1) + " / " + sess.steps.length);
+    var bar = byId("sessBar");
+    if (bar) bar.style.width = Math.round((sess.i / sess.steps.length) * 100) + "%";
+
+    var stage = byId("stage");
+    stage.innerHTML = "";
+
+    if (step.m === "meaning") modeMeaning(stage, step);
+    else if (step.m === "build") modeBuild(stage, step);
+    else if (step.m === "find") modeFind(stage, step);
+    else if (step.m === "transform") modeTransform(stage, step);
+    else if (step.m === "match") modeMatch(stage, step);
+    else if (step.m === "spell") modeSpell(stage, step);
+    else if (step.m === "pronounce") modePronounce(stage, step);
+    else if (step.m === "sentence") modeSentence(stage, step);
+  }
+
+  function nextStep() { if (sess) { sess.i += 1; renderStep(); } }
+
+  /* Finalises one step: records the answer, awards XP, tracks new-learned
+     count, pushes a result row, and returns the XP awarded so the mode
+     function can display it. */
+  function finalizeStep(step, ok, firstTry) {
+    var st = store.get();
+    var wasLearned = st.learnedWords.indexOf(step.w.id) !== -1;
+    var xp = store.recordAnswer(step.w.id, ok, firstTry);
+    if (ok) {
+      sess.right += 1;
+      sfx.right();
+      if (!wasLearned) sess.newlyLearned += 1;
+    } else {
+      sess.wrong += 1;
+      sfx.wrong();
+    }
+    sess.xp += xp;
+    sess.results.push({ w: step.w, ok: ok });
+    return xp;
+  }
+
+  /* ---------------- shared mode helpers ------------------------------------ */
+  var HINT_KEY = {
+    un:"hint_negative", dis:"hint_negative", in:"hint_negative", im:"hint_negative",
+    il:"hint_negative", ir:"hint_negative", non:"hint_negative",
+    re:"hint_again", pre:"hint_before", mis:"hint_wrongly",
+    over:"hint_too_much", under:"hint_too_little",
+    anti:"hint_against", auto:"hint_self", super:"hint_beyond", trans:"hint_across"
+  };
+  function hintFor(prefixKey) { return t(HINT_KEY[prefixKey] || "hint_negative"); }
+
+  /* Shows the prefix's own meaning and the root word's Hindi meaning
+     together — e.g. "UN- = नहीं (not) · LIMITED = सीमित" — so the learner
+     can reason their way to the answer instead of guessing blind. This
+     never reveals the combined word's own meaning, which stays the
+     actual question. */
+  function meaningHintLine(w) {
+    var info = HPM.prefixInfo(w.prefix);
+    var prefixPart = info
+      ? esc(w.prefix.toUpperCase()) + "- = <b>" + esc(info.meaningHi) + "</b> <i>(" + esc(info.meaningEn) + ")</i>"
+      : "";
+    var rootPart = esc(w.root) + " = <b>" + esc(w.rootMeaningHi) + "</b>";
+    return "<p class='readhint hi'>" + prefixPart + (prefixPart ? " &nbsp;·&nbsp; " : "") + rootPart + "</p>";
+  }
+
+  /* Root meaning only — used in Build the Word, where the prefix itself
+     is the answer being guessed, so showing the prefix's meaning there
+     would give the answer away. */
+  function rootMeaningLine(w) {
+    return "<p class='readhint hi'>" + esc(w.root) + " = <b>" + esc(w.rootMeaningHi) + "</b></p>";
+  }
+
+  function speakButton(text, cls, label) {
+    var b = make("button", cls || "btn ghost sm", label || ("🔊 " + esc(text)));
+    b.setAttribute("type", "button");
+    on(b, "click", function () { speech.say(text); });
+    return b;
+  }
+
+  function nextButton(label) {
+    var isLast = sess && sess.i === sess.steps.length - 1;
+    var b = make("button", "btn next", label || t(isLast ? "btn_finish" : "btn_next"));
+    b.setAttribute("type", "button");
+    on(b, "click", nextStep);
+    return b;
+  }
+
+  function wordDetailLines(w) {
+    return "<p class='line'><b>" + esc(w.prefix.toUpperCase()) + "-</b> + <b>" + esc(w.root) + "</b> = <b>" + esc(w.word) + "</b></p>" +
+      "<p class='line hi'>" + t("label_pronunciation") + ": <b>" + esc(w.wordPron) + "</b> · " + t("label_meaning") + ": <b>" + esc(w.wordMeaningHi) + "</b></p>" +
+      "<p class='line dim'>" + esc(w.wordMeaningEn) + "</p>" +
+      "<p class='line'>" + esc(w.exampleEn) + "</p>" +
+      "<p class='line hi dim'>" + esc(w.exampleHi) + "</p>";
+  }
+
+  /* Generic driver for the four multiple-choice modes (meaning / build /
+     find / sentence). `built` supplies {correct, options}; `optClass`
+     lets each mode render Hindi vs plain text; `renderExplain` returns
+     the extra HTML shown once the step concludes. Handles the "wrong →
+     hint → one retry → reveal" flow shared by all four modes. */
+  function runChoiceMode(stage, step, built, optClass, hintText, renderExplain) {
+    var box = make("div", "options");
+    var out = make("div", "");
+    stage.appendChild(box);
+    stage.appendChild(out);
+
+    var lastChosen = null;
+
+    built.options.forEach(function (o, k) {
+      var b = make("button", "opt", "<span class='k'>" + (k + 1) + "</span><span class='" + (optClass || "") + "'>" + esc(o) + "</span>");
+      b.setAttribute("type", "button");
+      b.setAttribute("data-val", o);
+      on(b, "click", function () { pick(o, b); });
+      box.appendChild(b);
+    });
+
+    function pick(chosen, btnNode) {
+      if (step.done) return;
+      step.attempts += 1;
+      lastChosen = chosen;
+      var ok = chosen === built.correct;
+      if (ok) { conclude(true, step.attempts === 1); return; }
+      if (step.attempts >= 2) { conclude(false, false); return; }
+      btnNode.classList.add("tried");
+      btnNode.disabled = true;
+      var hb = stage.querySelector(".hint-box");
+      if (hb) hb.remove();
+      var hint = make("div", "hint-box", "⚠ " + t("feedback_wrong") + "<br>" + hintText);
+      out.parentNode.insertBefore(hint, out);
+    }
+
+    function conclude(ok, firstTry) {
+      step.done = true;
+      all(".opt", box).forEach(function (b) {
+        b.disabled = true;
+        var v = b.getAttribute("data-val");
+        if (v === built.correct) b.classList.add("right");
+        else if (!ok && v === lastChosen) b.classList.add("wrong");
+        else if (!b.classList.contains("tried")) b.classList.add("fade");
+      });
+      var hb = stage.querySelector(".hint-box");
+      if (hb) hb.remove();
+      var xp = finalizeStep(step, ok, firstTry);
+      var panel = make("div", "explain " + (ok ? "ok" : "no"),
+        "<h4>" + (ok ? (firstTry ? "✓ " + t("feedback_first_try") : "✓ " + t("feedback_correct")) : "✕ " + t("feedback_reveal_prompt")) +
+        "<span class='xp'>+" + xp + " XP</span></h4>" + renderExplain());
+      out.appendChild(panel);
+      out.appendChild(nextButton());
+    }
+
+    keyHandler = function (n) {
+      var b = all(".opt", box)[n - 1];
+      if (b && !b.disabled) b.click();
+    };
+  }
+
+  /* ---------------- mode 1 · guess the meaning ------------------------------ */
+  function modeMeaning(stage, step) {
+    var w = step.w;
+    var built = store.buildMeaningOptions(w);
+    stage.appendChild(make("div", "wordstage",
+      "<p class='parts'><span class='pfx'>" + esc(w.prefix.toUpperCase()) + "-</span><span class='plus'>+</span><span class='base'>" + esc(w.root.toUpperCase()) + "</span></p>" +
+      meaningHintLine(w) +
+      "<p class='readhint hi'>" + t("label_pronunciation") + ": <b>" + esc(w.wordPron) + "</b></p>" +
+      "<p class='prompt hi'>" + t("q_meaning", { word: w.word.toUpperCase() }) + "</p>"));
+    runChoiceMode(stage, step, built, "hi", hintFor(w.prefix), function () { return wordDetailLines(w); });
+  }
+
+  /* ---------------- mode 2 · build the word --------------------------------- */
+  function modeBuild(stage, step) {
+    var w = step.w;
+    var built = store.buildPrefixOptionsForBuild(w);
+    var negation = ["un","dis","in","im","il","ir","non"].indexOf(w.prefix) !== -1;
+    stage.appendChild(make("div", "wordstage",
+      "<p class='big'>" + esc(w.root.toUpperCase()) + "</p>" +
+      rootMeaningLine(w) +
+      "<p class='readhint hi'>" + t("label_pronunciation") + ": <b>" + esc(w.rootPron) + "</b></p>" +
+      "<p class='prompt hi'>" + (negation ? t("q_build") : t("q_build_general")) + "</p>"));
+    var optionLabels = built.options.map(function (p) { return p.toUpperCase() + "-"; });
+    var builtLabelled = { correct: w.prefix.toUpperCase() + "-", options: optionLabels };
+    runChoiceMode(stage, step, builtLabelled, "", hintFor(w.prefix), function () { return wordDetailLines(w); });
+  }
+
+  /* ---------------- mode 3 · find the prefix --------------------------------- */
+  function modeFind(stage, step) {
+    var w = step.w;
+    var built = store.buildFindPrefixOptions(w);
+    stage.appendChild(make("div", "wordstage",
+      "<p class='big'>" + esc(w.word.toUpperCase()) + "</p>" +
+      "<p class='readhint hi'>" + t("label_pronunciation") + ": <b>" + esc(w.wordPron) + "</b></p>" +
+      "<p class='prompt hi'>" + t("q_find") + "</p>"));
+    var optionLabels = built.options.map(function (p) { return p.toUpperCase() + "-"; });
+    var builtLabelled = { correct: w.prefix.toUpperCase() + "-", options: optionLabels };
+    runChoiceMode(stage, step, builtLabelled, "", hintFor(w.prefix), function () { return wordDetailLines(w); });
+  }
+
+  /* ---------------- mode 4 · word transformation ----------------------------- */
+  function modeTransform(stage, step) {
+    var w = step.w;
+    var prefixLetters = w.prefix.split("");
+    stage.appendChild(make("div", "wordstage",
+      "<p class='prompt hi' style='margin-top:0'>" + t("q_transform", { prefix: w.prefix.toUpperCase(), root: w.root.toUpperCase() }) + "</p>" +
+      "<p class='big' style='margin-top:14px'>" + esc(w.root.toUpperCase()) + "</p>" +
+      meaningHintLine(w) +
+      "<p class='readhint hi'>" + t("label_pronunciation") + ": <b>" + esc(w.rootPron) + "</b></p>"));
+
+    var box = make("div", "spellbox");
+    var filled = {};
+    var slots = [];
+    prefixLetters.forEach(function (ch, idx) {
+      var s = make("div", "slot blank", "");
+      s.setAttribute("data-idx", String(idx));
+      on(s, "click", function () {
+        if (step.done || !filled[idx]) return;
+        var used = bank.querySelector("[data-bid='" + filled[idx].bid + "']");
+        if (used) used.classList.remove("used");
+        delete filled[idx];
+        s.textContent = "";
+      });
+      slots.push(s);
+      box.appendChild(s);
+    });
+    box.appendChild(make("div", "slot fixed", esc(w.root.toUpperCase())));
+    stage.appendChild(box);
+
+    var bankLetters = store.shuffle(
+      prefixLetters.map(function (c) { return c.toUpperCase(); })
+        .concat(store.shuffle("ABCDEFGHKLMNOPRSTUVWY".split("")).slice(0, 3))
+    );
+    var bank = make("div", "letterbank");
+    bankLetters.forEach(function (L, bid) {
+      var b = make("button", "lkey", esc(L));
+      b.setAttribute("type", "button");
+      b.setAttribute("data-bid", String(bid));
+      on(b, "click", function () {
+        if (step.done) return;
+        var open = -1;
+        for (var i = 0; i < slots.length; i++) if (!filled[i]) { open = i; break; }
+        if (open === -1) return;
+        filled[open] = { ch: L, bid: bid };
+        slots[open].textContent = L;
+        b.classList.add("used");
+        sfx.tap();
+      });
+      bank.appendChild(b);
+    });
+    stage.appendChild(bank);
+
+    var out = make("div", "");
+    var checkBtn = make("button", "btn next", t("btn_check"));
+    checkBtn.setAttribute("type", "button");
+    stage.appendChild(checkBtn);
+    stage.appendChild(out);
+
+    on(checkBtn, "click", function () {
+      if (step.done) return;
+      for (var i = 0; i < slots.length; i++) if (!filled[i]) { toast(t("q_transform", { prefix: w.prefix.toUpperCase(), root: w.root.toUpperCase() })); return; }
+      step.attempts += 1;
+      var guess = prefixLetters.map(function (_, i) { return filled[i].ch.toLowerCase(); }).join("");
+      var ok = guess === w.prefix.toLowerCase();
+      slots.forEach(function (s, i) {
+        var good = filled[i].ch.toLowerCase() === prefixLetters[i];
+        s.classList.remove("good", "bad");
+        s.classList.add(good ? "good" : "bad");
+      });
+      if (ok || step.attempts >= 2) {
+        step.done = true;
+        checkBtn.remove();
+        var xp = finalizeStep(step, ok, step.attempts === 1);
+        out.appendChild(make("div", "explain " + (ok ? "ok" : "no"),
+          "<h4>" + (ok ? "✓ " + t("feedback_correct") : "✕ " + t("feedback_reveal_prompt")) +
+          "<span class='xp'>+" + xp + " XP</span></h4>" + wordDetailLines(w)));
+        speech.say(w.word);
+        out.appendChild(nextButton());
+      } else {
+        toast(t("feedback_wrong"));
+      }
+    });
+  }
+
+  /* ---------------- mode 5 · prefix match ------------------------------------
+     A single mega-step: the whole match round is one entry in sess.steps.
+     Correct pairs award a flat +10 XP each (via store.recordAnswer with
+     firstTry=false) since "first attempt" does not map cleanly onto a
+     matching game; wrong taps just flash and reset, with no XP or
+     review-queue effect, since a mismatched tap does not clearly belong
+     to one specific word. This is a deliberate simplification, noted in
+     the README. */
+  function modeMatch(stage, step) {
+    var words = step.w;
+    var matchedIds = {};
+    var selPrefix = null, selRoot = null;
+
+    stage.appendChild(make("div", "wordstage",
+      "<p class='prompt hi' style='margin-top:0'>" + t("q_match") + "</p>"));
+
+    var cols = make("div", "match-cols");
+    var prefixCol = make("div", "match-col", "<b>" + t("label_prefix") + "</b>");
+    var rootCol = make("div", "match-col", "<b>" + t("label_root") + "</b>");
+    cols.appendChild(prefixCol);
+    cols.appendChild(rootCol);
+    stage.appendChild(cols);
+
+    var reveal = make("div", "match-reveal");
+    var out = make("div", "");
+    stage.appendChild(reveal);
+    stage.appendChild(out);
+
+    var prefixOrder = store.shuffle(words);
+    var rootOrder = store.shuffle(words);
+
+    var prefixBtns = {}, rootBtns = {};
+
+    prefixOrder.forEach(function (w) {
+      var b = make("button", "match-item", esc(w.prefix.toUpperCase()) + "-");
+      b.setAttribute("type", "button");
+      on(b, "click", function () { pickPrefix(w.id, b); });
+      prefixCol.appendChild(b);
+      prefixBtns[w.id] = b;
+    });
+    rootOrder.forEach(function (w) {
+      var b = make("button", "match-item", esc(w.root.toUpperCase()));
+      b.setAttribute("type", "button");
+      on(b, "click", function () { pickRoot(w.id, b); });
+      rootCol.appendChild(b);
+      rootBtns[w.id] = b;
+    });
+
+    function pickPrefix(id, btn) {
+      if (matchedIds[id]) return;
+      if (selPrefix) selPrefix.btn.classList.remove("sel");
+      selPrefix = { id: id, btn: btn };
+      btn.classList.add("sel");
+      tryMatch();
+    }
+    function pickRoot(id, btn) {
+      if (matchedIds[id]) return;
+      if (selRoot) selRoot.btn.classList.remove("sel");
+      selRoot = { id: id, btn: btn };
+      btn.classList.add("sel");
+      tryMatch();
+    }
+    function tryMatch() {
+      if (!selPrefix || !selRoot) return;
+      if (selPrefix.id === selRoot.id) {
+        matchedIds[selPrefix.id] = true;
+        selPrefix.btn.classList.remove("sel");
+        selRoot.btn.classList.remove("sel");
+        selPrefix.btn.classList.add("matched");
+        selRoot.btn.classList.add("matched");
+        selPrefix.btn.disabled = true;
+        selRoot.btn.disabled = true;
+        sfx.right();
+        var w = words.filter(function (x) { return x.id === selPrefix.id; })[0];
+        reveal.appendChild(make("div", "explain ok",
+          "<h4>✓ " + esc(w.prefix.toUpperCase()) + "- + " + esc(w.root) + " = " + esc(w.word) + "</h4>" +
+          "<p class='line hi'>" + esc(w.wordMeaningHi) + "</p>"));
+        selPrefix = null; selRoot = null;
+        if (Object.keys(matchedIds).length === words.length) allMatched();
+      } else {
+        sfx.wrong();
+        selPrefix.btn.classList.add("wrongflash");
+        selRoot.btn.classList.add("wrongflash");
+        setTimeout(function () {
+          if (selPrefix) selPrefix.btn.classList.remove("sel", "wrongflash");
+          if (selRoot) selRoot.btn.classList.remove("sel", "wrongflash");
+          selPrefix = null; selRoot = null;
+        }, 500);
+      }
+    }
+    function allMatched() {
+      words.forEach(function (w) { finalizeStep({ w: w, done: true, attempts: 1 }, true, false); });
+      out.appendChild(nextButton(t("btn_finish")));
+    }
+  }
+
+  /* ---------------- mode 6 · spelling challenge ------------------------------ */
+  function modeSpell(stage, step) {
+    var w = step.w;
+    var full = w.word;
+    var letters = full.split("");
+    var blanks = store.spellBlanks(full);
+    var filled = {};
+
+    stage.appendChild(make("div", "card",
+      "<p class='eyebrow' style='margin-top:0'>" + t("label_meaning") + "</p>" +
+      "<p class='spellword hi'>" + esc(w.wordMeaningHi) + "</p>" +
+      "<p class='dim small'>" + esc(w.prefix.toUpperCase()) + "- + " + esc(w.root) + "</p>" +
+      "<p class='dim' style='margin-top:8px'>" + t("q_spell") + "</p>"));
+
+    var box = make("div", "spellbox");
+    stage.appendChild(box);
+    var slots = [];
+    letters.forEach(function (ch, k) {
+      if (blanks.indexOf(k) === -1) {
+        box.appendChild(make("div", "slot fixed", esc(ch.toUpperCase())));
+        slots.push(null);
+      } else {
+        var s = make("div", "slot blank", "");
+        s.setAttribute("data-idx", String(k));
+        on(s, "click", function () {
+          if (step.done || !filled[k]) return;
+          var used = bank.querySelector("[data-bid='" + filled[k].bid + "']");
+          if (used) used.classList.remove("used");
+          delete filled[k];
+          s.textContent = "";
+        });
+        box.appendChild(s);
+        slots.push(s);
+      }
+    });
+
+    var bank = make("div", "letterbank");
+    var pool = blanks.map(function (k) { return letters[k].toUpperCase(); })
+      .concat(store.shuffle("ABCDEFGHKLMNOPRSTUVWY".split("")).slice(0, 3));
+    store.shuffle(pool).forEach(function (L, bid) {
+      var b = make("button", "lkey", esc(L));
+      b.setAttribute("type", "button");
+      b.setAttribute("data-bid", String(bid));
+      on(b, "click", function () {
+        if (step.done) return;
+        var open = blanks.filter(function (k) { return !filled[k]; })[0];
+        if (open === undefined) return;
+        filled[open] = { ch: L, bid: bid };
+        slots[open].textContent = L;
+        b.classList.add("used");
+        sfx.tap();
+      });
+      bank.appendChild(b);
+    });
+    stage.appendChild(bank);
+
+    var out = make("div", "");
+    var checkBtn = make("button", "btn next", t("btn_check"));
+    checkBtn.setAttribute("type", "button");
+    stage.appendChild(checkBtn);
+    stage.appendChild(out);
+
+    on(checkBtn, "click", function () {
+      if (blanks.some(function (k) { return !filled[k]; })) { toast(t("toast_fill_all"), "bad"); return; }
+      step.attempts += 1;
+      var guess = letters.map(function (ch, k) { return filled[k] ? filled[k].ch.toLowerCase() : ch.toLowerCase(); }).join("");
+      var ok = guess === full.toLowerCase();
+      blanks.forEach(function (k) {
+        var good = filled[k].ch.toLowerCase() === letters[k].toLowerCase();
+        slots[k].classList.remove("good", "bad");
+        slots[k].classList.add(good ? "good" : "bad");
+      });
+      if (ok || step.attempts >= 2) {
+        step.done = true;
+        checkBtn.remove();
+        if (!ok) blanks.forEach(function (k) { slots[k].textContent = letters[k].toUpperCase(); });
+        var xp = finalizeStep(step, ok, step.attempts === 1);
+        out.appendChild(make("div", "explain " + (ok ? "ok" : "no"),
+          "<h4>" + (ok ? "✓ " + t("feedback_correct") : "✕ " + t("label_correct_spelling") + ": " + esc(full.toUpperCase())) +
+          "<span class='xp'>+" + xp + " XP</span></h4>" + wordDetailLines(w)));
+        speech.say(full);
+        out.appendChild(nextButton());
+      } else {
+        toast(t("feedback_wrong"));
+      }
+    });
+  }
+
+  /* ---------------- mode 7 · pronunciation ------------------------------------ */
+  function modePronounce(stage, step) {
+    var w = step.w;
+    stage.appendChild(make("div", "wordstage",
+      "<p class='big'>" + esc(w.word.toUpperCase()) + "</p>" +
+      "<p class='readhint hi'>" + t("label_pronunciation") + ": <b>" + esc(w.wordPron) + "</b></p>" +
+      "<p class='prompt hi'>" + t("q_pronounce_intro") + "</p>"));
+
+    stage.appendChild(speakButton(w.word, "btn ghost spaced", "🔊 " + t("btn_listen")));
+
+    var wrap = make("div", "mic-wrap");
+    var mic = make("button", "mic", "🎤");
+    mic.setAttribute("type", "button");
+    var state = make("p", "mic-state", listen.supported ? t("mic_tap") : t("mic_unsupported"));
+    var verdict = make("p", "verdict", "");
+    wrap.appendChild(mic); wrap.appendChild(state); wrap.appendChild(verdict);
+    stage.appendChild(wrap);
+
+    var out = make("div", "");
+    stage.appendChild(out);
+
+    function finish(ok, firstTry, label, heard) {
+      if (step.done) return;
+      step.done = true;
+      verdict.textContent = label;
+      verdict.className = "verdict";
+      state.textContent = heard || "";
+      mic.classList.remove("rec");
+      mic.disabled = true;
+      var xp = finalizeStep(step, ok, firstTry);
+      out.appendChild(make("div", "explain " + (ok ? "ok" : "no"),
+        "<h4>" + esc(label) + "<span class='xp'>+" + xp + " XP</span></h4>" + wordDetailLines(w)));
+      out.appendChild(nextButton());
+    }
+
+    function selfRate() {
+      if (out.getAttribute("data-rated")) return;
+      out.setAttribute("data-rated", "1");
+      var row = make("div", "btn-row");
+      [[t("rate_excellent"), true, true], [t("rate_good"), true, false], [t("rate_try_again"), false, false]].forEach(function (r) {
+        var b = make("button", "btn" + (r[0] === t("rate_excellent") ? "" : " ghost"), r[0]);
+        b.setAttribute("type", "button");
+        on(b, "click", function () { row.remove(); finish(r[1], r[2], r[0]); });
+        row.appendChild(b);
+      });
+      out.appendChild(row);
+    }
+
+    if (listen.supported) {
+      on(mic, "click", function () {
+        if (step.done) return;
+        mic.classList.add("rec");
+        state.textContent = t("mic_listening");
+        listen.start(
+          function (heardList) {
+            var best = 0;
+            heardList.forEach(function (h) { best = Math.max(best, HPM.similarity(h, w.word)); });
+            var heard = heardList[0];
+            if (best >= 85) finish(true, true, t("rate_excellent"), heard);
+            else if (best >= 60) finish(true, false, t("rate_good"), heard);
+            else finish(false, false, t("rate_try_again"), heard);
+          },
+          function (err) {
+            mic.classList.remove("rec");
+            state.textContent = err === "not-allowed" ? t("mic_blocked") : t("mic_unsupported");
+            selfRate();
+          },
+          function () { mic.classList.remove("rec"); }
+        );
+      });
+    } else {
+      on(mic, "click", function () { speech.say(w.word); });
+      selfRate();
+    }
+  }
+
+  /* ---------------- mode 8 · sentence challenge -------------------------------- */
+  function modeSentence(stage, step) {
+    var w = step.w;
+    var built = store.buildSentenceOptions(w);
+    stage.appendChild(make("div", "wordstage",
+      "<p class='big'>" + esc(w.word.toUpperCase()) + "</p>" +
+      "<p class='readhint hi'>" + t("label_pronunciation") + ": <b>" + esc(w.wordPron) + "</b></p>" +
+      "<p class='prompt hi'>" + t("q_sentence", { word: w.word }) + "</p>"));
+    runChoiceMode(stage, step, built, "", t("hint_sentence"), function () {
+      return wordDetailLines(w);
+    });
+  }
+
+  /* ---------------- session end -------------------------------------------- */
+  function finishSession() {
+    if (!sess) { go("home"); return; }
+    var st = store.get();
+    st.timeMs += Date.now() - sess.t0;
+    store.touchDay();
+
+    var unlockedNew = false;
+    if (sess.isLevelQuiz) {
+      unlockedNew = store.completeLevel(sess.levelQuizLevel);
+      if (unlockedNew) sfx.levelup();
+    }
+    if (sess.isDaily) store.finishDaily(sess.xp);
+    store.addScore(sess.xp);
+
+    var total = sess.results.length;
+    var band = store.resultBand(sess.right, total);
+
+    setText("rScore", sess.right + "/" + total);
+    setText("rAcc", total ? Math.round((sess.right / total) * 100) + "%" : "0%");
+    setText("rXp", sess.xp);
+    setText("rWords", sess.newlyLearned);
+    setText("rStreak", st.dayStreak);
+
+    var bandKey = band === "excellent" ? "result_band_excellent"
+      : band === "great" ? "result_band_great"
+      : band === "good" ? "result_band_good" : "result_band_practice";
+    setText("resultBand", t(bandKey));
+
+    var unlockedNote = byId("resultUnlocked");
+    if (unlockedNew) {
+      unlockedNote.textContent = t("result_level_unlocked");
+      unlockedNote.classList.remove("hidden");
+    } else {
+      unlockedNote.classList.add("hidden");
+    }
+
+    var nextLevel = sess.isLevelQuiz ? sess.levelQuizLevel + 1 : null;
+    var nextBtn = byId("btnNextLevel");
+    if (sess.isLevelQuiz && nextLevel && nextLevel <= HPM.TOTAL_LEVELS && store.isLevelUnlocked(nextLevel)) {
+      nextBtn.classList.remove("hidden");
+      nextBtn.onclick = function () { openLesson(nextLevel); };
+    } else {
+      nextBtn.classList.add("hidden");
+    }
+
+    var finishedConfig = { steps: sess.steps.map(function (s) { return s.w; }), meta: sess };
+    lastSessionConfig = sess;
+    byId("btnAgain").onclick = function () { restartLastSession(); };
+
+    var reviewCard = byId("reviewCard");
+    var reviewWords = store.reviewWords();
+    if (reviewWords.length) {
+      reviewCard.classList.remove("hidden");
+      var list = byId("reviewList");
+      list.innerHTML = "";
+      reviewWords.slice(0, 12).forEach(function (w) {
+        list.appendChild(make("div", "row",
+          "<span class='rank'>" + esc(w.prefix.toUpperCase()) + "-</span>" +
+          "<span class='who'><b>" + esc(w.word.toUpperCase()) + "</b><small class='hi'>" + esc(w.wordPron) + " · " + esc(w.wordMeaningHi) + "</small></span>"));
+      });
+      byId("btnPracticeReview").onclick = function () { startPracticeSession(); };
+    } else {
+      reviewCard.classList.add("hidden");
+    }
+
+    sess = null;
+    go("result");
+    void finishedConfig;
+  }
+
+  function restartLastSession() {
+    if (!lastSessionConfig) { go("home"); return; }
+    var cfg = lastSessionConfig;
+    if (cfg.isLevelQuiz) { startLevelQuiz(HPM.wordsForLevel(cfg.levelQuizLevel), cfg.levelQuizLevel); return; }
+    if (cfg.isDaily) { startDailySession(); return; }
+    var words = cfg.steps.map(function (s) { return s.w; });
+    if (words.length && Array.isArray(words[0])) {
+      // a match-mode session: words[0] is the pair set
+      beginSession([newStep(store.shuffle(words[0]), "match")], { title: cfg.title });
+      return;
+    }
+    var modes = cfg.steps.map(function (s) { return s.m; });
+    var steps = words.map(function (w, i) { return newStep(w, modes[i]); });
+    beginSession(steps, { title: cfg.title });
+  }
+
+  function leaveSession() {
+    if (sess && sess.i > 0) finishSession();
+    else { sess = null; go("home"); }
+  }
+
+  /* ---------------- practice ------------------------------------------------- */
+  RENDER.practice = function () {
+    var host = byId("practiceBody");
+    var words = store.reviewWords();
+    host.innerHTML = "";
+    if (!words.length) {
+      host.appendChild(make("div", "card",
+        "<b class='card-title'>" + t("practice_empty_heading") + "</b>" +
+        "<p class='dim'>" + t("practice_empty_body") + "</p>"));
+      return;
+    }
+    var card = make("div", "card");
+    card.appendChild(make("b", "card-title", t("result_review_heading")));
+    words.forEach(function (w) {
+      card.appendChild(make("div", "row",
+        "<span class='rank'>" + esc(w.prefix.toUpperCase()) + "-</span>" +
+        "<span class='who'><b>" + esc(w.word.toUpperCase()) + "</b><small class='hi'>" + esc(w.wordPron) + " · " + esc(w.wordMeaningHi) + "</small></span>"));
+    });
+    host.appendChild(card);
+    var btn = make("button", "btn next", t("practice_start"));
+    btn.setAttribute("type", "button");
+    on(btn, "click", startPracticeSession);
+    host.appendChild(btn);
+  };
+
+  /* ---------------- daily ----------------------------------------------------- */
+  RENDER.daily = function () {
+    var st = store.get();
+    var done = st.daily.date === store.todayKey() && st.daily.done;
+    var note = byId("dailyDoneNote");
+    if (done) { note.textContent = t("daily_done_today"); note.classList.remove("hidden"); }
+    else note.classList.add("hidden");
+    byId("btnStartDaily").onclick = startDailySession;
+  };
+
+  /* ---------------- progress -------------------------------------------------- */
+  RENDER.progress = function () {
+    var st = store.get();
+    setText("pgWords", st.learnedWords.length);
+    setText("pgAcc", store.accuracy() + "%");
+    setText("pgStreak", st.dayStreak);
+    setText("pgBest", st.bestStreak);
+    setText("pgXp", st.xp);
+    setText("pgLevel", st.unlockedLevel);
+
+    var host = byId("levelProgress");
+    host.innerHTML = "";
+    HPM.LEVEL_INFO.forEach(function (lv) {
+      var words = HPM.wordsForLevel(lv.level);
+      var got = words.filter(function (w) { return st.learnedWords.indexOf(w.id) !== -1; }).length;
+      var pct = words.length ? Math.round((got / words.length) * 100) : 0;
+      var done = st.completedLevels.indexOf(lv.level) !== -1;
+      var row = make("div", "lvl-progress-row",
+        "<p class='lbl'><span>" + t("level_current") + " " + lv.level + " · " + esc(lv.titleEn) +
+        (done ? " ✓" : "") + "</span><span>" + got + "/" + words.length + "</span></p>" +
+        "<span class='lvl-bar" + (done ? " done" : "") + "'><span style='width:" + pct + "%'></span></span>");
+      host.appendChild(row);
+    });
+  };
+
+  /* ---------------- theme ------------------------------------------------- */
+  function applyTheme() {
+    var dark = store.get().theme === "dark";
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    var btn = byId("btnTheme");
+    if (btn) btn.textContent = dark ? "☀" : "🌙";
+  }
+  function toggleTheme() {
+    var s = store.get();
+    s.theme = s.theme === "dark" ? "light" : "dark";
+    store.save();
+    applyTheme();
+  }
+
+  /* ---------------- wiring --------------------------------------------------- */
+  function wire() {
+    on(document, "click", function (e) {
+      var b = e.target && e.target.closest ? e.target.closest("[data-go]") : null;
+      if (!b) return;
+      go(b.getAttribute("data-go"));
+    });
+
+    on(byId("btnLang"), "click", toggleLanguage);
+    on(byId("btnTheme"), "click", toggleTheme);
+
+    on(byId("sessBack"), "click", leaveSession);
+    on(byId("sessSpeak"), "click", function () {
+      if (!sess) return;
+      var step = sess.steps[Math.min(sess.i, sess.steps.length - 1)];
+      if (!step) return;
+      if (step.m === "match") return;
+      var w = step.w;
+      if (w && w.word) speech.say(w.word);
+    });
+
+    wireChallengeChips();
+
+    on(document, "keydown", function (e) {
+      if (current !== "session" || !keyHandler) return;
+      if (["1", "2", "3", "4"].indexOf(e.key) !== -1) keyHandler(Number(e.key));
+    });
+  }
+
+  /* ---------------- boot ------------------------------------------------------ */
+  function boot() {
+    store.load();
+    HPM.i18n.set(store.get().lang || "en");
+    wire();
+    applyTheme();
+    applyStaticI18n();
+    store.touchDay();
+    go("home");
+    HPM.app.booted = true;
+  }
+
+  HPM.app = {
+    booted: false,
+    boot: boot,
+    go: go,
+    startFreeSession: startFreeSession,
+    startLevelQuiz: startLevelQuiz,
+    startDailySession: startDailySession,
+    startPracticeSession: startPracticeSession,
+    openLesson: openLesson,
+    getPick: function () { return pick; },
+    getSession: function () { return sess; }
+  };
+
+  if (typeof document !== "undefined") {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", boot);
+    } else {
+      boot();
+    }
+  }
+})(typeof window !== "undefined" ? (window.HPM = window.HPM || {}) : (global.HPM = global.HPM || {}));
+
+</script>
+</body>
+</html>
