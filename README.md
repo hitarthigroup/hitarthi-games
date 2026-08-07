@@ -61,6 +61,25 @@ The site updates itself in about a minute. That's the whole process.
 - **Keep images small.** Many players are on slow rural connections. Resize a picture
   to the size it's actually displayed at before committing it.
 
+## The push-time check
+
+Every push is checked automatically (GitHub → Actions tab). It fails, in plain
+words, if:
+
+- the `GAMES` list has a syntax error (missing comma) or a bad title/path/date,
+- a listed game folder or its `index.html` is missing,
+- a game folder exists in the repo but isn't in the `GAMES` list,
+- any page references a file that doesn't exist (e.g. a zip flattened a game's
+  `css/` and `js/` folders).
+
+A failed check does **not** stop the site from deploying — it's an alarm, not a
+gate. GitHub emails the person who pushed; the red ✗ on the commit links to the
+reason. You can also run it yourself before pushing:
+
+```
+node scripts/check-games.mjs
+```
+
 ## What's in here
 
 | Path | What it is |
@@ -70,4 +89,6 @@ The site updates itself in about a minute. That's the whole process.
 | `assets/arcade-bar.js` | The "← back to arcade" button games include with one line |
 | `assets/hitarthi-logo.png` | Header logo and favicon |
 | `assets/og-image.png` | Preview picture shown when the link is shared on WhatsApp/Slack |
+| `assets/fonts/` | Self-hosted fonts — the homepage makes no requests to Google |
+| `scripts/check-games.mjs` | The push-time check (runs via `.github/workflows/check.yml`) |
 | `<game>/` | One folder per game — the junior's own code, styled however they like |
