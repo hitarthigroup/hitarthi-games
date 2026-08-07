@@ -1,0 +1,2927 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B2545">
+<meta name="description" content="Hitarthi English Master — learn English vocabulary in Hindi with quizzes, flashcards, spelling and pronunciation practice.">
+<title>Hitarthi English Master</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   styles.css — Hitarthi English Master
+   Palette: deep navy · white · orange accent · soft green · soft red
+   Mobile first. Light and dark themes.
+   ========================================================================== */
+
+/* ---------- 1 · design tokens ---------- */
+:root{
+  --navy-900:#071A33;
+  --navy-800:#0B2545;
+  --navy-700:#123563;
+  --navy-600:#1B4A85;
+  --orange:#FF7A1A;
+  --orange-deep:#E4650B;
+  --orange-soft:#FFF1E5;
+  --green:#2FBF71;
+  --green-soft:#E7F8EF;
+  --red:#E5484D;
+  --red-soft:#FDECEC;
+
+  --bg:#F2F6FC;
+  --surface:#FFFFFF;
+  --surface-2:#F7FAFD;
+  --text:#0B2545;
+  --text-2:#3D557A;
+  --muted:#5F7799;
+  --line:#E2E9F4;
+
+  --shadow:0 10px 30px rgba(11,37,69,.08);
+  --shadow-lg:0 20px 46px rgba(11,37,69,.16);
+  --r:18px;
+  --r-sm:12px;
+  --r-lg:26px;
+  --nav-h:64px;
+  --ease:cubic-bezier(.22,.85,.3,1);
+  --font:"Manrope","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-hi:"Noto Sans Devanagari","Nirmala UI","Mangal",sans-serif;
+}
+
+html[data-theme="dark"]{
+  --bg:#050F1E;
+  --surface:#0C2340;
+  --surface-2:#0A1C33;
+  --text:#E9F1FB;
+  --text-2:#B9CBE4;
+  --muted:#8AA3C2;
+  --line:#17385E;
+  --orange-soft:#3A2210;
+  --green-soft:#0E3324;
+  --red-soft:#3A1618;
+  --shadow:0 10px 30px rgba(0,0,0,.40);
+  --shadow-lg:0 20px 46px rgba(0,0,0,.55);
+}
+
+/* ---------- 2 · reset ---------- */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.55;
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));
+  transition:background .3s var(--ease),color .3s var(--ease);
+}
+button,input,select{font-family:inherit;font-size:inherit;color:inherit}
+button{border:0;background:none;cursor:pointer;text-align:left}
+button:disabled{cursor:default}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px;border-radius:8px}
+.hi{font-family:var(--font-hi)}
+.dim{color:var(--muted)}
+.small{font-size:13px}
+.tiny{font-size:12px}
+.center{text-align:center}
+.grow{flex:1;min-width:0}
+
+/* ---------- 3 · shell ---------- */
+.wrap{width:100%;max-width:720px;margin:0 auto;padding:0 16px}
+
+.appbar{
+  position:sticky;top:0;z-index:40;
+  background:linear-gradient(135deg,var(--navy-800),var(--navy-600));
+  color:#fff;padding:calc(12px + env(safe-area-inset-top,0px)) 0 12px;
+  box-shadow:0 6px 24px rgba(7,26,51,.28);
+}
+.appbar .wrap{display:flex;align-items:center;gap:12px}
+.logo{
+  width:40px;height:40px;flex:none;border-radius:12px;
+  background:linear-gradient(140deg,var(--orange),#FFB067);
+  display:grid;place-items:center;font-weight:800;font-size:18px;color:#3A1B02;
+  box-shadow:0 6px 16px rgba(255,122,26,.40);
+}
+.brand{flex:1;min-width:0}
+.brand h1{font-size:17px;font-weight:800;letter-spacing:-.2px;line-height:1.2}
+.brand p{font-size:11px;opacity:.78;font-weight:500}
+.icon-btn{
+  min-width:38px;height:38px;padding:0 9px;border-radius:11px;flex:none;
+  display:inline-flex;align-items:center;justify-content:center;gap:3px;
+  background:rgba(255,255,255,.15);color:#fff;font-size:15px;font-weight:700;
+  transition:background .2s var(--ease),transform .15s var(--ease);
+}
+.icon-btn:hover{background:rgba(255,255,255,.27)}
+.icon-btn:active{transform:scale(.92)}
+.icon-btn.accent{background:var(--orange-soft);color:var(--orange)}
+.icon-btn.accent:hover{background:var(--orange);color:#fff}
+
+.screen{display:none;padding:18px 0 26px}
+.screen.is-on{display:block;animation:fadeUp .34s var(--ease)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.screen-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.screen-head h2{font-size:20px;font-weight:800;letter-spacing:-.3px}
+.screen-head .sub{font-size:12px;color:var(--muted)}
+.back{
+  width:36px;height:36px;flex:none;border-radius:10px;background:var(--surface);
+  border:1px solid var(--line);display:grid;place-items:center;font-size:16px;color:var(--text);
+}
+.back:hover{border-color:var(--orange);color:var(--orange)}
+
+.eyebrow{
+  font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--muted);margin:16px 0 8px;
+}
+.eyebrow.flush{margin-top:0}
+.note{font-size:12px;color:var(--muted);margin-top:12px;text-align:center}
+.note.flush{margin-top:0;margin-bottom:8px;text-align:left}
+.card-title{display:block;font-size:14px;font-weight:800;margin-bottom:8px}
+
+/* ---------- 4 · bottom navigation ---------- */
+.bottomnav{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;
+  height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  background:var(--surface);border-top:1px solid var(--line);
+  box-shadow:0 -6px 24px rgba(11,37,69,.07);
+}
+.bottomnav button{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  font-size:10px;font-weight:700;color:var(--muted);text-align:center;
+  transition:color .2s var(--ease);
+}
+.bottomnav button i{font-style:normal;font-size:19px;line-height:1;transition:transform .25s var(--ease)}
+.bottomnav button.is-on{color:var(--orange)}
+.bottomnav button.is-on i{transform:translateY(-2px)}
+
+/* ---------- 5 · hero and stats ---------- */
+.hero{
+  position:relative;overflow:hidden;color:#fff;margin-bottom:18px;
+  background:linear-gradient(140deg,var(--navy-800) 0%,var(--navy-600) 60%,#20599C 100%);
+  border-radius:var(--r-lg);padding:22px 20px;box-shadow:var(--shadow-lg);
+}
+.hero::after{
+  content:"";position:absolute;right:-40px;top:-50px;width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,122,26,.55),transparent 70%);
+}
+.hero h2{position:relative;font-size:22px;font-weight:800;letter-spacing:-.4px}
+.hero > p{position:relative;font-size:13px;opacity:.86;margin-top:4px}
+.lvlrow{position:relative;display:flex;align-items:center;gap:10px;margin-top:16px}
+.lvl-badge{
+  flex:none;background:var(--orange);color:#3A1B02;font-weight:800;font-size:12px;
+  padding:5px 11px;border-radius:999px;
+}
+.xpbar{flex:1;display:block;height:9px;border-radius:99px;background:rgba(255,255,255,.22);overflow:hidden}
+.xpbar span{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#FFB067,var(--orange));transition:width .7s var(--ease)}
+.xptext{position:relative;font-size:11px;opacity:.86;margin-top:6px}
+
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.stat-mini{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:10px 6px;text-align:center;
+}
+.stat-mini b{display:block;font-size:17px;font-weight:800}
+.stat-mini span{font-size:9.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- 6 · tiles ---------- */
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 14px;box-shadow:var(--shadow);
+  transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s var(--ease);
+}
+.tile:hover{transform:translateY(-3px);border-color:var(--orange);box-shadow:var(--shadow-lg)}
+.tile:active{transform:scale(.97)}
+.tile .ico{
+  display:grid;place-items:center;width:42px;height:42px;border-radius:13px;
+  font-size:20px;margin-bottom:10px;background:var(--orange-soft);color:var(--orange);
+}
+.tile.blue .ico{background:rgba(27,74,133,.12);color:var(--navy-600)}
+html[data-theme="dark"] .tile.blue .ico{background:rgba(120,180,255,.15);color:#8CC0FF}
+.tile.green .ico{background:var(--green-soft);color:var(--green)}
+.tile b{display:block;font-size:15px;font-weight:800;letter-spacing:-.2px}
+.tile small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+.tile .hi{display:block;font-size:12px;color:var(--muted)}
+
+/* ---------- 7 · cards, buttons, chips ---------- */
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:18px;box-shadow:var(--shadow);margin-top:14px;
+}
+.card:first-child{margin-top:0}
+.reward{display:flex;align-items:center;gap:12px}
+.reward-ico{font-size:30px;line-height:1}
+.reward-txt{flex:1;min-width:0}
+.reward-txt b{display:block;font-size:15px}
+.reward-txt small{display:block;font-size:12px;color:var(--muted)}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  background:var(--orange);color:#fff;font-weight:800;font-size:15px;text-align:center;
+  padding:14px 22px;border-radius:14px;box-shadow:0 8px 20px rgba(255,122,26,.28);
+  transition:transform .18s var(--ease),background .18s var(--ease);
+}
+.btn:hover{background:var(--orange-deep)}
+.btn:active{transform:scale(.97)}
+.btn.next{margin-top:14px}
+.btn.sm{width:auto;padding:10px 16px;font-size:13px;border-radius:11px}
+.btn.ghost{background:transparent;color:var(--text);border:1.5px solid var(--line);box-shadow:none}
+.btn.ghost:hover{background:transparent;border-color:var(--orange);color:var(--orange)}
+.btn.danger{background:transparent;color:var(--red);border:1.5px solid var(--red);box-shadow:none}
+.btn.muted{background:var(--line);color:var(--muted);box-shadow:none}
+.btn-row{display:flex;gap:10px;margin-top:14px}
+.btn-row .btn{flex:1;width:auto}
+
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;white-space:nowrap;background:var(--surface);border:1.5px solid var(--line);
+  color:var(--text-2);padding:8px 14px;border-radius:999px;font-size:12.5px;font-weight:700;
+  transition:background .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease);
+}
+.chip:hover{border-color:var(--orange)}
+.chip.is-on{background:var(--navy-700);border-color:var(--navy-700);color:#fff}
+
+/* ---------- 8 · session ---------- */
+.progress{height:7px;border-radius:99px;background:var(--line);overflow:hidden;margin-bottom:18px}
+.progress span{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--orange),#FFB067);transition:width .5s var(--ease)}
+
+.wordstage{
+  position:relative;overflow:hidden;text-align:center;color:#fff;
+  background:linear-gradient(150deg,var(--navy-800),var(--navy-600));
+  border-radius:var(--r-lg);padding:34px 20px;box-shadow:var(--shadow-lg);
+}
+.wordstage::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 20% 0%,rgba(255,122,26,.28),transparent 55%);
+}
+.wordstage .big{position:relative;font-size:clamp(32px,9.5vw,52px);font-weight:800;letter-spacing:-1.1px;word-break:break-word;line-height:1.1}
+.wordstage .posline{position:relative;font-size:12px;opacity:.82;margin-top:6px;font-style:italic}
+.wordstage .readhint{
+  position:relative;font-size:13.5px;opacity:.92;margin-top:8px;
+  background:rgba(255,255,255,.12);display:inline-block;padding:5px 12px;border-radius:999px;
+}
+.wordstage .readhint b{font-weight:800;color:#FFD9AE}
+.wordstage .readhint.light{background:rgba(255,255,255,.16)}
+.face.front .readhint{
+  font-size:12.5px;opacity:.85;margin-top:6px;background:rgba(255,255,255,.14);
+  display:inline-block;padding:4px 11px;border-radius:999px;
+}
+.face.front .readhint b{color:#FFD9AE;font-weight:800}
+.wordstage .prompt{
+  position:relative;display:inline-block;margin-top:14px;font-size:13px;
+  background:rgba(255,255,255,.15);padding:7px 14px;border-radius:999px;
+}
+.wordstage .prefix-parts{
+  position:relative;display:flex;align-items:center;justify-content:center;gap:12px;
+  flex-wrap:wrap;font-weight:800;letter-spacing:-.5px;
+}
+.wordstage .prefix-parts .pfx{
+  font-size:clamp(26px,7.5vw,38px);color:var(--orange);
+  background:rgba(255,122,26,.18);padding:6px 14px;border-radius:12px;
+}
+.wordstage .prefix-parts .plus{font-size:22px;opacity:.7}
+.wordstage .prefix-parts .base{font-size:clamp(26px,7.5vw,38px)}
+
+.reveal-list{display:grid;gap:10px;margin-top:14px}
+.rcard{
+  background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--orange);
+  border-radius:var(--r-sm);padding:13px 15px;opacity:0;transform:translateY(16px);
+  animation:pop .45s var(--ease) forwards;
+}
+@keyframes pop{to{opacity:1;transform:none}}
+.rcard.tone1{border-left-color:var(--navy-600)}
+.rcard.tone2{border-left-color:var(--green)}
+.rcard .lab{font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
+.rcard .val{font-size:17px;font-weight:700;margin-top:2px}
+.rcard .val.small{font-size:15px;font-weight:600}
+.rcard .meta{font-size:12px;color:var(--muted);margin-top:6px}
+.speakcard{display:flex;align-items:center;gap:10px}
+.speakcard .btn{width:auto;flex:1;margin-top:0}
+
+/* ---------- 9 · options and explanation ---------- */
+.options{display:grid;gap:10px;margin-top:16px}
+.opt{
+  display:flex;align-items:center;gap:12px;width:100%;
+  background:var(--surface);border:1.5px solid var(--line);border-radius:14px;
+  padding:14px 15px;font-size:15px;font-weight:600;
+  transition:transform .15s var(--ease),border-color .15s var(--ease),background .2s var(--ease);
+}
+.opt:hover:not(:disabled){transform:translateY(-2px);border-color:var(--orange)}
+.opt .k{
+  flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;
+  background:var(--surface-2);border:1px solid var(--line);
+  font-size:12px;font-weight:800;color:var(--muted);
+}
+.opt.right{background:var(--green-soft);border-color:var(--green)}
+.opt.right .k{background:var(--green);border-color:var(--green);color:#fff}
+.opt.wrong{background:var(--red-soft);border-color:var(--red)}
+.opt.wrong .k{background:var(--red);border-color:var(--red);color:#fff}
+.opt.fade{opacity:.5}
+
+.explain{
+  margin-top:14px;padding:15px;border:1px solid var(--line);border-radius:var(--r);
+  background:var(--surface);animation:fadeUp .3s var(--ease);
+}
+.explain.ok{border-color:var(--green);background:var(--green-soft)}
+.explain.no{border-color:var(--red);background:var(--red-soft)}
+.explain h4{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800}
+.explain.ok h4{color:var(--green)}
+.explain.no h4{color:var(--red)}
+.explain h4 .xp{margin-left:auto;font-size:12px;font-weight:700}
+.explain .line{font-size:14px;margin-top:8px}
+.explain .btn{margin-top:12px}
+
+/* ---------- 10 · spell challenge ---------- */
+.spell-mean{font-size:22px;font-weight:800;margin-top:2px}
+.spellbox{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:20px 0}
+.slot{
+  width:44px;height:52px;border-radius:12px;display:grid;place-items:center;
+  background:var(--surface);border:1.5px solid var(--line);
+  font-size:22px;font-weight:800;text-transform:uppercase;
+}
+.slot.fixed{background:var(--surface-2);color:var(--muted)}
+.slot.blank{border-color:var(--orange);border-style:dashed;cursor:pointer}
+.slot.blank.good{border-style:solid;border-color:var(--green);background:var(--green-soft);color:var(--green)}
+.slot.blank.bad{border-style:solid;border-color:var(--red);background:var(--red-soft);color:var(--red)}
+.letterbank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.lkey{
+  min-width:42px;height:44px;padding:0 10px;border-radius:11px;text-align:center;
+  background:var(--surface);border:1.5px solid var(--line);
+  font-size:18px;font-weight:800;text-transform:uppercase;
+  transition:transform .15s var(--ease),border-color .15s var(--ease),opacity .2s var(--ease);
+}
+.lkey:hover{border-color:var(--orange)}
+.lkey:active{transform:scale(.9)}
+.lkey.used{opacity:.32;pointer-events:none}
+
+/* ---------- 11 · pronunciation ---------- */
+.mic-wrap{text-align:center;padding:18px 0}
+.mic{
+  width:104px;height:104px;margin:0 auto;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--orange),#FFB067);color:#fff;font-size:40px;
+  box-shadow:0 14px 34px rgba(255,122,26,.42);transition:transform .2s var(--ease),opacity .2s var(--ease);
+}
+.mic:active{transform:scale(.93)}
+.mic:disabled{opacity:.5}
+.mic.rec{animation:pulse 1.2s infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,122,26,.55)}
+  70%{box-shadow:0 0 0 26px rgba(255,122,26,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,122,26,0)}
+}
+.mic-state{margin-top:14px;font-size:13.5px;font-weight:600;color:var(--muted);min-height:22px}
+.verdict{font-size:26px;font-weight:800;margin-top:6px}
+.verdict.good{color:var(--green)}
+.verdict.mid{color:var(--orange)}
+.verdict.bad{color:var(--red)}
+
+/* ---------- 12 · flashcards ---------- */
+.flip-wrap{perspective:1400px;margin-top:8px;min-height:280px}
+.flip{
+  position:relative;width:100%;height:280px;cursor:pointer;
+  transform-style:preserve-3d;transition:transform .6s var(--ease);
+}
+.flip.on{transform:rotateY(180deg)}
+.face{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;text-align:center;padding:24px;border-radius:var(--r-lg);
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:var(--shadow-lg);
+}
+.face.front{background:linear-gradient(150deg,var(--navy-800),var(--navy-600));color:#fff}
+.face.front .w{font-size:clamp(30px,9vw,46px);font-weight:800;letter-spacing:-1px}
+.face.front .hint{font-size:12px;opacity:.75;margin-top:12px}
+.face.back{transform:rotateY(180deg);background:var(--surface);border:1px solid var(--line);color:var(--text)}
+.face.back .p{font-size:20px;font-weight:700;color:var(--orange)}
+.face.back .m{font-size:24px;font-weight:800}
+.face.back .s{font-size:14px;color:var(--text-2)}
+.face.back .sh{font-size:14px;color:var(--muted)}
+
+/* ---------- 13 · rows, leaderboard, progress ---------- */
+.row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.rank{
+  flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+  background:var(--surface-2);font-size:13px;font-weight:800;color:var(--muted);
+}
+.rank.g1{background:#FFF4D6;color:#B07B00}
+.rank.g2{background:#EDF1F7;color:#5F7799}
+.rank.g3{background:#FBEBE0;color:#B4632B}
+.rank.ok{background:var(--green-soft);color:var(--green)}
+.rank.no{background:var(--red-soft);color:var(--red)}
+html[data-theme="dark"] .rank.g1{background:#3A2E08;color:#FFD86B}
+html[data-theme="dark"] .rank.g2{background:#1B2A3D;color:#B9CBE4}
+html[data-theme="dark"] .rank.g3{background:#3A2313;color:#F0A96B}
+.row .who{flex:1;min-width:0}
+.row .who b{display:block;font-size:14.5px;font-weight:800}
+.row .who small{display:block;font-size:11.5px;color:var(--muted)}
+.row .val{font-size:15px;font-weight:800;color:var(--orange)}
+.row.me{margin:4px 0;padding:12px 10px;border-bottom:0;border-radius:12px;background:var(--orange-soft)}
+
+.bigstats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bigstat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.bigstat b{display:block;font-size:28px;font-weight:800;letter-spacing:-.6px}
+.bigstat span{display:block;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.bigstat i{display:block;font-style:normal;font-size:11px;color:var(--muted)}
+
+.catrow{margin-bottom:10px}
+.catlabel{display:flex;font-size:12.5px;font-weight:700}
+.catlabel i{font-style:normal;font-weight:600;color:var(--muted)}
+.catlabel span:last-child{margin-left:auto}
+.catbar{display:block;height:8px;margin-top:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.catbar span{display:block;height:100%;border-radius:99px;background:var(--navy-600);transition:width .6s var(--ease)}
+
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.badge{
+  padding:12px 8px;text-align:center;border-radius:var(--r-sm);
+  background:var(--surface);border:1px solid var(--line);
+  opacity:.42;filter:grayscale(1);transition:opacity .3s var(--ease),filter .3s var(--ease),border-color .3s var(--ease);
+}
+.badge.got{opacity:1;filter:none;border-color:var(--orange)}
+.badge .e{display:block;font-size:24px;line-height:1}
+.badge b{display:block;font-size:11px;font-weight:800;margin-top:5px}
+.badge small{display:block;font-size:9.5px;color:var(--muted);line-height:1.3}
+
+/* ---------- 14 · summary ---------- */
+.summary{text-align:center;padding:10px 0}
+.ring{width:132px;height:132px;margin:0 auto 8px;display:block}
+.ring circle{fill:none;stroke-width:11;stroke-linecap:round}
+.ring-bg{stroke:var(--line)}
+.ring-fg{stroke:var(--orange);transition:stroke-dashoffset 1s var(--ease)}
+.ring-txt{font-family:var(--font);font-size:26px;font-weight:800;fill:var(--text)}
+.summary h2{font-size:22px;font-weight:800;margin-top:6px}
+.summary p{font-size:13.5px;color:var(--muted)}
+
+/* ---------- 15 · search ---------- */
+.searchbar{
+  display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:12px 14px;
+  background:var(--surface);border:1.5px solid var(--line);border-radius:14px;
+}
+.searchbar input{flex:1;min-width:0;border:0;background:none;outline:none;font-size:15px}
+.searchbar span{color:var(--muted)}
+.result{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:14px;margin-bottom:10px}
+.res-top{display:flex;align-items:center;gap:10px}
+.res-top b{font-size:18px;font-weight:800}
+.res-top .pron{font-size:13px;font-weight:700;color:var(--orange)}
+.res-top .icon-btn{margin-left:auto}
+.result .mean{font-size:16px;font-weight:700;margin-top:6px}
+.result .ex{font-size:13px;color:var(--text-2);margin-top:5px}
+.result .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.tagpill{
+  font-size:10px;font-weight:800;padding:4px 9px;border-radius:99px;
+  background:var(--surface-2);border:1px solid var(--line);color:var(--muted);
+}
+.tagpill.lv1{background:var(--green-soft);color:var(--green);border-color:transparent}
+.tagpill.lv2{background:var(--orange-soft);color:var(--orange-deep);border-color:transparent}
+.tagpill.lv3{background:var(--red-soft);color:var(--red);border-color:transparent}
+
+/* ---------- 16 · settings ---------- */
+.setrow{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.setrow:last-child{border-bottom:0}
+.setrow .t{flex:1;min-width:0}
+.setrow .t b{display:block;font-size:14.5px;font-weight:700}
+.setrow .t small{display:block;font-size:11.5px;color:var(--muted)}
+.switch{
+  position:relative;flex:none;width:52px;height:30px;border-radius:99px;
+  background:var(--line);transition:background .25s var(--ease);
+}
+.switch::after{
+  content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;
+  background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:transform .25s var(--ease);
+}
+.switch.is-on{background:var(--orange)}
+.switch.is-on::after{transform:translateX(22px)}
+input[type=range]{width:120px;accent-color:var(--orange)}
+select,.txtinput{
+  max-width:170px;padding:8px 10px;border-radius:10px;font-size:13px;font-weight:600;
+  background:var(--surface-2);border:1.5px solid var(--line);
+}
+.txtinput{width:130px}
+
+/* ---------- 17 · toast and modal ---------- */
+.toast{
+  position:fixed;left:50%;bottom:calc(var(--nav-h) + 18px);z-index:80;
+  transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;
+  max-width:90vw;text-align:center;padding:11px 18px;border-radius:12px;
+  background:var(--navy-800);color:#fff;font-size:13.5px;font-weight:700;
+  box-shadow:var(--shadow-lg);transition:opacity .3s var(--ease),transform .3s var(--ease);
+}
+.toast.is-on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.good{background:var(--green)}
+.toast.bad{background:var(--red)}
+
+.modal{
+  position:fixed;inset:0;z-index:90;display:none;place-items:center;padding:20px;
+  background:rgba(7,26,51,.62);
+}
+.modal.is-on{display:grid}
+.modal-box{
+  width:100%;max-width:340px;padding:26px 22px;text-align:center;
+  background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-lg);
+  animation:zoom .35s var(--ease);
+}
+@keyframes zoom{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:none}}
+.modal-emoji{font-size:44px}
+.modal-box h3{font-size:20px;font-weight:800;margin-top:6px}
+.modal-box p{font-size:13.5px;color:var(--muted);margin-top:6px}
+.modal-box .btn{margin-top:16px}
+
+/* ---------- 18 · larger screens ---------- */
+@media (min-width:760px){
+  body{padding-bottom:0}
+  .bottomnav{
+    position:static;height:auto;max-width:720px;margin:0 auto;padding:8px 0;
+    background:transparent;border-top:0;border-bottom:1px solid var(--line);box-shadow:none;
+  }
+  .bottomnav button{flex-direction:row;gap:7px;padding:8px;font-size:13px}
+  .tiles{grid-template-columns:repeat(3,1fr)}
+  .stat-strip{gap:12px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+
+</style>
+</head>
+<body>
+
+<header class="appbar">
+  <div class="wrap">
+    <div class="logo">H</div>
+    <div class="brand">
+      <h1>Hitarthi English Master</h1>
+      <p class="hi">अंग्रेज़ी सीखिए — अपनी भाषा में</p>
+    </div>
+    <button class="icon-btn" id="coinPill" type="button" aria-label="Coins">🪙 <span id="coinCount">0</span></button>
+    <button class="icon-btn" id="btnTheme" type="button" aria-label="Switch light or dark theme">🌙</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ================= HOME ================= -->
+  <section class="screen is-on" id="s-home">
+    <div class="hero">
+      <h2 id="greetEn">Welcome</h2>
+      <p class="hi" id="greetHi">आज दस नए शब्द सीखते हैं।</p>
+      <div class="lvlrow">
+        <span class="lvl-badge" id="lvlBadge">Level 1</span>
+        <span class="xpbar"><span id="xpFill"></span></span>
+      </div>
+      <p class="xptext" id="xpText">0 XP</p>
+    </div>
+
+    <div class="stat-strip">
+      <div class="stat-mini"><b id="statLearned">0</b><span>Learned</span></div>
+      <div class="stat-mini"><b id="statAcc">0%</b><span>Accuracy</span></div>
+      <div class="stat-mini"><b id="statStreak">0</b><span>Streak</span></div>
+      <div class="stat-mini"><b id="statTotal">0</b><span>Words</span></div>
+    </div>
+
+    <div class="tiles">
+      <button class="tile" type="button" data-go="picker">
+        <span class="ico">▶</span><b>Start Learning</b>
+        <small>Learn · Quiz · Spell · Speak</small><span class="hi">सीखना शुरू करें</span>
+      </button>
+      <button class="tile blue" type="button" data-go="daily">
+        <span class="ico">📅</span><b>Daily Challenge</b>
+        <small>10 fresh words today</small><span class="hi">आज की चुनौती</span>
+      </button>
+      <button class="tile green" type="button" data-go="revision">
+        <span class="ico">🔁</span><b>Revision</b>
+        <small><span id="tileRevCount">0</span> words due</small><span class="hi">दोहराई</span>
+      </button>
+      <button class="tile" type="button" data-go="prefix">
+        <span class="ico">➕</span><b>Prefix Builder</b>
+        <small>Prefix + word = new word</small><span class="hi">उपसर्ग खेल</span>
+      </button>
+      <button class="tile blue" type="button" data-go="leaderboard">
+        <span class="ico">🏅</span><b>Leaderboard</b>
+        <small>Your best sessions</small><span class="hi">अंक तालिका</span>
+      </button>
+      <button class="tile" type="button" data-go="progress">
+        <span class="ico">📊</span><b>Progress</b>
+        <small>Stats and badges</small><span class="hi">प्रगति</span>
+      </button>
+      <button class="tile blue" type="button" data-go="settings">
+        <span class="ico">⚙</span><b>Settings</b>
+        <small>Theme, voice, reset</small><span class="hi">सेटिंग्स</span>
+      </button>
+    </div>
+
+    <div class="card reward">
+      <span class="reward-ico">🎁</span>
+      <div class="reward-txt">
+        <b>Daily reward</b>
+        <small class="hi" id="rewardNote">रोज़ लॉगिन कीजिए, सिक्के पाइए।</small>
+      </div>
+      <button class="btn sm" type="button" id="btnReward">Collect</button>
+    </div>
+  </section>
+
+  <!-- ================= PICKER ================= -->
+  <section class="screen" id="s-picker">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2>Start Learning</h2><p class="sub hi">श्रेणी और तरीका चुनिए</p></div>
+    </div>
+
+    <p class="eyebrow">Category · श्रेणी</p>
+    <div class="chips" id="catChips"></div>
+
+    <p class="eyebrow">Difficulty · कठिनाई</p>
+    <div class="chips" id="lvlChips">
+      <button class="chip is-on" type="button" data-lvl="0">All</button>
+      <button class="chip" type="button" data-lvl="1">Easy · आसान</button>
+      <button class="chip" type="button" data-lvl="2">Medium · मध्यम</button>
+      <button class="chip" type="button" data-lvl="3">Hard · कठिन</button>
+    </div>
+
+    <p class="eyebrow">Words per session</p>
+    <div class="chips" id="lenChips">
+      <button class="chip" type="button" data-len="5">5</button>
+      <button class="chip is-on" type="button" data-len="10">10</button>
+      <button class="chip" type="button" data-len="20">20</button>
+    </div>
+
+    <p class="eyebrow">Mode · तरीका</p>
+    <div class="tiles" id="modeGrid">
+      <button class="tile" type="button" data-mode="learn"><span class="ico">📖</span><b>Learning</b><small>Reveal cards one by one</small><span class="hi">पढ़ाई मोड</span></button>
+      <button class="tile blue" type="button" data-mode="quiz"><span class="ico">❓</span><b>Quiz</b><small>Four options, instant answer</small><span class="hi">प्रश्नोत्तरी</span></button>
+      <button class="tile green" type="button" data-mode="spell"><span class="ico">✍</span><b>Spell Challenge</b><small>Fill the missing letters</small><span class="hi">वर्तनी</span></button>
+      <button class="tile" type="button" data-mode="speak"><span class="ico">🎤</span><b>Pronunciation</b><small>Speak and get checked</small><span class="hi">उच्चारण</span></button>
+      <button class="tile blue" type="button" data-mode="flash"><span class="ico">🃏</span><b>Flashcards</b><small>Tap to flip the card</small><span class="hi">फ़्लैशकार्ड</span></button>
+      <button class="tile" type="button" data-mode="prefix"><span class="ico">➕</span><b>Prefix Builder</b><small>Prefix + word = new word</small><span class="hi">उपसर्ग खेल</span></button>
+      <button class="tile green" type="button" data-mode="mixed"><span class="ico">🎲</span><b>Mixed Practice</b><small>All modes together</small><span class="hi">मिश्रित अभ्यास</span></button>
+    </div>
+    <p class="note" id="pickCount"></p>
+  </section>
+
+  <!-- ================= SESSION ================= -->
+  <section class="screen" id="s-session">
+    <div class="screen-head">
+      <button class="back" type="button" id="sessBack" aria-label="Leave session">←</button>
+      <div class="grow"><h2 id="sessTitle">Practice</h2><p class="sub" id="sessSub">Word 1 of 10</p></div>
+      <button class="icon-btn accent" type="button" id="sessSpeak" aria-label="Play pronunciation">🔊</button>
+    </div>
+    <div class="progress"><span id="sessBar"></span></div>
+    <div id="stage"></div>
+  </section>
+
+  <!-- ================= SUMMARY ================= -->
+  <section class="screen" id="s-summary">
+    <div class="summary">
+      <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+        <circle class="ring-fg" id="sumRing" cx="60" cy="60" r="52" transform="rotate(-90 60 60)"></circle>
+        <text class="ring-txt" id="sumPct" x="60" y="69" text-anchor="middle">0%</text>
+      </svg>
+      <h2 id="sumTitle">Session complete</h2>
+      <p class="hi" id="sumHi">बहुत बढ़िया!</p>
+    </div>
+    <div class="stat-strip">
+      <div class="stat-mini"><b id="sumRight">0</b><span>Correct</span></div>
+      <div class="stat-mini"><b id="sumWrong">0</b><span>Wrong</span></div>
+      <div class="stat-mini"><b id="sumXp">0</b><span>XP</span></div>
+      <div class="stat-mini"><b id="sumCoins">0</b><span>Coins</span></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn ghost" type="button" data-go="home">Home</button>
+      <button class="btn" type="button" id="btnAgain">Practise again</button>
+    </div>
+    <div class="card">
+      <b class="card-title">Words in this session</b>
+      <div id="sumList"></div>
+    </div>
+  </section>
+
+  <!-- ================= REVISION ================= -->
+  <section class="screen" id="s-revision">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2>Revision</h2><p class="sub hi">गलत शब्द दोबारा — स्मृति अंतराल विधि</p></div>
+    </div>
+    <div class="card" id="revInfo"></div>
+    <div id="revList"></div>
+  </section>
+
+  <!-- ================= LEADERBOARD ================= -->
+  <section class="screen" id="s-leaderboard">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2>Leaderboard</h2><p class="sub hi">इस डिवाइस पर सहेजे गए अंक</p></div>
+    </div>
+    <div class="card"><div id="lbList"></div></div>
+    <p class="note">Scores stay on this device. Practice partners are sample entries to aim at.</p>
+  </section>
+
+  <!-- ================= PROGRESS ================= -->
+  <section class="screen" id="s-progress">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2>Progress</h2><p class="sub hi">आपकी पूरी प्रगति</p></div>
+    </div>
+    <div class="bigstats">
+      <div class="bigstat"><b id="pgLearned">0</b><span>Words Learned</span><i class="hi">सीखे गए शब्द</i></div>
+      <div class="bigstat"><b id="pgAcc">0%</b><span>Accuracy</span><i class="hi">शुद्धता</i></div>
+      <div class="bigstat"><b id="pgStreak">0</b><span>Current Streak</span><i class="hi">वर्तमान श्रृंखला</i></div>
+      <div class="bigstat"><b id="pgBest">0</b><span>Best Streak</span><i class="hi">सर्वश्रेष्ठ श्रृंखला</i></div>
+      <div class="bigstat"><b id="pgTime">0m</b><span>Practice Time</span><i class="hi">अभ्यास समय</i></div>
+      <div class="bigstat"><b id="pgXp">0</b><span>Total XP</span><i class="hi">कुल अंक</i></div>
+    </div>
+    <div class="card">
+      <b class="card-title">Category progress · श्रेणीवार प्रगति</b>
+      <div id="catProgress"></div>
+    </div>
+    <div class="card">
+      <b class="card-title">Achievements · उपलब्धियाँ</b>
+      <div class="badges" id="badgeGrid"></div>
+    </div>
+  </section>
+
+  <!-- ================= SEARCH ================= -->
+  <section class="screen" id="s-search">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2>Search</h2><p class="sub hi">कोई भी शब्द खोजिए</p></div>
+    </div>
+    <div class="searchbar">
+      <span aria-hidden="true">🔍</span>
+      <input id="searchInput" type="search" placeholder="Type English or हिंदी…" autocomplete="off" aria-label="Search words">
+    </div>
+    <div id="searchOut"></div>
+  </section>
+
+  <!-- ================= SETTINGS ================= -->
+  <section class="screen" id="s-settings">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2>Settings</h2><p class="sub hi">अपनी पसंद तय कीजिए</p></div>
+    </div>
+    <div class="card">
+      <div class="setrow">
+        <div class="t"><b>Dark mode</b><small class="hi">रात के लिए गहरा रंग</small></div>
+        <button class="switch" type="button" id="swTheme" role="switch" aria-checked="false" aria-label="Dark mode"></button>
+      </div>
+      <div class="setrow">
+        <div class="t"><b>Auto-speak new word</b><small class="hi">नया शब्द अपने आप बोले</small></div>
+        <button class="switch" type="button" id="swAuto" role="switch" aria-checked="true" aria-label="Auto speak"></button>
+      </div>
+      <div class="setrow">
+        <div class="t"><b>Sound effects</b><small class="hi">सही और गलत की ध्वनि</small></div>
+        <button class="switch" type="button" id="swSfx" role="switch" aria-checked="true" aria-label="Sound effects"></button>
+      </div>
+      <div class="setrow">
+        <div class="t"><b>Speech speed</b><small class="hi">बोलने की गति</small></div>
+        <input type="range" id="rngRate" min="0.5" max="1.2" step="0.05" value="0.85" aria-label="Speech speed">
+      </div>
+      <div class="setrow">
+        <div class="t"><b>English voice</b><small class="hi">आवाज़ चुनिए</small></div>
+        <select id="selVoice" aria-label="English voice"><option value="">Automatic</option></select>
+      </div>
+    </div>
+    <div class="card">
+      <div class="setrow">
+        <div class="t"><b>Your name</b><small class="hi">अंक तालिका में दिखेगा</small></div>
+        <input id="inpName" class="txtinput" maxlength="16" aria-label="Your name">
+      </div>
+      <div class="setrow">
+        <div class="t"><b>Reset all progress</b><small class="hi">सारा डेटा मिटा दें</small></div>
+        <button class="btn sm danger" type="button" id="btnReset">Reset</button>
+      </div>
+    </div>
+    <p class="note" id="storeNote"></p>
+  </section>
+
+</main>
+
+<nav class="bottomnav" id="nav">
+  <button type="button" data-go="home" class="is-on"><i>⌂</i>Home</button>
+  <button type="button" data-go="picker"><i>▶</i>Practice</button>
+  <button type="button" data-go="search"><i>🔍</i>Search</button>
+  <button type="button" data-go="progress"><i>📊</i>Progress</button>
+  <button type="button" data-go="settings"><i>⚙</i>Settings</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-emoji" id="mEmoji">🎉</div>
+    <h3 id="mTitle"></h3>
+    <p id="mText"></p>
+    <button class="btn" type="button" id="mClose">Great</button>
+  </div>
+</div>
+
+<script>
+/* ==========================================================================
+   data.js — word bank, categories and achievement definitions
+   Attaches to the single HEM namespace. Declares no global identifiers.
+   Row format:
+   [ english, hindiPronunciation, hindiMeaning, partOfSpeech, exampleSentence,
+     hindiTranslation, synonyms, antonyms, usageTip, level(1-3), categoryKey ]
+   ========================================================================== */
+(function (HEM) {
+  "use strict";
+
+  var ROWS = [
+
+    /* ---- daily ---- */
+    ["Happy","हैपी","खुश","adjective","I am happy today.","मैं आज खुश हूँ।","glad, joyful, cheerful","sad, unhappy","am/is/are के साथ बोलें — I am happy.",1,"daily"],
+    ["Sad","सैड","दुखी","adjective","She looks sad.","वह दुखी लग रही है।","unhappy, upset","happy, glad","looks/feels के साथ आम है।",1,"daily"],
+    ["Hungry","हंग्री","भूखा","adjective","The child is hungry.","बच्चा भूखा है।","starving, famished","full","I am hungry बोलें, I have hunger नहीं।",1,"daily"],
+    ["Thirsty","थर्स्टी","प्यासा","adjective","I am thirsty after the walk.","चलने के बाद मैं प्यासा हूँ।","parched, dry","quenched","पानी माँगते समय: I am thirsty.",1,"daily"],
+    ["Tired","टायर्ड","थका हुआ","adjective","He is tired after work.","वह काम के बाद थका हुआ है।","exhausted, weary","fresh, energetic","tired of = किसी चीज़ से ऊब जाना।",1,"daily"],
+    ["Sleep","स्लीप","सोना, नींद","verb","I sleep at ten every night.","मैं हर रात दस बजे सोता हूँ।","rest, nap","wake, awake","sleep = सोना, sleepy = नींद आना।",1,"daily"],
+    ["Wake","वेक","जागना","verb","I wake up at six.","मैं छह बजे जागता हूँ।","rise, get up","sleep","हमेशा wake up बोलें।",1,"daily"],
+    ["Morning","मॉर्निंग","सुबह","noun","I read the news in the morning.","मैं सुबह समाचार पढ़ता हूँ।","dawn, sunrise","evening, night","in the morning — at नहीं।",1,"daily"],
+    ["Evening","ईवनिंग","शाम","noun","We walk in the evening.","हम शाम को टहलते हैं।","dusk, sundown","morning","in the evening सही रूप है।",1,"daily"],
+    ["Night","नाइट","रात","noun","The village is quiet at night.","रात में गाँव शांत रहता है।","nighttime, darkness","day","at night — in नहीं।",1,"daily"],
+    ["Water","वॉटर","पानी","noun","Please give me water.","कृपया मुझे पानी दीजिए।","liquid, H2O","","अगणनीय है — waters आमतौर पर नहीं।",1,"daily"],
+    ["Food","फ़ूड","भोजन, खाना","noun","The food is very tasty.","खाना बहुत स्वादिष्ट है।","meal, diet","hunger","food अगणनीय है — foods कम प्रयोग।",1,"daily"],
+    ["House","हाउस","घर, मकान","noun","Our house has two rooms.","हमारे घर में दो कमरे हैं।","home, residence","","house = इमारत, home = अपनापन।",1,"daily"],
+    ["Family","फ़ैमिली","परिवार","noun","My family lives in a village.","मेरा परिवार गाँव में रहता है।","household, relatives","","एकवचन क्रिया लें — family is.",1,"daily"],
+    ["Friend","फ़्रेंड","मित्र, दोस्त","noun","He is my best friend.","वह मेरा सबसे अच्छा दोस्त है।","companion, buddy","enemy","friend of mine भी सही है।",1,"daily"],
+    ["Market","मार्केट","बाज़ार","noun","I go to the market on Sunday.","मैं रविवार को बाज़ार जाता हूँ।","bazaar, marketplace","","go to the market कहें।",1,"daily"],
+    ["Money","मनी","पैसा, धन","noun","She saves money every month.","वह हर महीने पैसा बचाती है।","cash, funds","","अगणनीय — moneys नहीं।",1,"daily"],
+    ["Clean","क्लीन","साफ़ करना, साफ़","verb","Clean your room daily.","अपना कमरा रोज़ साफ़ करो।","tidy, wash","dirty","विशेषण और क्रिया दोनों।",1,"daily"],
+    ["Dirty","डर्टी","गंदा","adjective","The floor is dirty.","फ़र्श गंदा है।","filthy, unclean","clean","dirty water, dirty hands.",1,"daily"],
+    ["Hot","हॉट","गर्म","adjective","The tea is very hot.","चाय बहुत गर्म है।","warm, boiling","cold","मौसम: It is hot today.",1,"daily"],
+    ["Cold","कोल्ड","ठंडा, सर्दी","adjective","Winter nights are cold here.","यहाँ सर्दियों की रातें ठंडी होती हैं।","chilly, cool","hot","I have a cold = ज़ुकाम है।",1,"daily"],
+    ["Busy","बिज़ी","व्यस्त","adjective","I am busy with my work.","मैं अपने काम में व्यस्त हूँ।","occupied, engaged","free, idle","busy with + काम।",1,"daily"],
+    ["Free","फ़्री","खाली, मुफ़्त","adjective","Are you free this evening?","क्या आप आज शाम खाली हैं?","available, vacant","busy","free = खाली समय और मुफ़्त दोनों।",1,"daily"],
+    ["Late","लेट","देर से","adjective","Do not come late to class.","कक्षा में देर से मत आओ।","delayed, tardy","early","be late for + कार्यक्रम।",1,"daily"],
+    ["Early","अर्ली","जल्दी, समय से पहले","adjective","She reaches office early.","वह दफ़्तर जल्दी पहुँचती है।","prompt, ahead","late","early morning बहुत आम है।",1,"daily"],
+    ["Buy","बाय","खरीदना","verb","I want to buy a book.","मैं एक किताब खरीदना चाहता हूँ।","purchase, get","sell","भूतकाल: bought.",1,"daily"],
+    ["Sell","सेल","बेचना","verb","They sell vegetables here.","वे यहाँ सब्ज़ियाँ बेचते हैं।","trade, market","buy","भूतकाल: sold.",1,"daily"],
+    ["Walk","वॉक","चलना, टहलना","verb","We walk two kilometres daily.","हम रोज़ दो किलोमीटर चलते हैं।","stroll, march","run","go for a walk = टहलने जाना।",1,"daily"],
+    ["Cook","कुक","पकाना, रसोइया","verb","My mother cooks very well.","मेरी माँ बहुत अच्छा पकाती हैं।","prepare, bake","","cook = क्रिया और व्यक्ति दोनों।",1,"daily"],
+    ["Rest","रेस्ट","आराम करना","verb","Take rest for an hour.","एक घंटे आराम करो।","relax, pause","work","take rest के बजाय rest भी सही है।",1,"daily"],
+
+    /* ---- education ---- */
+    ["Study","स्टडी","पढ़ाई करना","verb","I study English every night.","मैं हर रात अंग्रेज़ी पढ़ता हूँ।","learn, read","ignore","study for an exam बोलें।",1,"education"],
+    ["Teacher","टीचर","शिक्षक","noun","Our teacher explains slowly.","हमारे शिक्षक धीरे-धीरे समझाते हैं।","instructor, tutor","student","teacher of English भी कह सकते हैं।",1,"education"],
+    ["Student","स्टूडेंट","विद्यार्थी","noun","She is a hard-working student.","वह मेहनती विद्यार्थी है।","pupil, learner","teacher","स्कूल-कॉलेज दोनों के लिए।",1,"education"],
+    ["School","स्कूल","विद्यालय","noun","The school opens at eight.","विद्यालय आठ बजे खुलता है।","academy, institute","","go to school में the नहीं लगता।",1,"education"],
+    ["College","कॉलेज","महाविद्यालय","noun","He joined a college in the city.","उसने शहर के एक कॉलेज में दाख़िला लिया।","institute, university","","join a college / study in college.",1,"education"],
+    ["Book","बुक","पुस्तक, बुक करना","noun","This book changed my thinking.","इस पुस्तक ने मेरी सोच बदल दी।","volume, text","","book a ticket = टिकट बुक करना।",1,"education"],
+    ["Lesson","लेसन","पाठ, सबक","noun","Today's lesson is very useful.","आज का पाठ बहुत उपयोगी है।","chapter, class","","learn a lesson = सबक सीखना।",1,"education"],
+    ["Homework","होमवर्क","गृहकार्य","noun","Finish your homework first.","पहले अपना गृहकार्य पूरा करो।","assignment, task","","अगणनीय — homeworks नहीं।",1,"education"],
+    ["Exam","एग्ज़ाम","परीक्षा","noun","The exam starts next Monday.","परीक्षा अगले सोमवार से शुरू है।","test, examination","","give an exam नहीं, take an exam बोलें।",1,"education"],
+    ["Result","रिज़ल्ट","परिणाम","noun","The result was better than expected.","परिणाम उम्मीद से बेहतर रहा।","outcome, score","cause","as a result = परिणामस्वरूप।",1,"education"],
+    ["Practice","प्रैक्टिस","अभ्यास","noun","Daily practice makes you fluent.","रोज़ का अभ्यास आपको धाराप्रवाह बनाता है।","exercise, drill","theory","practice करना = practise (ब्रिटिश)।",1,"education"],
+    ["Learn","लर्न","सीखना","verb","I learn ten new words daily.","मैं रोज़ दस नए शब्द सीखता हूँ।","study, grasp","forget","learn from mistakes = गलतियों से सीखना।",1,"education"],
+    ["Knowledge","नॉलेज","ज्ञान","noun","Knowledge grows when shared.","बाँटने से ज्ञान बढ़ता है।","wisdom, learning","ignorance","अगणनीय — a knowledge नहीं।",2,"education"],
+    ["Question","क्वेश्चन","प्रश्न","noun","May I ask a question?","क्या मैं एक प्रश्न पूछ सकता हूँ?","query, doubt","answer","ask a question — say नहीं।",1,"education"],
+    ["Answer","आंसर","उत्तर","noun","Write the answer in short.","उत्तर संक्षेप में लिखिए।","reply, response","question","answer to a question.",1,"education"],
+    ["Notebook","नोटबुक","कॉपी","noun","Keep a separate notebook for words.","शब्दों के लिए अलग कॉपी रखें।","copy, register","","भारत में copy बोला जाता है, अंग्रेज़ी में notebook।",1,"education"],
+    ["Library","लाइब्रेरी","पुस्तकालय","noun","The library stays open till six.","पुस्तकालय छह बजे तक खुला रहता है।","reading room","","in the library = पुस्तकालय में।",1,"education"],
+    ["Subject","सब्जेक्ट","विषय","noun","Mathematics is my favourite subject.","गणित मेरा पसंदीदा विषय है।","topic, discipline","","बात का विषय भी subject होता है।",1,"education"],
+    ["Degree","डिग्री","उपाधि","noun","She has a degree in commerce.","उसके पास वाणिज्य में उपाधि है।","qualification, diploma","","a degree in + विषय।",2,"education"],
+    ["Scholarship","स्कॉलरशिप","छात्रवृत्ति","noun","He won a scholarship for college.","उसे कॉलेज के लिए छात्रवृत्ति मिली।","grant, stipend","","win/get a scholarship.",2,"education"],
+    ["Discipline","डिसिप्लिन","अनुशासन","noun","Discipline is stronger than talent.","अनुशासन प्रतिभा से अधिक शक्तिशाली है।","order, control","chaos","self-discipline = आत्म-अनुशासन।",2,"education"],
+    ["Attendance","अटेंडेंस","उपस्थिति","noun","Your attendance is below seventy percent.","आपकी उपस्थिति सत्तर प्रतिशत से कम है।","presence","absence","mark attendance = हाज़िरी लगाना।",2,"education"],
+    ["Revision","रिविज़न","दोहराव","noun","Revision before sleep helps memory.","सोने से पहले दोहराव याददाश्त बढ़ाता है।","review, recap","","do revision / revise कहें।",2,"education"],
+    ["Syllabus","सिलेबस","पाठ्यक्रम","noun","Read the syllabus before you start.","शुरू करने से पहले पाठ्यक्रम पढ़ें।","curriculum, course","","बहुवचन: syllabuses.",2,"education"],
+
+    /* ---- business ---- */
+    ["Business","बिज़नेस","व्यापार","noun","He started a small business.","उसने एक छोटा व्यापार शुरू किया।","trade, company","","do business with = साथ व्यापार करना।",1,"business"],
+    ["Profit","प्रॉफ़िट","लाभ, मुनाफ़ा","noun","The shop made a good profit.","दुकान ने अच्छा मुनाफ़ा कमाया।","gain, earnings","loss","make a profit — do नहीं।",2,"business"],
+    ["Loss","लॉस","हानि, घाटा","noun","We faced a loss last year.","पिछले साल हमें घाटा हुआ।","deficit, damage","profit","at a loss = घाटे में।",2,"business"],
+    ["Customer","कस्टमर","ग्राहक","noun","The customer is always important.","ग्राहक हमेशा महत्वपूर्ण होता है।","client, buyer","seller","दुकान के लिए customer, सेवा के लिए client।",1,"business"],
+    ["Product","प्रोडक्ट","उत्पाद","noun","Our product is made in India.","हमारा उत्पाद भारत में बना है।","item, goods","","launch a product = उत्पाद उतारना।",1,"business"],
+    ["Price","प्राइस","कीमत","noun","The price of rice has risen.","चावल की कीमत बढ़ गई है।","cost, rate","","price of + वस्तु।",1,"business"],
+    ["Invest","इन्वेस्ट","निवेश करना","verb","Invest only what you can spare.","केवल उतना निवेश करें जितना बचा सकें।","fund, put in","withdraw","invest in + चीज़।",2,"business"],
+    ["Budget","बजट","बजट, आय-व्यय","noun","Make a monthly budget for the family.","परिवार के लिए मासिक बजट बनाएँ।","plan, allowance","","on a budget = सीमित पैसे में।",2,"business"],
+    ["Sale","सेल","बिक्री","noun","The sale ends on Sunday.","बिक्री रविवार को समाप्त होगी।","selling, discount","purchase","on sale = छूट पर।",1,"business"],
+    ["Purchase","परचेज़","खरीद","noun","Keep the purchase bill safely.","खरीद का बिल सुरक्षित रखें।","buying, acquisition","sale","buy का औपचारिक रूप।",2,"business"],
+    ["Supplier","सप्लायर","आपूर्तिकर्ता","noun","Our supplier delivers every week.","हमारा आपूर्तिकर्ता हर हफ़्ते माल देता है।","vendor, dealer","buyer","supplier of + सामान।",2,"business"],
+    ["Contract","कॉन्ट्रैक्ट","अनुबंध","noun","Read the contract before signing.","हस्ताक्षर से पहले अनुबंध पढ़ें।","agreement, deal","","sign a contract.",2,"business"],
+    ["Revenue","रेवेन्यू","आय, राजस्व","noun","Revenue doubled after the festival.","त्योहार के बाद आय दोगुनी हो गई।","income, turnover","expense","revenue = कुल आय, profit = शुद्ध लाभ।",3,"business"],
+    ["Expense","एक्सपेंस","खर्च","noun","Travel expense is paid by the office.","यात्रा खर्च दफ़्तर देता है।","cost, spending","income","at the expense of = की कीमत पर।",2,"business"],
+    ["Brand","ब्रांड","ब्रांड, पहचान","noun","Trust builds a strong brand.","भरोसा मज़बूत ब्रांड बनाता है।","label, name","","brand value = ब्रांड की साख।",2,"business"],
+    ["Startup","स्टार्टअप","नया उद्यम","noun","His startup has five employees.","उसके नए उद्यम में पाँच कर्मचारी हैं।","new venture","","start-up भी लिखा जाता है।",2,"business"],
+    ["Partner","पार्टनर","साझेदार","noun","She is my business partner.","वह मेरी व्यापारिक साझेदार है।","associate, ally","rival","partner with = साझेदारी करना।",2,"business"],
+    ["Growth","ग्रोथ","वृद्धि","noun","The company shows steady growth.","कंपनी में लगातार वृद्धि दिख रही है।","rise, increase","decline","growth in / growth of दोनों।",2,"business"],
+    ["Strategy","स्ट्रैटेजी","रणनीति","noun","We need a better sales strategy.","हमें बेहतर बिक्री रणनीति चाहिए।","plan, approach","","बहुवचन: strategies.",3,"business"],
+    ["Negotiate","निगोशिएट","मोल-भाव करना","verb","Learn to negotiate politely.","विनम्रता से मोल-भाव करना सीखें।","bargain, discuss","accept","negotiate with + व्यक्ति।",3,"business"],
+    ["Client","क्लाइंट","मुवक्किल, ग्राहक","noun","The client approved our design.","ग्राहक ने हमारा डिज़ाइन स्वीकार किया।","customer, patron","","सेवा-आधारित काम में client कहते हैं।",2,"business"],
+    ["Invoice","इनवॉइस","बीजक, बिल","noun","Send the invoice by email.","बिल ईमेल से भेजें।","bill, receipt","","raise an invoice = बिल बनाना।",3,"business"],
+    ["Competition","कॉम्पिटीशन","प्रतिस्पर्धा","noun","Competition improves quality.","प्रतिस्पर्धा गुणवत्ता सुधारती है।","rivalry, contest","cooperation","competitor = प्रतिस्पर्धी व्यक्ति।",2,"business"],
+    ["Marketing","मार्केटिंग","विपणन, प्रचार","noun","Good marketing brings new customers.","अच्छा विपणन नए ग्राहक लाता है।","promotion, publicity","","marketing = बेचने का प्रचार।",2,"business"],
+
+    /* ---- tech ---- */
+    ["Computer","कंप्यूटर","संगणक","noun","Every office needs a computer.","हर दफ़्तर को कंप्यूटर चाहिए।","PC, machine","","on the computer = कंप्यूटर पर।",1,"tech"],
+    ["Mobile","मोबाइल","चलायमान, मोबाइल फ़ोन","noun","My mobile battery is low.","मेरे मोबाइल की बैटरी कम है।","cellphone, handset","","अमेरिका में cell phone कहते हैं।",1,"tech"],
+    ["Internet","इंटरनेट","अंतरजाल","noun","The internet connects the world.","इंटरनेट दुनिया को जोड़ता है।","web, net","","हमेशा the internet।",1,"tech"],
+    ["Software","सॉफ़्टवेयर","सॉफ़्टवेयर","noun","Update the software regularly.","सॉफ़्टवेयर नियमित रूप से अपडेट करें।","program, application","hardware","अगणनीय — softwares गलत है।",2,"tech"],
+    ["Hardware","हार्डवेयर","यंत्र सामग्री","noun","The hardware is old but working.","यंत्र पुराने हैं पर काम कर रहे हैं।","equipment, machinery","software","अगणनीय संज्ञा।",2,"tech"],
+    ["Website","वेबसाइट","वेबसाइट","noun","Our website loads very fast.","हमारी वेबसाइट बहुत तेज़ खुलती है।","site, webpage","","visit a website.",1,"tech"],
+    ["Password","पासवर्ड","गुप्त शब्द","noun","Never share your password.","अपना पासवर्ड कभी साझा न करें।","code, PIN","","strong password रखें।",1,"tech"],
+    ["Download","डाउनलोड","उतारना","verb","Download the file before travel.","यात्रा से पहले फ़ाइल डाउनलोड करें।","save, transfer","upload","download from + स्रोत।",1,"tech"],
+    ["Upload","अपलोड","चढ़ाना","verb","Upload your photo here.","अपनी तस्वीर यहाँ अपलोड करें।","post, send","download","upload to + जगह।",1,"tech"],
+    ["Screen","स्क्रीन","पर्दा","noun","Clean the screen with a soft cloth.","स्क्रीन को मुलायम कपड़े से साफ़ करें।","display, monitor","","screen time = स्क्रीन पर बिताया समय।",1,"tech"],
+    ["Keyboard","कीबोर्ड","कुंजीपटल","noun","This keyboard has Hindi letters.","इस कीबोर्ड पर हिंदी अक्षर हैं।","keypad","","type on a keyboard.",1,"tech"],
+    ["Battery","बैटरी","बैटरी","noun","The battery lasts two days.","बैटरी दो दिन चलती है।","cell, power pack","","battery is low / charged.",1,"tech"],
+    ["Network","नेटवर्क","संजाल","noun","The network is weak in my village.","मेरे गाँव में नेटवर्क कमज़ोर है।","connection, system","","network problem = नेटवर्क की दिक्कत।",2,"tech"],
+    ["Data","डेटा","आँकड़े","noun","Mobile data is cheap in India.","भारत में मोबाइल डेटा सस्ता है।","information, figures","","अगणनीय की तरह प्रयोग होता है।",2,"tech"],
+    ["File","फ़ाइल","संचिका","noun","Save the file before closing.","बंद करने से पहले फ़ाइल सहेजें।","document, record","","open/save/delete a file.",1,"tech"],
+    ["Update","अपडेट","नवीनीकरण","noun","A new update is available.","एक नया अपडेट उपलब्ध है।","upgrade, revision","","update करना = क्रिया भी।",2,"tech"],
+    ["Device","डिवाइस","उपकरण","noun","This device works without internet.","यह उपकरण बिना इंटरनेट चलता है।","gadget, machine","","smart device = स्मार्ट उपकरण।",2,"tech"],
+    ["Application","एप्लिकेशन","अनुप्रयोग, आवेदन","noun","Install the application from the store.","स्टोर से एप्लिकेशन इंस्टॉल करें।","app, program","","नौकरी के लिए application = आवेदन।",2,"tech"],
+    ["Browser","ब्राउज़र","ब्राउज़र","noun","Open the link in another browser.","लिंक दूसरे ब्राउज़र में खोलें।","web client","","Chrome, Firefox आदि browser हैं।",2,"tech"],
+    ["Server","सर्वर","सर्वर","noun","The server is down for repair.","सर्वर मरम्मत के लिए बंद है।","host, mainframe","client","server down = सेवा बंद।",3,"tech"],
+    ["Storage","स्टोरेज","भंडारण","noun","My phone storage is full.","मेरे फ़ोन का भंडारण भर गया है।","memory, space","","cloud storage = ऑनलाइन भंडारण।",2,"tech"],
+    ["Charger","चार्जर","आवेशक","noun","I forgot my charger at home.","मैं अपना चार्जर घर भूल गया।","adapter","","plug in the charger.",1,"tech"],
+    ["Signal","सिग्नल","संकेत","noun","There is no signal on the hill.","पहाड़ पर कोई सिग्नल नहीं है।","sign, indication","","traffic signal भी यही शब्द।",1,"tech"],
+    ["Digital","डिजिटल","अंकीय","adjective","India is going digital fast.","भारत तेज़ी से डिजिटल हो रहा है।","electronic, online","analog","digital payment = ऑनलाइन भुगतान।",2,"tech"],
+
+    /* ---- ai ---- */
+    ["Artificial","आर्टिफ़िशियल","कृत्रिम","adjective","This is artificial light, not sunlight.","यह कृत्रिम प्रकाश है, सूरज की रोशनी नहीं।","man-made, synthetic","natural","artificial intelligence = कृत्रिम बुद्धिमत्ता।",2,"ai"],
+    ["Intelligence","इंटेलिजेंस","बुद्धिमत्ता","noun","Intelligence grows with practice.","अभ्यास से बुद्धिमत्ता बढ़ती है।","cleverness, intellect","stupidity","अगणनीय संज्ञा है।",2,"ai"],
+    ["Robot","रोबोट","यंत्रमानव","noun","A robot packs the boxes here.","यहाँ एक रोबोट डिब्बे पैक करता है।","machine, automaton","human","robotic = रोबोट जैसा।",1,"ai"],
+    ["Machine","मशीन","यंत्र","noun","This machine learns from examples.","यह यंत्र उदाहरणों से सीखता है।","device, engine","","machine learning = मशीन का सीखना।",1,"ai"],
+    ["Algorithm","एल्गोरिदम","कलन विधि","noun","The algorithm sorts names quickly.","यह कलन विधि नामों को तेज़ी से क्रम में लगाती है।","procedure, method","","step-by-step नियमों का समूह।",3,"ai"],
+    ["Automation","ऑटोमेशन","स्वचालन","noun","Automation saves hours of work.","स्वचालन घंटों का काम बचाता है।","mechanisation","manual work","automate = स्वचालित करना।",3,"ai"],
+    ["Chatbot","चैटबॉट","बातचीत करने वाला प्रोग्राम","noun","A chatbot answers customer questions.","चैटबॉट ग्राहकों के प्रश्नों का उत्तर देता है।","virtual agent","","chat + robot से बना शब्द।",2,"ai"],
+    ["Model","मॉडल","प्रतिरूप","noun","The model predicts tomorrow's demand.","यह प्रतिरूप कल की माँग बताता है।","system, framework","","AI में model = प्रशिक्षित प्रोग्राम।",2,"ai"],
+    ["Training","ट्रेनिंग","प्रशिक्षण","noun","Training makes the model accurate.","प्रशिक्षण मॉडल को सटीक बनाता है।","coaching, teaching","","train = प्रशिक्षित करना।",2,"ai"],
+    ["Prediction","प्रिडिक्शन","भविष्यवाणी","noun","The prediction was almost correct.","भविष्यवाणी लगभग सही थी।","forecast, guess","","predict = अनुमान लगाना।",2,"ai"],
+    ["Neural","न्यूरल","तंत्रिका संबंधी","adjective","A neural network copies the brain.","तंत्रिका जाल मस्तिष्क की नकल करता है।","nerve-related","","neural network एक साथ बोलें।",3,"ai"],
+    ["Dataset","डेटासेट","आँकड़ा समूह","noun","A clean dataset gives better results.","स्वच्छ आँकड़ा समूह बेहतर परिणाम देता है।","data collection","","data + set से बना।",3,"ai"],
+    ["Prompt","प्रॉम्प्ट","निर्देश","noun","Write a clear prompt for the AI.","एआई के लिए स्पष्ट निर्देश लिखें।","instruction, cue","","prompt = तुरंत भी होता है।",2,"ai"],
+    ["Accuracy","एक्युरेसी","सटीकता","noun","The accuracy improved after training.","प्रशिक्षण के बाद सटीकता बढ़ गई।","precision, exactness","error","accurate = सटीक।",2,"ai"],
+    ["Virtual","वर्चुअल","आभासी","adjective","We had a virtual meeting.","हमने आभासी बैठक की।","online, simulated","physical, real","virtual class = ऑनलाइन कक्षा।",2,"ai"],
+    ["Assistant","असिस्टेंट","सहायक","noun","A voice assistant sets my alarm.","आवाज़ सहायक मेरा अलार्म लगाता है।","helper, aide","","assist = सहायता करना।",1,"ai"],
+    ["Recognition","रेकग्निशन","पहचान","noun","Face recognition unlocks the phone.","चेहरा पहचान फ़ोन खोलती है।","identification","","recognise = पहचानना।",3,"ai"],
+    ["Generate","जेनरेट","उत्पन्न करना","verb","AI can generate images from text.","एआई पाठ से चित्र उत्पन्न कर सकता है।","create, produce","destroy","generative = उत्पन्न करने वाला।",2,"ai"],
+    ["Bias","बायस","पक्षपात","noun","Bias in data creates unfair results.","आँकड़ों में पक्षपात अनुचित परिणाम देता है।","prejudice, partiality","fairness","biased = पक्षपाती।",3,"ai"],
+    ["Ethics","एथिक्स","नैतिकता","noun","AI must follow strong ethics.","एआई को मज़बूत नैतिकता माननी चाहिए।","morals, values","","बहुवचन रूप में ही चलता है।",3,"ai"],
+
+    /* ---- comm ---- */
+    ["Speak","स्पीक","बोलना","verb","Speak slowly and clearly.","धीरे और स्पष्ट बोलिए।","talk, say","listen","speak to / speak with somebody.",1,"comm"],
+    ["Listen","लिसन","ध्यान से सुनना","verb","Listen to the teacher carefully.","शिक्षक को ध्यान से सुनिए।","hear, attend","ignore","हमेशा listen to बोलें।",1,"comm"],
+    ["Explain","एक्सप्लेन","समझाना","verb","Please explain it in Hindi.","कृपया इसे हिंदी में समझाइए।","clarify, describe","confuse","explain me गलत है — explain to me सही।",2,"comm"],
+    ["Discuss","डिस्कस","चर्चा करना","verb","Let us discuss the plan today.","आइए आज योजना पर चर्चा करें।","talk over, debate","","discuss about गलत है — सिर्फ़ discuss.",2,"comm"],
+    ["Message","मैसेज","संदेश","noun","I sent you a message yesterday.","मैंने कल आपको संदेश भेजा था।","note, text","","send/get a message.",1,"comm"],
+    ["Call","कॉल","बुलाना, फ़ोन करना","verb","Call me after eight.","आठ बजे के बाद मुझे फ़ोन करना।","phone, ring","","call me — call to me नहीं।",1,"comm"],
+    ["Reply","रिप्लाई","उत्तर देना","verb","Reply to the email today.","आज ईमेल का उत्तर दीजिए।","respond, answer","ask","reply to + चीज़।",1,"comm"],
+    ["Request","रिक्वेस्ट","अनुरोध","noun","I have a small request.","मेरा एक छोटा-सा अनुरोध है।","appeal, plea","order","make a request.",2,"comm"],
+    ["Suggest","सजेस्ट","सुझाव देना","verb","I suggest starting with easy words.","मेरा सुझाव है कि आसान शब्दों से शुरू करें।","advise, recommend","","suggest me गलत — suggest to me सही।",2,"comm"],
+    ["Apologize","अपोलोजाइज़","क्षमा माँगना","verb","He apologized for the delay.","उसने देरी के लिए क्षमा माँगी।","say sorry, regret","","apologize for + गलती।",2,"comm"],
+    ["Greet","ग्रीट","अभिवादन करना","verb","Greet everyone with a smile.","सबका मुस्कान से अभिवादन कीजिए।","welcome, salute","ignore","greeting = अभिवादन।",1,"comm"],
+    ["Introduce","इंट्रोड्यूस","परिचय कराना","verb","Let me introduce my friend.","मैं अपने मित्र का परिचय कराता हूँ।","present, acquaint","","introduce yourself = अपना परिचय दें।",2,"comm"],
+    ["Conversation","कन्वर्सेशन","बातचीत","noun","We had a long conversation.","हमने लंबी बातचीत की।","talk, chat","silence","have a conversation with.",2,"comm"],
+    ["Language","लैंग्वेज","भाषा","noun","English is a global language.","अंग्रेज़ी एक वैश्विक भाषा है।","tongue, speech","","mother tongue = मातृभाषा।",1,"comm"],
+    ["Fluent","फ़्लुएंट","धाराप्रवाह","adjective","She is fluent in three languages.","वह तीन भाषाओं में धाराप्रवाह है।","smooth, articulate","hesitant","fluent in + भाषा।",2,"comm"],
+    ["Polite","पोलाइट","विनम्र","adjective","Always use polite words.","हमेशा विनम्र शब्दों का प्रयोग करें।","courteous, respectful","rude","polite request = विनम्र अनुरोध।",1,"comm"],
+    ["Clear","क्लियर","स्पष्ट","adjective","Your voice is not clear.","आपकी आवाज़ स्पष्ट नहीं है।","plain, obvious","unclear, vague","make it clear = स्पष्ट करना।",1,"comm"],
+    ["Repeat","रिपीट","दोहराना","verb","Could you repeat that, please?","क्या आप उसे दोहरा सकते हैं?","say again, echo","","repeat again कहना दोहराव है।",1,"comm"],
+    ["Understand","अंडरस्टैंड","समझना","verb","I understand a little English.","मैं थोड़ी अंग्रेज़ी समझता हूँ।","grasp, follow","misunderstand","भूतकाल: understood.",1,"comm"],
+    ["Express","एक्सप्रेस","व्यक्त करना","verb","Express your feelings without fear.","अपनी भावनाएँ बिना डर के व्यक्त करें।","convey, state","suppress","express yourself = अपनी बात कहना।",2,"comm"],
+    ["Inform","इनफ़ॉर्म","सूचित करना","verb","Inform the office before leaving.","जाने से पहले दफ़्तर को सूचित करें।","notify, tell","hide","inform somebody about something.",2,"comm"],
+    ["Confirm","कन्फ़र्म","पुष्टि करना","verb","Please confirm your booking.","कृपया अपनी बुकिंग की पुष्टि करें।","verify, approve","deny","confirmation = पुष्टि।",2,"comm"],
+    ["Feedback","फ़ीडबैक","प्रतिक्रिया","noun","Your feedback helps us improve.","आपकी प्रतिक्रिया हमें सुधरने में मदद करती है।","response, opinion","","अगणनीय — feedbacks नहीं।",2,"comm"],
+    ["Silence","साइलेंस","मौन","noun","Silence is also an answer.","मौन भी एक उत्तर है।","quiet, stillness","noise","keep silence = चुप रहना।",2,"comm"],
+
+    /* ---- health ---- */
+    ["Health","हेल्थ","स्वास्थ्य","noun","Health is real wealth.","स्वास्थ्य ही असली धन है।","wellbeing, fitness","illness","अगणनीय संज्ञा।",1,"health"],
+    ["Doctor","डॉक्टर","चिकित्सक","noun","Meet a doctor if the fever stays.","बुखार बना रहे तो चिकित्सक से मिलें।","physician, medic","patient","see a doctor = डॉक्टर को दिखाना।",1,"health"],
+    ["Medicine","मेडिसिन","दवा","noun","Take this medicine after food.","यह दवा खाने के बाद लें।","drug, remedy","","take medicine — eat नहीं।",1,"health"],
+    ["Fever","फ़ीवर","बुखार","noun","He has a high fever.","उसे तेज़ बुखार है।","temperature","","have a fever बोलें।",1,"health"],
+    ["Pain","पेन","दर्द","noun","I feel pain in my back.","मुझे पीठ में दर्द है।","ache, hurt","comfort","pain in + शरीर का अंग।",1,"health"],
+    ["Exercise","एक्सरसाइज़","व्यायाम","noun","Daily exercise keeps you strong.","रोज़ का व्यायाम आपको मज़बूत रखता है।","workout, activity","rest","do exercise / exercise daily.",1,"health"],
+    ["Diet","डाइट","आहार","noun","A balanced diet prevents disease.","संतुलित आहार बीमारी से बचाता है।","food plan, nutrition","","on a diet = परहेज़ पर।",2,"health"],
+    ["Hospital","हॉस्पिटल","अस्पताल","noun","The hospital is two kilometres away.","अस्पताल दो किलोमीटर दूर है।","clinic, infirmary","","in hospital = भर्ती होना।",1,"health"],
+    ["Nurse","नर्स","परिचारिका","noun","The nurse checked my pulse.","नर्स ने मेरी नब्ज़ देखी।","caregiver, attendant","","nursing = देखभाल का कार्य।",1,"health"],
+    ["Injury","इंजरी","चोट","noun","The injury needs three stitches.","चोट में तीन टाँके चाहिए।","wound, harm","","injured = घायल।",2,"health"],
+    ["Treatment","ट्रीटमेंट","उपचार","noun","The treatment lasted one month.","उपचार एक महीने चला।","cure, therapy","","under treatment = इलाज चल रहा है।",2,"health"],
+    ["Healthy","हेल्दी","स्वस्थ","adjective","She stays healthy by walking.","वह टहलकर स्वस्थ रहती है।","fit, well","sick, unhealthy","healthy food = पौष्टिक भोजन।",1,"health"],
+    ["Weak","वीक","कमज़ोर","adjective","He feels weak after the illness.","बीमारी के बाद वह कमज़ोर महसूस करता है।","feeble, frail","strong","weak और week का उच्चारण एक जैसा।",1,"health"],
+    ["Fitness","फ़िटनेस","शारीरिक क्षमता","noun","Fitness improves with routine.","नियमितता से शारीरिक क्षमता बढ़ती है।","strength, stamina","weakness","fitness level = शरीर की क्षमता।",2,"health"],
+    ["Stress","स्ट्रेस","तनाव","noun","Too much stress harms sleep.","अधिक तनाव नींद को नुकसान पहुँचाता है।","tension, pressure","calm","under stress = तनाव में।",2,"health"],
+    ["Mind","माइंड","मन, मस्तिष्क","noun","A calm mind solves problems.","शांत मन समस्याएँ हल करता है।","brain, thought","body","never mind = कोई बात नहीं।",1,"health"],
+    ["Breath","ब्रेथ","साँस","noun","Take a deep breath and relax.","गहरी साँस लीजिए और शांत होइए।","air, inhalation","","breath संज्ञा, breathe क्रिया।",2,"health"],
+    ["Blood","ब्लड","रक्त","noun","Blood donation saves lives.","रक्तदान जीवन बचाता है।","","","blood pressure = रक्तचाप।",1,"health"],
+    ["Cough","कॉफ़","खाँसी","noun","This syrup stops a dry cough.","यह सिरप सूखी खाँसी रोकता है।","","","उच्चारण कॉफ़ है, काउ नहीं।",1,"health"],
+    ["Immunity","इम्युनिटी","रोग प्रतिरोधक क्षमता","noun","Good sleep builds immunity.","अच्छी नींद रोग प्रतिरोधक क्षमता बढ़ाती है।","resistance, defence","","immune = प्रतिरक्षित।",3,"health"],
+    ["Nutrition","न्यूट्रिशन","पोषण","noun","Children need proper nutrition.","बच्चों को उचित पोषण चाहिए।","nourishment, diet","","nutritious = पौष्टिक।",2,"health"],
+    ["Recover","रिकवर","स्वस्थ होना","verb","He recovered within a week.","वह एक हफ़्ते में स्वस्थ हो गया।","heal, improve","worsen","recover from + बीमारी।",2,"health"],
+    ["Checkup","चेकअप","जाँच","noun","Get a checkup once a year.","साल में एक बार जाँच कराएँ।","examination, test","","health checkup कहा जाता है।",1,"health"],
+    ["Hygiene","हाइजीन","स्वच्छता","noun","Hygiene prevents many diseases.","स्वच्छता कई बीमारियों से बचाती है।","cleanliness, sanitation","dirtiness","उच्चारण हाइजीन है।",3,"health"],
+
+    /* ---- travel ---- */
+    ["Travel","ट्रैवल","यात्रा करना","verb","I travel by bus every week.","मैं हर हफ़्ते बस से यात्रा करता हूँ।","journey, tour","stay","travel by + वाहन।",1,"travel"],
+    ["Journey","जर्नी","सफ़र","noun","The journey took six hours.","सफ़र में छह घंटे लगे।","trip, voyage","","journey = एक तरफ़ का सफ़र।",1,"travel"],
+    ["Ticket","टिकट","टिकट","noun","Book the ticket in advance.","टिकट पहले से बुक करें।","pass, coupon","","book/buy a ticket.",1,"travel"],
+    ["Station","स्टेशन","स्टेशन","noun","The train reaches the station at nine.","गाड़ी नौ बजे स्टेशन पहुँचती है।","depot, terminal","","railway station / bus station.",1,"travel"],
+    ["Airport","एयरपोर्ट","हवाई अड्डा","noun","Reach the airport two hours early.","हवाई अड्डे दो घंटे पहले पहुँचें।","airfield","","at the airport कहें।",1,"travel"],
+    ["Luggage","लगेज","सामान","noun","Keep your luggage with you.","अपना सामान अपने पास रखें।","baggage, bags","","अगणनीय — luggages नहीं।",2,"travel"],
+    ["Hotel","होटल","होटल","noun","The hotel is near the temple.","होटल मंदिर के पास है।","lodge, inn","","stay at a hotel.",1,"travel"],
+    ["Booking","बुकिंग","आरक्षण","noun","My booking is confirmed.","मेरा आरक्षण पक्का हो गया है।","reservation","cancellation","booking confirmed / cancelled.",1,"travel"],
+    ["Passport","पासपोर्ट","पासपोर्ट","noun","Keep your passport safe abroad.","विदेश में पासपोर्ट सुरक्षित रखें।","travel document","","apply for a passport.",2,"travel"],
+    ["Map","मैप","नक्शा","noun","Open the map on your phone.","अपने फ़ोन पर नक्शा खोलिए।","chart, atlas","","on the map = नक्शे पर।",1,"travel"],
+    ["Road","रोड","सड़क","noun","The road to the village is narrow.","गाँव की सड़क सँकरी है।","street, path","","on the road = सफ़र में।",1,"travel"],
+    ["Village","विलेज","गाँव","noun","My village has clean air.","मेरे गाँव की हवा साफ़ है।","hamlet","city","in a village रहते हैं।",1,"travel"],
+    ["City","सिटी","शहर","noun","The city never sleeps.","शहर कभी सोता नहीं।","town, metro","village","in the city कहें।",1,"travel"],
+    ["Distance","डिस्टेंस","दूरी","noun","The distance is only ten kilometres.","दूरी केवल दस किलोमीटर है।","gap, span","","distance between A and B.",2,"travel"],
+    ["Arrive","अराइव","पहुँचना","verb","We arrive at noon.","हम दोपहर को पहुँचते हैं।","reach, land","depart, leave","arrive at (जगह), arrive in (शहर)।",2,"travel"],
+    ["Depart","डिपार्ट","प्रस्थान करना","verb","The bus departs at five sharp.","बस ठीक पाँच बजे प्रस्थान करती है।","leave, exit","arrive","departure = प्रस्थान।",2,"travel"],
+    ["Guide","गाइड","मार्गदर्शक","noun","A local guide showed us the fort.","एक स्थानीय मार्गदर्शक ने हमें किला दिखाया।","escort, leader","","guide करना = मार्ग दिखाना।",2,"travel"],
+    ["Tourist","टूरिस्ट","पर्यटक","noun","Tourists visit this lake in winter.","पर्यटक सर्दियों में इस झील पर आते हैं।","visitor, traveller","local","tourism = पर्यटन।",2,"travel"],
+    ["Vehicle","व्हीकल","वाहन","noun","Park your vehicle outside.","अपना वाहन बाहर खड़ा करें।","transport, carrier","","उच्चारण वी-इकल है।",2,"travel"],
+    ["Fare","फ़ेयर","किराया","noun","The bus fare has increased.","बस का किराया बढ़ गया है।","charge, rate","","fare = किराया, fair = मेला/उचित।",2,"travel"],
+    ["Delay","डिले","देरी","noun","The train is running with a delay.","गाड़ी देरी से चल रही है।","holdup, lag","","delayed by two hours.",2,"travel"],
+    ["Return","रिटर्न","वापस आना","verb","We return home on Sunday.","हम रविवार को घर लौटते हैं।","come back, restore","depart","return back दोहराव है।",1,"travel"],
+    ["Direction","डायरेक्शन","दिशा","noun","Ask a shopkeeper for direction.","दिशा के लिए दुकानदार से पूछिए।","way, course","","in the direction of.",2,"travel"],
+    ["Adventure","एडवेंचर","साहसिक कार्य","noun","The trek was a real adventure.","वह पैदल यात्रा सच्चा साहसिक कार्य थी।","expedition, thrill","boredom","adventurous = साहसी।",2,"travel"],
+
+    /* ---- jobs ---- */
+    ["Job","जॉब","नौकरी","noun","He got a job in the bank.","उसे बैंक में नौकरी मिली।","work, post","","get/lose a job.",1,"jobs"],
+    ["Work","वर्क","काम करना","verb","I work six days a week.","मैं हफ़्ते में छह दिन काम करता हूँ।","labour, function","rest","work as + पद।",1,"jobs"],
+    ["Salary","सैलरी","वेतन","noun","The salary is paid on the first.","वेतन पहली तारीख़ को मिलता है।","pay, wages","","monthly salary कहें।",1,"jobs"],
+    ["Office","ऑफ़िस","कार्यालय","noun","The office opens at ten.","कार्यालय दस बजे खुलता है।","workplace, bureau","","at the office = दफ़्तर में।",1,"jobs"],
+    ["Employee","एम्प्लॉई","कर्मचारी","noun","Every employee gets a uniform.","हर कर्मचारी को वर्दी मिलती है।","worker, staff","employer","उच्चारण एम्प्लॉ-ई है।",2,"jobs"],
+    ["Employer","एम्प्लॉयर","नियोक्ता","noun","A good employer respects time.","अच्छा नियोक्ता समय का सम्मान करता है।","boss, hirer","employee","employ = नियुक्त करना।",2,"jobs"],
+    ["Duty","ड्यूटी","कर्तव्य","noun","It is my duty to help.","मदद करना मेरा कर्तव्य है।","responsibility, task","","on duty / off duty.",1,"jobs"],
+    ["Skill","स्किल","कौशल","noun","Typing is a useful skill.","टाइपिंग एक उपयोगी कौशल है।","ability, talent","","skilled = कुशल।",1,"jobs"],
+    ["Experience","एक्सपीरियंस","अनुभव","noun","She has five years of experience.","उसके पास पाँच साल का अनुभव है।","practice, exposure","","experience in + क्षेत्र।",2,"jobs"],
+    ["Recruitment","रिक्रूटमेंट","भर्ती","noun","The recruitment starts next month.","भर्ती अगले महीने शुरू होगी।","hiring, enrolment","","recruit = भर्ती करना।",2,"jobs"],
+    ["Promotion","प्रमोशन","पदोन्नति","noun","He received a promotion this year.","उसे इस साल पदोन्नति मिली।","upgrade, advancement","demotion","get a promotion.",2,"jobs"],
+    ["Resign","रिज़ाइन","इस्तीफ़ा देना","verb","She decided to resign politely.","उसने विनम्रता से इस्तीफ़ा देने का निर्णय लिया।","quit, step down","join","resign from + पद।",3,"jobs"],
+    ["Apply","अप्लाई","आवेदन करना","verb","Apply for the post before Friday.","शुक्रवार से पहले पद के लिए आवेदन करें।","request, submit","","apply for + नौकरी।",1,"jobs"],
+    ["Resume","रिज़्यूमे","बायोडाटा","noun","Keep your resume to one page.","अपना बायोडाटा एक पन्ने का रखें।","CV, biodata","","resume = फिर से शुरू करना भी।",2,"jobs"],
+    ["Deadline","डेडलाइन","अंतिम तिथि","noun","The deadline is Monday morning.","अंतिम तिथि सोमवार सुबह है।","due date, time limit","","meet a deadline = समय पर पूरा करना।",2,"jobs"],
+    ["Team","टीम","दल","noun","Our team finished the work early.","हमारे दल ने काम जल्दी पूरा किया।","group, crew","individual","team work = सामूहिक काम।",1,"jobs"],
+    ["Task","टास्क","कार्य","noun","This task needs two people.","इस कार्य के लिए दो लोग चाहिए।","job, assignment","","complete a task.",1,"jobs"],
+    ["Report","रिपोर्ट","विवरण देना","noun","Submit the report by evening.","शाम तक विवरण जमा करें।","account, record","","report to + अधिकारी।",2,"jobs"],
+    ["Shift","शिफ़्ट","पाली","noun","I work in the night shift.","मैं रात की पाली में काम करता हूँ।","turn, duty period","","shift = बदलना भी होता है।",1,"jobs"],
+    ["Overtime","ओवरटाइम","अतिरिक्त समय","noun","Overtime is paid double.","अतिरिक्त समय का दोगुना भुगतान होता है।","extra hours","","do overtime कहें।",2,"jobs"],
+    ["Colleague","कॉलीग","सहकर्मी","noun","My colleague helped me a lot.","मेरे सहकर्मी ने बहुत मदद की।","co-worker, associate","","उच्चारण कॉ-लीग है।",2,"jobs"],
+    ["Vacancy","वेकेंसी","रिक्ति","noun","There is one vacancy for a clerk.","क्लर्क के लिए एक रिक्ति है।","opening, post","","vacancy for + पद।",2,"jobs"],
+    ["Appointment","अपॉइंटमेंट","नियुक्ति, मुलाक़ात","noun","I have an appointment at four.","मेरी चार बजे मुलाक़ात है।","meeting, posting","","fix an appointment.",2,"jobs"],
+    ["Retire","रिटायर","सेवानिवृत्त होना","verb","My father will retire next year.","मेरे पिता अगले साल सेवानिवृत्त होंगे।","step down","join","retirement = सेवानिवृत्ति।",2,"jobs"],
+
+    /* ---- motivation ---- */
+    ["Motivation","मोटिवेशन","प्रेरणा","noun","Motivation comes from small wins.","प्रेरणा छोटी जीत से आती है।","drive, inspiration","laziness","motivate = प्रेरित करना।",2,"motivation"],
+    ["Success","सक्सेस","सफलता","noun","Success needs patience and work.","सफलता के लिए धैर्य और मेहनत चाहिए।","achievement, victory","failure","successful = सफल।",1,"motivation"],
+    ["Failure","फ़ेल्योर","असफलता","noun","Failure is only a lesson.","असफलता केवल एक सबक है।","defeat, setback","success","fail = असफल होना।",2,"motivation"],
+    ["Effort","एफ़र्ट","प्रयास","noun","Your effort will never be wasted.","आपका प्रयास कभी व्यर्थ नहीं जाएगा।","attempt, labour","laziness","make an effort — do नहीं।",2,"motivation"],
+    ["Goal","गोल","लक्ष्य","noun","Write your goal on paper.","अपना लक्ष्य काग़ज़ पर लिखिए।","aim, target","","set a goal = लक्ष्य तय करना।",1,"motivation"],
+    ["Dream","ड्रीम","सपना","noun","Never stop chasing your dream.","अपने सपने का पीछा करना कभी मत छोड़िए।","vision, hope","","dream of / dream about.",1,"motivation"],
+    ["Hope","होप","आशा","noun","Hope keeps a person moving.","आशा इंसान को चलते रहने देती है।","expectation, faith","despair","hope for the best.",1,"motivation"],
+    ["Courage","करेज","साहस","noun","It takes courage to start again.","फिर से शुरू करने में साहस लगता है।","bravery, nerve","fear","courageous = साहसी।",2,"motivation"],
+    ["Confidence","कॉन्फ़िडेंस","आत्मविश्वास","noun","Practice builds confidence.","अभ्यास आत्मविश्वास बनाता है।","self-belief, assurance","doubt","confident = आत्मविश्वासी।",2,"motivation"],
+    ["Patience","पेशेंस","धैर्य","noun","Learning a language needs patience.","भाषा सीखने में धैर्य चाहिए।","tolerance, calm","impatience","patient = धैर्यवान और मरीज़।",2,"motivation"],
+    ["Determination","डिटरमिनेशन","दृढ़ संकल्प","noun","Her determination changed everything.","उसके दृढ़ संकल्प ने सब बदल दिया।","resolve, will","weakness","determined = संकल्पित।",3,"motivation"],
+    ["Believe","बिलीव","विश्वास करना","verb","Believe in your own effort.","अपने प्रयास पर विश्वास कीजिए।","trust, accept","doubt","believe in + व्यक्ति/बात।",1,"motivation"],
+    ["Achieve","अचीव","हासिल करना","verb","You can achieve this in a year.","आप इसे एक साल में हासिल कर सकते हैं।","attain, reach","lose","achievement = उपलब्धि।",2,"motivation"],
+    ["Struggle","स्ट्रगल","संघर्ष","noun","Every struggle teaches something.","हर संघर्ष कुछ सिखाता है।","fight, hardship","ease","struggle with / struggle for.",2,"motivation"],
+    ["Progress","प्रोग्रेस","प्रगति","noun","Slow progress is still progress.","धीमी प्रगति भी प्रगति है।","advance, growth","decline","अगणनीय — progresses नहीं।",2,"motivation"],
+    ["Improve","इम्प्रूव","सुधारना","verb","Improve a little every day.","हर दिन थोड़ा सुधार कीजिए।","better, enhance","worsen","improvement = सुधार।",1,"motivation"],
+    ["Inspire","इंस्पायर","प्रेरित करना","verb","Your story can inspire others.","आपकी कहानी दूसरों को प्रेरित कर सकती है।","motivate, encourage","discourage","inspiration = प्रेरणा।",2,"motivation"],
+    ["Positive","पॉज़िटिव","सकारात्मक","adjective","Keep a positive attitude daily.","रोज़ सकारात्मक दृष्टिकोण रखिए।","optimistic, hopeful","negative","positive thinking = सकारात्मक सोच।",1,"motivation"],
+    ["Focus","फ़ोकस","ध्यान केंद्रित करना","verb","Focus on one word at a time.","एक बार में एक शब्द पर ध्यान दीजिए।","concentrate, aim","distract","focus on + विषय।",1,"motivation"],
+    ["Consistency","कंसिस्टेंसी","निरंतरता","noun","Consistency beats talent.","निरंतरता प्रतिभा से आगे निकल जाती है।","regularity, steadiness","irregularity","consistent = लगातार।",3,"motivation"],
+    ["Sacrifice","सैक्रिफ़ाइस","त्याग","noun","Every big goal asks for sacrifice.","हर बड़ा लक्ष्य त्याग माँगता है।","surrender, giving up","","sacrifice for + उद्देश्य।",3,"motivation"],
+    ["Victory","विक्ट्री","विजय","noun","Victory belongs to the patient.","विजय धैर्यवान की होती है।","win, triumph","defeat","victorious = विजयी।",2,"motivation"],
+    ["Challenge","चैलेंज","चुनौती","noun","Treat every problem as a challenge.","हर समस्या को चुनौती मानिए।","test, difficulty","","face a challenge = चुनौती का सामना।",2,"motivation"],
+    ["Persist","परसिस्ट","डटे रहना","verb","Persist even when progress is slow.","प्रगति धीमी हो तब भी डटे रहिए।","continue, endure","quit","persistence = दृढ़ता।",3,"motivation"],
+
+    /* ---- leadership ---- */
+    ["Leader","लीडर","नेता","noun","A leader listens before speaking.","नेता बोलने से पहले सुनता है।","chief, head","follower","leadership = नेतृत्व।",1,"leadership"],
+    ["Vision","विज़न","दूरदृष्टि","noun","A clear vision guides the team.","स्पष्ट दूरदृष्टि दल का मार्गदर्शन करती है।","foresight, insight","","vision = दृष्टि भी होती है।",2,"leadership"],
+    ["Decision","डिसीज़न","निर्णय","noun","Take the decision without fear.","बिना डर के निर्णय लीजिए।","choice, judgement","doubt","make/take a decision.",1,"leadership"],
+    ["Responsibility","रिस्पॉन्सिबिलिटी","ज़िम्मेदारी","noun","Leadership means responsibility.","नेतृत्व का अर्थ है ज़िम्मेदारी।","duty, charge","","take responsibility for.",2,"leadership"],
+    ["Delegate","डेलिगेट","काम सौंपना","verb","A good leader knows how to delegate.","अच्छा नेता काम सौंपना जानता है।","assign, hand over","","delegate work to somebody.",3,"leadership"],
+    ["Influence","इन्फ़्लुएंस","प्रभाव","noun","Her influence changed the village.","उसके प्रभाव ने गाँव बदल दिया।","impact, effect","","influence on / over.",2,"leadership"],
+    ["Respect","रिस्पेक्ट","सम्मान","noun","Respect is earned, not demanded.","सम्मान कमाया जाता है, माँगा नहीं जाता।","honour, regard","insult","respect for + व्यक्ति।",1,"leadership"],
+    ["Trust","ट्रस्ट","भरोसा","noun","Trust takes years to build.","भरोसा बनने में वर्षों लगते हैं।","faith, belief","distrust","trust in somebody.",1,"leadership"],
+    ["Teamwork","टीमवर्क","सामूहिक कार्य","noun","Teamwork finishes work faster.","सामूहिक कार्य से काम जल्दी पूरा होता है।","cooperation","conflict","अगणनीय संज्ञा।",2,"leadership"],
+    ["Manage","मैनेज","प्रबंध करना","verb","She manages twenty workers.","वह बीस मज़दूरों का प्रबंध करती है।","handle, run","","manager = प्रबंधक।",1,"leadership"],
+    ["Motivate","मोटिवेट","उत्साह बढ़ाना","verb","Praise can motivate a whole team.","प्रशंसा पूरे दल को प्रेरित कर सकती है।","encourage, drive","discourage","motivate somebody to do.",2,"leadership"],
+    ["Support","सपोर्ट","सहायता करना","verb","Support your team in bad times.","बुरे समय में अपने दल की सहायता कीजिए।","help, back","oppose","supportive = सहायक।",1,"leadership"],
+    ["Initiative","इनिशिएटिव","पहल","noun","He took the initiative to start.","उसने शुरू करने की पहल की।","first step, drive","","take the initiative.",3,"leadership"],
+    ["Accountable","अकाउंटेबल","जवाबदेह","adjective","A leader is accountable for results.","नेता परिणामों के लिए जवाबदेह होता है।","answerable, liable","","accountable to + व्यक्ति।",3,"leadership"],
+    ["Mentor","मेंटर","मार्गदर्शक गुरु","noun","Find a mentor in your field.","अपने क्षेत्र में एक मार्गदर्शक गुरु खोजिए।","adviser, coach","","mentor करना = मार्गदर्शन देना।",2,"leadership"],
+    ["Empower","एम्पावर","सशक्त बनाना","verb","Education empowers women.","शिक्षा महिलाओं को सशक्त बनाती है।","enable, strengthen","weaken","empowerment = सशक्तिकरण।",3,"leadership"],
+    ["Fair","फ़ेयर","न्यायसंगत","adjective","Give everyone a fair chance.","सबको न्यायसंगत अवसर दीजिए।","just, equal","unfair","fair = मेला और गोरा भी।",1,"leadership"],
+    ["Command","कमांड","आदेश, अधिकार","noun","She has good command over English.","उसकी अंग्रेज़ी पर अच्छी पकड़ है।","order, control","","command over + भाषा/विषय।",2,"leadership"],
+    ["Example","एग्ज़ाम्पल","उदाहरण","noun","Lead by example, not by words.","शब्दों से नहीं, उदाहरण से नेतृत्व कीजिए।","instance, model","","for example = उदाहरण के लिए।",1,"leadership"],
+    ["Unity","यूनिटी","एकता","noun","Unity makes a small team strong.","एकता छोटे दल को मज़बूत बनाती है।","togetherness, harmony","division","unite = एक होना।",2,"leadership"],
+
+    /* ---- interview ---- */
+    ["Interview","इंटरव्यू","साक्षात्कार","noun","My interview is on Monday.","मेरा साक्षात्कार सोमवार को है।","meeting, discussion","","attend/face an interview.",1,"interview"],
+    ["Introduction","इंट्रोडक्शन","परिचय","noun","Start with a short introduction.","संक्षिप्त परिचय से शुरू कीजिए।","opening, preface","conclusion","self-introduction तैयार रखें।",2,"interview"],
+    ["Weakness","वीकनेस","कमज़ोरी","noun","Name a weakness you are improving.","ऐसी कमज़ोरी बताइए जिसे आप सुधार रहे हैं।","fault, drawback","strength","weakness for = किसी चीज़ का शौक।",2,"interview"],
+    ["Achievement","अचीवमेंट","उपलब्धि","noun","Share one achievement with proof.","एक उपलब्धि प्रमाण के साथ बताइए।","accomplishment, success","failure","greatest achievement पूछा जाता है।",2,"interview"],
+    ["Qualification","क्वालिफ़िकेशन","योग्यता","noun","List your highest qualification first.","अपनी सर्वोच्च योग्यता पहले लिखिए।","credential, degree","","educational qualification.",2,"interview"],
+    ["Candidate","कैंडिडेट","उम्मीदवार","noun","Ten candidates applied for the post.","पद के लिए दस उम्मीदवारों ने आवेदन किया।","applicant, aspirant","","candidate for + पद।",2,"interview"],
+    ["Selection","सिलेक्शन","चयन","noun","The selection list came out today.","चयन सूची आज आई।","choice, pick","rejection","select = चुनना।",1,"interview"],
+    ["Rejection","रिजेक्शन","अस्वीकृति","noun","One rejection is not the end.","एक अस्वीकृति अंत नहीं है।","refusal, denial","acceptance","reject = अस्वीकार करना।",2,"interview"],
+    ["Punctual","पंक्चुअल","समय का पाबंद","adjective","Be punctual on the interview day.","साक्षात्कार के दिन समय के पाबंद रहिए।","on time, prompt","late","punctuality = समयनिष्ठा।",2,"interview"],
+    ["Formal","फ़ॉर्मल","औपचारिक","adjective","Wear formal clothes for the interview.","साक्षात्कार के लिए औपचारिक कपड़े पहनिए।","official, proper","casual, informal","formal language = शिष्ट भाषा।",2,"interview"],
+    ["Impression","इम्प्रेशन","छाप","noun","The first impression matters most.","पहली छाप सबसे अधिक मायने रखती है।","effect, image","","make a good impression.",2,"interview"],
+    ["Prepare","प्रिपेयर","तैयारी करना","verb","Prepare five common questions.","पाँच सामान्य प्रश्नों की तैयारी कीजिए।","get ready, plan","","preparation = तैयारी।",1,"interview"],
+    ["Expectation","एक्सपेक्टेशन","अपेक्षा","noun","What is your salary expectation?","आपकी वेतन अपेक्षा क्या है?","hope, demand","","expect = अपेक्षा करना।",2,"interview"],
+    ["Reference","रेफ़रेंस","संदर्भ, सिफ़ारिश","noun","Add two references in the resume.","बायोडाटा में दो संदर्भ जोड़िए।","recommendation, source","","refer = संदर्भ देना।",2,"interview"],
+    ["Offer","ऑफ़र","प्रस्ताव","noun","I received the offer letter today.","मुझे आज प्रस्ताव पत्र मिला।","proposal, bid","","offer letter = नियुक्ति पत्र।",1,"interview"],
+    ["Notice","नोटिस","सूचना अवधि","noun","My notice period is one month.","मेरी सूचना अवधि एक महीने की है।","warning, information","","notice period पूछा जाता है।",2,"interview"],
+    ["Probation","प्रोबेशन","परिवीक्षा","noun","The probation lasts six months.","परिवीक्षा छह महीने चलती है।","trial period","","on probation = परिवीक्षा पर।",3,"interview"],
+    ["Panel","पैनल","चयन समिति","noun","A panel of three took the interview.","तीन सदस्यों की समिति ने साक्षात्कार लिया।","board, committee","","interview panel कहते हैं।",2,"interview"],
+    ["Eligible","एलिजिबल","पात्र","adjective","Graduates are eligible for this post.","स्नातक इस पद के लिए पात्र हैं।","qualified, entitled","ineligible","eligible for + पद।",2,"interview"],
+    ["Suitable","सूटेबल","उपयुक्त","adjective","This job is suitable for freshers.","यह नौकरी नए लोगों के लिए उपयुक्त है।","fitting, appropriate","unsuitable","suitable for + व्यक्ति।",2,"interview"],
+
+    /* ---- personality ---- */
+    ["Personality","पर्सनैलिटी","व्यक्तित्व","noun","A calm personality wins trust.","शांत व्यक्तित्व भरोसा जीतता है।","character, nature","","personality development = व्यक्तित्व विकास।",2,"personality"],
+    ["Attitude","एटीट्यूड","दृष्टिकोण","noun","Your attitude decides your height.","आपका दृष्टिकोण आपकी ऊँचाई तय करता है।","outlook, mindset","","attitude towards + बात।",2,"personality"],
+    ["Behaviour","बिहेवियर","व्यवहार","noun","Polite behaviour opens many doors.","विनम्र व्यवहार कई दरवाज़े खोलता है।","conduct, manner","","अमेरिकी वर्तनी: behavior.",2,"personality"],
+    ["Honest","ऑनेस्ट","ईमानदार","adjective","Be honest even when it is hard.","कठिन हो तब भी ईमानदार रहिए।","truthful, sincere","dishonest","H मौन है — ऑनेस्ट बोलें।",1,"personality"],
+    ["Humble","हंबल","विनम्र, नम्र","adjective","He stayed humble after success.","सफलता के बाद भी वह विनम्र रहा।","modest, simple","arrogant","humility = विनम्रता।",2,"personality"],
+    ["Kind","काइंड","दयालु","adjective","Be kind to strangers too.","अजनबियों के प्रति भी दयालु रहिए।","gentle, caring","cruel","kindness = दयालुता।",1,"personality"],
+    ["Generous","जेनरस","उदार","adjective","She is generous with her time.","वह अपने समय को लेकर उदार है।","giving, liberal","selfish","generosity = उदारता।",2,"personality"],
+    ["Calm","काम","शांत","adjective","Stay calm during an argument.","बहस के दौरान शांत रहिए।","peaceful, quiet","angry","L मौन है — काम बोलें।",1,"personality"],
+    ["Curious","क्यूरियस","जिज्ञासु","adjective","Curious people learn faster.","जिज्ञासु लोग तेज़ी से सीखते हैं।","inquisitive, eager","indifferent","curiosity = जिज्ञासा।",2,"personality"],
+    ["Creative","क्रिएटिव","रचनात्मक","adjective","Creative thinking solves old problems.","रचनात्मक सोच पुरानी समस्याएँ हल करती है।","imaginative, original","dull","creativity = रचनात्मकता।",2,"personality"],
+    ["Ambitious","एम्बिशियस","महत्वाकांक्षी","adjective","He is ambitious but patient.","वह महत्वाकांक्षी पर धैर्यवान है।","aspiring, driven","content","ambition = महत्वाकांक्षा।",3,"personality"],
+    ["Loyal","लॉयल","वफ़ादार","adjective","A loyal friend stays in bad times.","वफ़ादार मित्र बुरे समय में साथ रहता है।","faithful, devoted","disloyal","loyalty = वफ़ादारी।",2,"personality"],
+    ["Grateful","ग्रेटफ़ुल","आभारी","adjective","I am grateful for your help.","मैं आपकी मदद के लिए आभारी हूँ।","thankful, obliged","ungrateful","grateful to + व्यक्ति, for + चीज़।",2,"personality"],
+    ["Optimistic","ऑप्टिमिस्टिक","आशावादी","adjective","Stay optimistic about your result.","अपने परिणाम को लेकर आशावादी रहिए।","hopeful, positive","pessimistic","optimism = आशावाद।",3,"personality"],
+    ["Reliable","रिलायबल","भरोसेमंद","adjective","He is a reliable worker.","वह भरोसेमंद कर्मचारी है।","dependable, trusty","unreliable","rely on = भरोसा करना।",2,"personality"],
+    ["Sincere","सिन्सियर","निष्ठावान","adjective","Give a sincere apology.","निष्ठापूर्वक क्षमा माँगिए।","genuine, honest","insincere","sincerity = निष्ठा।",2,"personality"],
+    ["Empathy","एम्पैथी","समानुभूति","noun","Empathy makes you a better listener.","समानुभूति आपको बेहतर श्रोता बनाती है।","compassion, understanding","indifference","empathy = महसूस करना, sympathy = तरस।",3,"personality"],
+    ["Charisma","करिश्मा","आकर्षक व्यक्तित्व","noun","His charisma fills the room.","उसका आकर्षक व्यक्तित्व पूरे कमरे में छा जाता है।","charm, appeal","","charismatic = आकर्षक।",3,"personality"]
+  ];
+
+  HEM.WORDS = ROWS.map(function (r, i) {
+    return {
+      id: i, en: r[0], pron: r[1], hi: r[2], pos: r[3], sent: r[4],
+      sentHi: r[5], syn: r[6], ant: r[7], tip: r[8], level: r[9], cat: r[10]
+    };
+  });
+
+  HEM.CATEGORIES = [
+    { key:"all", en:"All Words", hi:"सभी शब्द", icon:"◆" },
+    { key:"daily", en:"Daily Life", hi:"रोज़मर्रा", icon:"☀" },
+    { key:"education", en:"Education", hi:"शिक्षा", icon:"✎" },
+    { key:"business", en:"Business", hi:"व्यापार", icon:"₹" },
+    { key:"tech", en:"Technology", hi:"तकनीक", icon:"⌘" },
+    { key:"ai", en:"AI", hi:"कृत्रिम बुद्धि", icon:"◉" },
+    { key:"comm", en:"Communication", hi:"संवाद", icon:"✉" },
+    { key:"health", en:"Health", hi:"स्वास्थ्य", icon:"✚" },
+    { key:"travel", en:"Travel", hi:"यात्रा", icon:"✈" },
+    { key:"jobs", en:"Jobs", hi:"नौकरी", icon:"▤" },
+    { key:"motivation", en:"Motivation", hi:"प्रेरणा", icon:"★" },
+    { key:"leadership", en:"Leadership", hi:"नेतृत्व", icon:"⚑" },
+    { key:"interview", en:"Interview", hi:"साक्षात्कार", icon:"◎" },
+    { key:"personality", en:"Personality", hi:"व्यक्तित्व", icon:"❖" }
+  ];
+
+  HEM.LEVEL_NAME = { 1: "Easy \u00b7 \u0906\u0938\u093e\u0928", 2: "Medium \u00b7 \u092e\u0927\u094d\u092f\u092e", 3: "Hard \u00b7 \u0915\u0920\u093f\u0928" };
+
+  /* Each test receives a plain stats object from store.stats() — no globals. */
+  HEM.ACHIEVEMENTS = [
+    { id:"first",    icon:"\ud83c\udf31", en:"First Step",        hi:"\u092a\u0939\u0932\u093e \u0915\u0926\u092e",           desc:"Answer your first word",             test:function(s){ return s.answers >= 1; } },
+    { id:"ten",      icon:"\ud83d\udcd8", en:"Ten Down",          hi:"\u0926\u0938 \u092a\u0942\u0930\u0947",                   desc:"Learn 10 words correctly",           test:function(s){ return s.learned >= 10; } },
+    { id:"fifty",    icon:"\ud83d\udcda", en:"Half Century",      hi:"\u0905\u0930\u094d\u0927\u0936\u0924\u0915",             desc:"Learn 50 words correctly",           test:function(s){ return s.learned >= 50; } },
+    { id:"hundred",  icon:"\ud83c\udfc6", en:"Century Maker",     hi:"\u0936\u0924\u0915\u0935\u0940\u0930",                     desc:"Learn 100 words correctly",          test:function(s){ return s.learned >= 100; } },
+    { id:"streak3",  icon:"\ud83d\udd25", en:"Three Day Fire",    hi:"\u0924\u0940\u0928 \u0926\u093f\u0928 \u0915\u0940 \u0932\u094c", desc:"Practise 3 days in a row",      test:function(s){ return s.bestStreak >= 3; } },
+    { id:"streak7",  icon:"\u26a1", en:"Week Warrior",             hi:"\u0938\u092a\u094d\u0924\u093e\u0939 \u092f\u094b\u0926\u094d\u0927\u093e", desc:"Practise 7 days in a row", test:function(s){ return s.bestStreak >= 7; } },
+    { id:"sharp",    icon:"\ud83c\udfaf", en:"Sharp Shooter",     hi:"\u0905\u091a\u0942\u0915 \u0928\u093f\u0936\u093e\u0928\u093e", desc:"80% accuracy over 50 answers", test:function(s){ return s.answers >= 50 && s.accuracy >= 80; } },
+    { id:"speller",  icon:"\u270d", en:"Spell Master",             hi:"\u0935\u0930\u094d\u0924\u0928\u0940 \u0917\u0941\u0930\u0941", desc:"Win 20 spell challenges",      test:function(s){ return s.spellWins >= 20; } },
+    { id:"speaker",  icon:"\ud83c\udfa4", en:"Brave Speaker",     hi:"\u0928\u093f\u0921\u0930 \u0935\u0915\u094d\u0924\u093e", desc:"Finish 15 pronunciation checks", test:function(s){ return s.speakTries >= 15; } },
+    { id:"daily5",   icon:"\ud83d\udcc5", en:"Daily Regular",     hi:"\u0928\u093f\u092f\u092e\u093f\u0924 \u0936\u093f\u0937\u094d\u092f", desc:"Finish 5 Daily Challenges", test:function(s){ return s.dailyDone >= 5; } },
+    { id:"level5",   icon:"\ud83d\udc51", en:"Level Five",        hi:"\u092a\u093e\u0901\u091a\u0935\u093e\u0901 \u0938\u094d\u0924\u0930", desc:"Reach Level 5",             test:function(s){ return s.level >= 5; } },
+    { id:"explorer", icon:"\ud83e\udded", en:"Category Explorer", hi:"\u0936\u094d\u0930\u0947\u0923\u0940 \u0916\u094b\u091c\u0940", desc:"Practise 6 categories",      test:function(s){ return s.catCount >= 6; } }
+  ];
+})(window.HEM = window.HEM || {});
+
+</script>
+<script>
+/* ==========================================================================
+   prefixdata.js — prefix + word combination bank
+   "Prefix Builder" game: shows a prefix and a base word, asks what they
+   become when joined, then reveals the combined word's meaning in both
+   English and Hindi.
+   Attaches to the single HEM namespace. Declares no global identifiers.
+
+   Row format:
+   [ prefix, prefixPronHi, prefixMeaningEn, prefixMeaningHi,
+     base, basePronHi, baseMeaningHi,
+     result, resultPronHi, resultMeaningEn, resultMeaningHi,
+     exampleEn, exampleHi ]
+   ========================================================================== */
+(function (HEM) {
+  "use strict";
+
+  var ROWS = [
+    ["un","अन","not / opposite of","नहीं / विपरीत","happy","हैपी","खुश","unhappy","अन्हैपी","not happy","दुखी, नाखुश","She looked unhappy after the exam.","परीक्षा के बाद वह दुखी लग रही थी।"],
+    ["un","अन","not / opposite of","नहीं / विपरीत","able","एबल","सक्षम","unable","अन्एबल","not able to do something","असमर्थ","He was unable to attend the meeting.","वह बैठक में शामिल होने में असमर्थ था।"],
+    ["un","अन","not / opposite of","नहीं / विपरीत","fair","फ़ेयर","न्यायसंगत","unfair","अन्फ़ेयर","not fair or just","अनुचित","The referee's decision was unfair.","रेफ़री का फ़ैसला अनुचित था।"],
+    ["un","अन","not / opposite of","नहीं / विपरीत","kind","काइंड","दयालु","unkind","अन्काइंड","not kind, cruel in speech","निर्दयी, कठोर","It was unkind to laugh at him.","उस पर हँसना निर्दयी बात थी।"],
+    ["un","अन","not / opposite of","नहीं / विपरीत","lock","लॉक","ताला","unlock","अन्लॉक","to open something locked","ताला खोलना","Unlock the door with this key.","इस चाबी से दरवाज़ा खोलो।"],
+    ["un","अन","not / opposite of","नहीं / विपरीत","comfortable","कंफ़र्टेबल","आरामदायक","uncomfortable","अन्कंफ़र्टेबल","not comfortable, causing unease","असहज","The chair felt uncomfortable after an hour.","एक घंटे बाद कुर्सी असहज लगने लगी।"],
+
+    ["re","री","again","फिर से","do","डू","करना","redo","रीडू","to do something again","दोबारा करना","Please redo this page, it has errors.","कृपया यह पन्ना दोबारा करो, इसमें गलतियाँ हैं।"],
+    ["re","री","again","फिर से","write","राइट","लिखना","rewrite","रीराइट","to write something again","फिर से लिखना","I had to rewrite the whole essay.","मुझे पूरा निबंध फिर से लिखना पड़ा।"],
+    ["re","री","again","फिर से","start","स्टार्ट","शुरू करना","restart","रीस्टार्ट","to start again","फिर से शुरू करना","Restart the computer and try again.","कंप्यूटर फिर से चालू करो और कोशिश करो।"],
+    ["re","री","again","फिर से","fill","फ़िल","भरना","refill","रीफ़िल","to fill again","फिर से भरना","Can you refill my water bottle?","क्या आप मेरी पानी की बोतल फिर से भर सकते हैं?"],
+    ["re","री","again","फिर से","build","बिल्ड","बनाना","rebuild","रीबिल्ड","to build again after damage","फिर से बनाना","The village had to rebuild after the flood.","बाढ़ के बाद गाँव को फिर से बनाना पड़ा।"],
+
+    ["pre","प्री","before","पहले","view","व्यू","देखना","preview","प्रीव्यू","to see something before the main showing","पूर्वावलोकन, पहले देखना","We watched a preview of the new film.","हमने नई फ़िल्म का पूर्वावलोकन देखा।"],
+    ["pre","प्री","before","पहले","pay","पे","भुगतान करना","prepay","प्रीपे","to pay before receiving something","पहले भुगतान करना","You must prepay for the delivery.","डिलीवरी के लिए आपको पहले भुगतान करना होगा।"],
+    ["pre","प्री","before","पहले","heat","हीट","गरम करना","preheat","प्रीहीट","to heat something in advance","पहले से गरम करना","Preheat the oven before baking.","बेक करने से पहले ओवन को गरम कर लें।"],
+    ["pre","प्री","before","पहले","school","स्कूल","विद्यालय","preschool","प्रीस्कूल","school before regular school age","बाल विद्यालय, प्ले-स्कूल","My daughter starts preschool this year.","इस साल मेरी बेटी बाल विद्यालय शुरू करेगी।"],
+
+    ["dis","डिस","not / opposite of","नहीं / विपरीत","agree","अग्री","सहमत होना","disagree","डिसअग्री","to not agree","असहमत होना","I disagree with that decision.","मैं उस फ़ैसले से असहमत हूँ।"],
+    ["dis","डिस","not / opposite of","नहीं / विपरीत","like","लाइक","पसंद करना","dislike","डिसलाइक","to not like something","नापसंद करना","She does not dislike the plan, just the timing.","उसे योजना नापसंद नहीं, सिर्फ़ समय पसंद नहीं है।"],
+    ["dis","डिस","not / opposite of","नहीं / विपरीत","appear","अपियर","दिखाई देना","disappear","डिसअपियर","to go out of sight","गायब हो जाना","The sun disappeared behind the clouds.","सूरज बादलों के पीछे गायब हो गया।"],
+    ["dis","डिस","not / opposite of","नहीं / विपरीत","honest","ऑनेस्ट","ईमानदार","dishonest","डिसऑनेस्ट","not honest, deceitful","बेईमान","Cheating in the exam is dishonest.","परीक्षा में नकल करना बेईमानी है।"],
+    ["dis","डिस","not / opposite of","नहीं / विपरीत","connect","कनेक्ट","जोड़ना","disconnect","डिसकनेक्ट","to break a connection","संपर्क तोड़ना, काटना","Disconnect the charger before travelling.","यात्रा से पहले चार्जर काट दें।"],
+
+    ["mis","मिस","wrongly","गलत तरीके से","understand","अंडरस्टैंड","समझना","misunderstand","मिसअंडरस्टैंड","to understand incorrectly","गलत समझना","Please don't misunderstand my intention.","कृपया मेरे इरादे को गलत मत समझिए।"],
+    ["mis","मिस","wrongly","गलत तरीके से","spell","स्पेल","वर्तनी लिखना","misspell","मिसस्पेल","to spell a word incorrectly","गलत वर्तनी लिखना","He often misspells long words.","वह अक्सर लंबे शब्दों की गलत वर्तनी लिखता है।"],
+    ["mis","मिस","wrongly","गलत तरीके से","lead","लीड","ले जाना","mislead","मिसलीड","to give a false impression","गुमराह करना","The advertisement was designed to mislead buyers.","विज्ञापन खरीदारों को गुमराह करने के लिए बनाया गया था।"],
+
+    ["in","इन","not","नहीं","correct","करेक्ट","सही","incorrect","इनकरेक्ट","not correct, wrong","गलत","Two of your answers are incorrect.","आपके दो उत्तर गलत हैं।"],
+    ["in","इन","not","नहीं","active","एक्टिव","सक्रिय","inactive","इनएक्टिव","not active","निष्क्रिय","This account has been inactive for a year.","यह खाता एक साल से निष्क्रिय है।"],
+    ["in","इन","not","नहीं","visible","विज़िबल","दिखाई देने वाला","invisible","इनविज़िबल","not able to be seen","अदृश्य","Germs are invisible to the naked eye.","कीटाणु नंगी आँखों से अदृश्य होते हैं।"],
+
+    ["im","इम","not","नहीं","possible","पॉसिबल","संभव","impossible","इम्पॉसिबल","not possible","असंभव","Nothing is impossible with practice.","अभ्यास से कुछ भी असंभव नहीं है।"],
+    ["im","इम","not","नहीं","patient","पेशेंट","धैर्यवान","impatient","इम्पेशेंट","not patient, restless","अधीर","The children grew impatient during the wait.","इंतज़ार के दौरान बच्चे अधीर हो गए।"],
+    ["im","इम","not","नहीं","mature","मेच्योर","परिपक्व","immature","इम्मेच्योर","not fully grown or sensible","अपरिपक्व","That was an immature way to react.","वह प्रतिक्रिया देने का अपरिपक्व तरीका था।"],
+
+    ["non","नॉन","not","नहीं","fiction","फ़िक्शन","कल्पित कथा","nonfiction","नॉनफ़िक्शन","writing based on facts, not imagination","तथ्यात्मक साहित्य","She prefers nonfiction over novels.","वह उपन्यासों से ज़्यादा तथ्यात्मक किताबें पसंद करती है।"],
+    ["non","नॉन","not","नहीं","stop","स्टॉप","रुकना","nonstop","नॉनस्टॉप","without stopping or pausing","लगातार, बिना रुके","We took a nonstop flight to Delhi.","हमने दिल्ली के लिए लगातार उड़ान भरने वाली फ़्लाइट ली।"],
+
+    ["over","ओवर","too much","बहुत अधिक","eat","ईट","खाना","overeat","ओवरईट","to eat more than needed","ज़्यादा खाना","Do not overeat at festival dinners.","त्योहार के खाने में ज़्यादा मत खाओ।"],
+    ["over","ओवर","too much","बहुत अधिक","sleep","स्लीप","सोना","oversleep","ओवरस्लीप","to sleep longer than intended","देर तक सो जाना","I overslept and missed the bus.","मैं देर तक सो गया और बस छूट गई।"],
+    ["over","ओवर","too much","बहुत अधिक","load","लोड","भार लादना","overload","ओवरलोड","to load with too much","अधिक भार डालना","Do not overload the small cart.","छोटी गाड़ी पर अधिक भार मत डालो।"],
+
+    ["under","अंडर","too little","बहुत कम","cook","कुक","पकाना","undercook","अंडरकुक","to cook less than needed","कम पकाना","Undercooked rice is hard to digest.","कम पका हुआ चावल पचाना मुश्किल होता है।"],
+    ["under","अंडर","too little","बहुत कम","pay","पे","भुगतान करना","underpay","अंडरपे","to pay less than deserved","कम भुगतान करना","Workers should not be underpaid.","मज़दूरों को कम भुगतान नहीं करना चाहिए।"],
+
+    ["sub","सब","below / under","नीचे","way","वे","रास्ता","subway","सबवे","a path or train system below the ground","भूमिगत मार्ग, मेट्रो","We took the subway to the office.","हम दफ़्तर के लिए मेट्रो से गए।"],
+    ["sub","सब","below / under","नीचे","marine","मरीन","समुद्री","submarine","सबमरीन","a vessel that travels under the sea","पनडुब्बी","The submarine dived deep into the ocean.","पनडुब्बी समुद्र में गहरे उतर गई।"],
+
+    ["super","सुपर","above / beyond","ऊपर, अधिक","market","मार्केट","बाज़ार","supermarket","सुपरमार्केट","a large store selling many goods","बड़ा बाज़ार, सुपरमार्केट","We buy groceries from the supermarket.","हम किराना सामान सुपरमार्केट से खरीदते हैं।"],
+    ["super","सुपर","above / beyond","ऊपर, अधिक","human","ह्यूमन","मानव","superhuman","सुपरह्यूमन","beyond normal human power","अलौकिक, असाधारण मानवीय","He showed superhuman strength that day.","उस दिन उसने असाधारण शक्ति दिखाई।"],
+
+    ["inter","इंटर","between","के बीच","national","नेशनल","राष्ट्रीय","international","इंटरनेशनल","involving more than one nation","अंतरराष्ट्रीय","She works for an international company.","वह एक अंतरराष्ट्रीय कंपनी में काम करती है।"],
+
+    ["auto","ऑटो","self","स्वयं","mobile","मोबाइल","चलायमान","automobile","ऑटोमोबाइल","a self-powered road vehicle","स्वचालित वाहन, मोटर गाड़ी","The automobile industry is growing fast.","वाहन उद्योग तेज़ी से बढ़ रहा है।"],
+
+    ["bi","बाइ","two","दो","cycle","साइकल","चक्र","bicycle","बाइसाइकल","a vehicle with two wheels","दो पहियों वाली गाड़ी, साइकिल","He rides his bicycle to school.","वह अपनी साइकिल से स्कूल जाता है।"],
+
+    ["tri","ट्राइ","three","तीन","angle","एंगल","कोण","triangle","ट्राइएंगल","a shape with three angles","त्रिभुज","Draw a triangle with equal sides.","बराबर भुजाओं वाला त्रिभुज बनाओ।"],
+
+    ["semi","सेमी","half","आधा","circle","सर्कल","वृत्त","semicircle","सेमीसर्कल","half of a circle","अर्धवृत्त","The stage was built in a semicircle.","मंच अर्धवृत्त में बनाया गया था।"],
+
+    ["anti","एंटी","against","के विरुद्ध","clockwise","क्लॉकवाइज़","घड़ी की दिशा में","anticlockwise","एंटीक्लॉकवाइज़","moving opposite to clock hands","घड़ी की उलटी दिशा में","Turn the cap anticlockwise to open it.","खोलने के लिए ढक्कन को घड़ी की उलटी दिशा में घुमाओ।"],
+
+    ["co","को","together","साथ में","operate","ऑपरेट","संचालन करना","cooperate","कोऑपरेट","to work together with others","सहयोग करना","The two teams agreed to cooperate.","दोनों टीमें सहयोग करने पर सहमत हुईं।"],
+
+    ["fore","फ़ोर","before","पहले","cast","कास्ट","अनुमान लगाना","forecast","फ़ोरकास्ट","a statement of what will happen","पूर्वानुमान","The weather forecast predicts rain today.","मौसम का पूर्वानुमान आज बारिश बताता है।"],
+
+    ["post","पोस्ट","after","बाद में","pone","पोन","रखना","postpone","पोस्टपोन","to delay something to a later time","स्थगित करना","We had to postpone the meeting.","हमें बैठक स्थगित करनी पड़ी।"],
+
+    ["de","डी","reverse / remove","उलटना, हटाना","code","कोड","संकेत लिपि","decode","डीकोड","to work out the meaning of a coded message","कूट खोलना, अर्थ निकालना","Can you decode this secret message?","क्या आप इस गुप्त संदेश को समझ सकते हैं?"],
+
+    ["ex","एक्स","out / former","बाहर, पूर्व","port","पोर्ट","बंदरगाह","export","एक्सपोर्ट","to send goods to another country","निर्यात करना","India exports tea to many countries.","भारत कई देशों को चाय निर्यात करता है।"],
+
+    ["extra","एक्स्ट्रा","beyond / more","परे, अतिरिक्त","ordinary","ऑर्डिनरी","साधारण","extraordinary","एक्स्ट्राऑर्डिनरी","beyond what is usual or normal","असाधारण","She showed extraordinary courage that day.","उस दिन उसने असाधारण साहस दिखाया।"]
+  ];
+
+  HEM.PREFIXES = ROWS.map(function (r, i) {
+    return {
+      id: i,
+      prefix: r[0], prefixPron: r[1], prefixMeaningEn: r[2], prefixMeaningHi: r[3],
+      base: r[4], basePron: r[5], baseMeaningHi: r[6],
+      result: r[7], resultPron: r[8], resultMeaningEn: r[9], resultMeaningHi: r[10],
+      exampleEn: r[11], exampleHi: r[12]
+    };
+  });
+})(typeof window !== "undefined" ? (window.HEM = window.HEM || {}) : (global.HEM = global.HEM || {}));
+
+</script>
+<script>
+/* ==========================================================================
+   store.js — persistence, user state, XP levels, spaced repetition
+   Attaches to the single HEM namespace. Declares no global identifiers.
+   All decision logic lives here as pure functions so it can be tested
+   without a browser.
+   ========================================================================== */
+(function (HEM) {
+  "use strict";
+
+  var KEY = "hitarthi_english_master_v2";
+
+  /* ---------------- storage backend with automatic fallback ------------- */
+  var backend = "memory";
+  var mem = {};
+  try {
+    if (typeof window !== "undefined" && window.localStorage) {
+      window.localStorage.setItem("__hem__", "1");
+      window.localStorage.removeItem("__hem__");
+      backend = "local";
+    }
+  } catch (e) {
+    backend = "memory";
+  }
+
+  function readRaw() {
+    try {
+      return backend === "local" ? window.localStorage.getItem(KEY) : (mem[KEY] || null);
+    } catch (e) { return null; }
+  }
+  function writeRaw(str) {
+    try {
+      if (backend === "local") window.localStorage.setItem(KEY, str);
+      else mem[KEY] = str;
+      return true;
+    } catch (e) { return false; }
+  }
+  function clearRaw() {
+    try {
+      if (backend === "local") window.localStorage.removeItem(KEY);
+      else delete mem[KEY];
+    } catch (e) {}
+  }
+
+  /* ---------------- default state --------------------------------------- */
+  function freshState() {
+    return {
+      name: "Learner",
+      xp: 0,
+      coins: 0,
+      learned: [],
+      srs: {},
+      correct: 0,
+      answers: 0,
+      spellWins: 0,
+      speakTries: 0,
+      prefixWins: 0,
+      dailyDone: 0,
+      dayStreak: 0,
+      bestStreak: 0,
+      lastDay: "",
+      timeMs: 0,
+      catSeen: {},
+      badges: [],
+      scores: [],
+      lastReward: "",
+      daily: { date: "", ids: [], done: false },
+      settings: { theme: "light", auto: true, sfx: true, rate: 0.85, voice: "" }
+    };
+  }
+
+  var state = freshState();
+
+  function load() {
+    var raw = readRaw(), saved = null;
+    try { saved = raw ? JSON.parse(raw) : null; } catch (e) { saved = null; }
+    var base = freshState();
+    if (saved && typeof saved === "object") {
+      Object.keys(base).forEach(function (k) {
+        if (saved[k] === undefined || saved[k] === null) return;
+        if (k === "settings" || k === "daily") base[k] = Object.assign(base[k], saved[k]);
+        else base[k] = saved[k];
+      });
+    }
+    state = base;
+    return state;
+  }
+
+  function save() { return writeRaw(JSON.stringify(state)); }
+
+  function reset() {
+    clearRaw();
+    state = freshState();
+    save();
+    return state;
+  }
+
+  /* ---------------- dates ----------------------------------------------- */
+  function pad(n) { return n < 10 ? "0" + n : "" + n; }
+  function todayKey(d) {
+    d = d || new Date();
+    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  }
+  function daysBetween(a, b) {
+    return Math.round((new Date(b + "T00:00:00") - new Date(a + "T00:00:00")) / 86400000);
+  }
+
+  /* ---------------- XP and levels --------------------------------------- */
+  function xpForLevel(n) { return 180 + (n - 1) * 120; }
+
+  function levelFromXp(xp) {
+    var level = 1, left = Math.max(0, xp), need = xpForLevel(1);
+    while (left >= need && level < 99) {
+      left -= need;
+      level += 1;
+      need = xpForLevel(level);
+    }
+    return { level: level, into: left, need: need, pct: Math.round((left / need) * 100) };
+  }
+
+  var LEVEL_TITLES = [
+    "Beginner \u00b7 \u0936\u0941\u0930\u0941\u0906\u0924\u0940",
+    "Learner \u00b7 \u0938\u0940\u0916\u0928\u0947 \u0935\u093e\u0932\u093e",
+    "Explorer \u00b7 \u0916\u094b\u091c\u0940",
+    "Speaker \u00b7 \u0935\u0915\u094d\u0924\u093e",
+    "Confident \u00b7 \u0906\u0924\u094d\u092e\u0935\u093f\u0936\u094d\u0935\u093e\u0938\u0940",
+    "Fluent \u00b7 \u0927\u093e\u0930\u093e\u092a\u094d\u0930\u0935\u093e\u0939",
+    "Achiever \u00b7 \u0909\u092a\u0932\u092c\u094d\u0927\u093f\u0915\u0930\u094d\u0924\u093e",
+    "Mentor \u00b7 \u092e\u093e\u0930\u094d\u0917\u0926\u0930\u094d\u0936\u0915",
+    "Master \u00b7 \u0928\u093f\u092a\u0941\u0923",
+    "Grandmaster \u00b7 \u092e\u0939\u093e\u0930\u0925\u0940"
+  ];
+  function levelTitle(n) {
+    return LEVEL_TITLES[Math.min(Math.max(n, 1), LEVEL_TITLES.length) - 1];
+  }
+
+  /* ---------------- day streak ------------------------------------------ */
+  function touchDay(now) {
+    var t = todayKey(now);
+    if (state.lastDay === t) return state.dayStreak;
+    if (!state.lastDay) state.dayStreak = 1;
+    else state.dayStreak = daysBetween(state.lastDay, t) === 1 ? state.dayStreak + 1 : 1;
+    state.lastDay = t;
+    if (state.dayStreak > state.bestStreak) state.bestStreak = state.dayStreak;
+    save();
+    return state.dayStreak;
+  }
+
+  /* ---------------- spaced repetition (5-box Leitner) ------------------- */
+  var BOX_DAYS = [0, 1, 2, 4, 8, 16];
+
+  function srsRecord(id, ok, now) {
+    now = now || Date.now();
+    var cur = state.srs[id] || { box: 1, due: now, misses: 0 };
+    if (ok) cur.box = Math.min(cur.box + 1, 5);
+    else { cur.box = 1; cur.misses += 1; }
+    cur.due = now + BOX_DAYS[cur.box] * 86400000;
+    state.srs[id] = cur;
+    return cur;
+  }
+
+  function dueWords(now) {
+    now = now || Date.now();
+    return HEM.WORDS.filter(function (w) {
+      var r = state.srs[w.id];
+      return r && r.box < 5 && r.due <= now;
+    }).sort(function (a, b) {
+      return (state.srs[b.id].misses - state.srs[a.id].misses) ||
+             (state.srs[a.id].due - state.srs[b.id].due);
+    });
+  }
+
+  function weakWords() {
+    return HEM.WORDS.filter(function (w) {
+      var r = state.srs[w.id];
+      return r && r.misses > 0;
+    }).sort(function (a, b) { return state.srs[b.id].misses - state.srs[a.id].misses; });
+  }
+
+  /* ---------------- recording answers ----------------------------------- */
+  function recordLearn(word, xp) {
+    state.xp += xp;
+    if (state.learned.indexOf(word.id) === -1) state.learned.push(word.id);
+    state.catSeen[word.cat] = (state.catSeen[word.cat] || 0) + 1;
+    save();
+  }
+
+  function recordAnswer(word, ok, xp, mode) {
+    state.answers += 1;
+    if (ok) {
+      state.correct += 1;
+      state.coins += 1;
+      if (state.learned.indexOf(word.id) === -1) state.learned.push(word.id);
+    }
+    state.catSeen[word.cat] = (state.catSeen[word.cat] || 0) + 1;
+    srsRecord(word.id, ok);
+    state.xp += xp;
+    if (mode === "spell" && ok) state.spellWins += 1;
+    if (mode === "speak") state.speakTries += 1;
+    save();
+  }
+
+  /* Prefix Builder answers count toward XP, coins and overall accuracy,
+     but the combined words are not part of the 300-word catalogue, so
+     they never touch `learned` or the spaced-repetition boxes. */
+  function recordPrefixAnswer(ok, xp) {
+    state.answers += 1;
+    if (ok) {
+      state.correct += 1;
+      state.coins += 1;
+      state.prefixWins += 1;
+    }
+    state.xp += xp;
+    save();
+  }
+
+  /* Turns one prefix-combo row into a word-shaped object so it can reuse
+     the same detail card, scoring and summary-list rendering as HEM.WORDS. */
+  function comboToWord(combo) {
+    return {
+      id: "px" + combo.id,
+      en: combo.result,
+      pron: combo.resultPron,
+      hi: combo.resultMeaningHi,
+      pos: combo.prefix + "- + " + combo.base + " \u2192 " + combo.result,
+      sent: combo.exampleEn,
+      sentHi: combo.exampleHi,
+      syn: "",
+      ant: "",
+      tip: "\u0909\u092a\u0938\u0930\u094d\u0917 \u0905\u0930\u094d\u0925 \u00b7 " + combo.prefixMeaningHi + " (" + combo.prefixMeaningEn + ")",
+      level: 1,
+      cat: "prefix"
+    };
+  }
+
+  function buildPrefixOptions(combo, rnd) {
+    var correct = combo.result;
+    var seen = {};
+    seen[correct] = true;
+    var pool = shuffle(HEM.PREFIXES.filter(function (x) { return x.id !== combo.id; }), rnd);
+    var opts = [correct];
+    for (var i = 0; i < pool.length && opts.length < 4; i++) {
+      var v = pool[i].result;
+      if (!seen[v]) { seen[v] = true; opts.push(v); }
+    }
+    return { correct: correct, options: shuffle(opts, rnd) };
+  }
+
+  function accuracy() {
+    return state.answers ? Math.round((state.correct / state.answers) * 100) : 0;
+  }
+
+  function stats() {
+    return {
+      learned: state.learned.length,
+      answers: state.answers,
+      correct: state.correct,
+      accuracy: accuracy(),
+      bestStreak: state.bestStreak,
+      dayStreak: state.dayStreak,
+      spellWins: state.spellWins,
+      speakTries: state.speakTries,
+      dailyDone: state.dailyDone,
+      level: levelFromXp(state.xp).level,
+      catCount: Object.keys(state.catSeen).length
+    };
+  }
+
+  /* ---------------- achievements ---------------------------------------- */
+  function checkBadges() {
+    var st = stats(), fresh = [];
+    HEM.ACHIEVEMENTS.forEach(function (a) {
+      if (state.badges.indexOf(a.id) === -1 && a.test(st)) {
+        state.badges.push(a.id);
+        fresh.push(a);
+      }
+    });
+    if (fresh.length) state.coins += fresh.length * 10;
+    save();
+    return fresh;
+  }
+
+  /* ---------------- leaderboard ----------------------------------------- */
+  var SAMPLE_BOARD = [
+    { name: "Practice partner \u00b7 Asha",  score: 940, sample: true },
+    { name: "Practice partner \u00b7 Ravi",  score: 780, sample: true },
+    { name: "Practice partner \u00b7 Meena", score: 610, sample: true },
+    { name: "Practice partner \u00b7 Karan", score: 430, sample: true }
+  ];
+
+  function addScore(score) {
+    state.scores.push({ name: state.name || "Learner", score: score, date: todayKey() });
+    state.scores.sort(function (a, b) { return b.score - a.score; });
+    state.scores = state.scores.slice(0, 10);
+    save();
+  }
+
+  /* ---------------- deterministic daily set ------------------------------ */
+  function seeded(seed) {
+    var x = seed % 2147483647;
+    if (x <= 0) x += 2147483646;
+    return function () { x = (x * 16807) % 2147483647; return (x - 1) / 2147483646; };
+  }
+
+  function dailySet(dateKey) {
+    var t = dateKey || todayKey();
+    if (state.daily.date === t && state.daily.ids.length === 10) {
+      return state.daily.ids.map(function (i) { return HEM.WORDS[i]; });
+    }
+    var rnd = seeded(Number(t.replace(/-/g, "")));
+    var pool = HEM.WORDS.slice();
+    for (var i = pool.length - 1; i > 0; i--) {
+      var j = Math.floor(rnd() * (i + 1));
+      var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+    }
+    var picked = pool.slice(0, 10);
+    state.daily = { date: t, ids: picked.map(function (w) { return w.id; }), done: false };
+    save();
+    return picked;
+  }
+
+  /* ---------------- pure helpers used by the practice modes ------------- */
+  function shuffle(arr, rnd) {
+    var a = arr.slice(), r = rnd || Math.random;
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(r() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  /* Four options that are always distinct strings, correct answer included. */
+  function buildQuizOptions(word, askHindi, rnd) {
+    var field = askHindi ? "hi" : "en";
+    var correct = word[field];
+    var seen = {};
+    seen[correct] = true;
+    var pool = shuffle(HEM.WORDS.filter(function (x) {
+      return x.id !== word.id && x.cat !== word.cat;
+    }), rnd);
+    var opts = [correct];
+    for (var i = 0; i < pool.length && opts.length < 4; i++) {
+      var v = pool[i][field];
+      if (!seen[v]) { seen[v] = true; opts.push(v); }
+    }
+    return { correct: correct, options: shuffle(opts, rnd) };
+  }
+
+  /* Which letter positions to blank out in the spell challenge. */
+  function spellBlanks(word, rnd) {
+    var idx = [];
+    for (var i = 1; i < word.length; i++) if (/[a-z]/i.test(word.charAt(i))) idx.push(i);
+    if (!idx.length) return [];
+    var count = Math.max(1, Math.min(4, Math.round(idx.length * 0.45)));
+    return shuffle(idx, rnd).slice(0, count).sort(function (a, b) { return a - b; });
+  }
+
+  function levenshtein(a, b) {
+    if (!a.length) return b.length;
+    if (!b.length) return a.length;
+    var prev = [], i, j;
+    for (j = 0; j <= b.length; j++) prev[j] = j;
+    for (i = 1; i <= a.length; i++) {
+      var last = prev[0];
+      prev[0] = i;
+      for (j = 1; j <= b.length; j++) {
+        var tmp = prev[j];
+        prev[j] = Math.min(prev[j] + 1, prev[j - 1] + 1,
+                           last + (a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1));
+        last = tmp;
+      }
+    }
+    return prev[b.length];
+  }
+
+  function similarity(a, b) {
+    var clean = function (s) { return String(s).toLowerCase().replace(/[^a-z]/g, ""); };
+    var A = clean(a), B = clean(b);
+    if (!A.length && !B.length) return 100;
+    if (!A.length || !B.length) return 0;
+    return Math.max(0, Math.round((1 - levenshtein(A, B) / Math.max(A.length, B.length)) * 100));
+  }
+
+  function filterWords(cat, level) {
+    return HEM.WORDS.filter(function (w) {
+      if (cat && cat !== "all" && w.cat !== cat) return false;
+      if (level && w.level !== level) return false;
+      return true;
+    });
+  }
+
+  function searchWords(term) {
+    var q = String(term || "").trim().toLowerCase();
+    if (!q) return [];
+    return HEM.WORDS.filter(function (w) {
+      return w.en.toLowerCase().indexOf(q) !== -1 ||
+             w.hi.indexOf(q) !== -1 ||
+             w.pron.indexOf(q) !== -1 ||
+             w.cat.indexOf(q) !== -1 ||
+             (w.syn || "").toLowerCase().indexOf(q) !== -1 ||
+             (w.ant || "").toLowerCase().indexOf(q) !== -1;
+    });
+  }
+
+  /* ---------------- public surface --------------------------------------- */
+  HEM.store = {
+    backend: backend,
+    get: function () { return state; },
+    load: load,
+    save: save,
+    reset: reset,
+    todayKey: todayKey,
+    daysBetween: daysBetween,
+    levelFromXp: levelFromXp,
+    levelTitle: levelTitle,
+    touchDay: touchDay,
+    srsRecord: srsRecord,
+    dueWords: dueWords,
+    weakWords: weakWords,
+    recordLearn: recordLearn,
+    recordAnswer: recordAnswer,
+    recordPrefixAnswer: recordPrefixAnswer,
+    comboToWord: comboToWord,
+    buildPrefixOptions: buildPrefixOptions,
+    accuracy: accuracy,
+    stats: stats,
+    checkBadges: checkBadges,
+    addScore: addScore,
+    sampleBoard: SAMPLE_BOARD,
+    dailySet: dailySet,
+    shuffle: shuffle,
+    seeded: seeded,
+    buildQuizOptions: buildQuizOptions,
+    spellBlanks: spellBlanks,
+    similarity: similarity,
+    filterWords: filterWords,
+    searchWords: searchWords,
+    freshState: freshState
+  };
+})(typeof window !== "undefined" ? (window.HEM = window.HEM || {}) : (global.HEM = global.HEM || {}));
+
+</script>
+<script>
+/* ==========================================================================
+   speech.js — text-to-speech, pronunciation listening, sound effects
+   Attaches to the single HEM namespace. Declares no global identifiers.
+   Every browser API is feature-detected; nothing here can throw.
+   ========================================================================== */
+(function (HEM) {
+  "use strict";
+
+  var synth = (typeof window !== "undefined" && window.speechSynthesis) || null;
+  var voices = [];
+  var voiceHandlers = [];
+
+  function refreshVoices() {
+    if (!synth || !synth.getVoices) return;
+    try { voices = synth.getVoices() || []; } catch (e) { voices = []; }
+  }
+  refreshVoices();
+  if (synth && typeof synth.addEventListener === "function") {
+    synth.addEventListener("voiceschanged", function () {
+      refreshVoices();
+      voiceHandlers.forEach(function (fn) { try { fn(voices); } catch (e) {} });
+    });
+  }
+
+  function settings() {
+    return (HEM.store && HEM.store.get().settings) || { rate: 0.85, voice: "", sfx: true };
+  }
+
+  function pickVoice(lang) {
+    if (!voices.length) refreshVoices();
+    var find = function (re) {
+      for (var i = 0; i < voices.length; i++) if (re.test(voices[i].lang || "")) return voices[i];
+      return null;
+    };
+    if (lang === "hi") return find(/^hi/i);
+    var want = settings().voice;
+    if (want) {
+      for (var i = 0; i < voices.length; i++) if (voices[i].name === want) return voices[i];
+    }
+    return find(/^en-IN/i) || find(/^en-GB/i) || find(/^en/i);
+  }
+
+  HEM.speech = {
+    supported: !!synth,
+    voices: function () { return voices.slice(); },
+    onVoices: function (fn) { if (typeof fn === "function") voiceHandlers.push(fn); },
+    say: function (text, lang) {
+      if (!synth || !text) return false;
+      try {
+        synth.cancel();
+        var u = new window.SpeechSynthesisUtterance(String(text));
+        var v = pickVoice(lang || "en");
+        if (v) u.voice = v;
+        u.lang = v ? v.lang : (lang === "hi" ? "hi-IN" : "en-IN");
+        var rate = Number(settings().rate) || 0.85;
+        u.rate = lang === "hi" ? Math.min(1, rate + 0.05) : rate;
+        u.pitch = 1;
+        synth.speak(u);
+        return true;
+      } catch (e) { return false; }
+    },
+    stop: function () { try { if (synth) synth.cancel(); } catch (e) {} }
+  };
+
+  /* ---------------- sound effects ---------------------------------------- */
+  var ctx = null;
+  function tone(freqs, dur) {
+    if (!settings().sfx) return;
+    var AC = (typeof window !== "undefined") && (window.AudioContext || window.webkitAudioContext);
+    if (!AC) return;
+    try {
+      ctx = ctx || new AC();
+      var t0 = ctx.currentTime, slice = dur / freqs.length;
+      freqs.forEach(function (f, i) {
+        var o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = "sine";
+        o.frequency.value = f;
+        o.connect(g); g.connect(ctx.destination);
+        var s = t0 + i * slice;
+        g.gain.setValueAtTime(0.0001, s);
+        g.gain.exponentialRampToValueAtTime(0.09, s + 0.015);
+        g.gain.exponentialRampToValueAtTime(0.0001, s + slice);
+        o.start(s); o.stop(s + slice + 0.02);
+      });
+    } catch (e) {}
+  }
+
+  HEM.sfx = {
+    right: function () { tone([660, 880], 0.26); },
+    wrong: function () { tone([300, 200], 0.30); },
+    tap:   function () { tone([520], 0.08); }
+  };
+
+  /* ---------------- speech recognition ----------------------------------- */
+  var SR = (typeof window !== "undefined") && (window.SpeechRecognition || window.webkitSpeechRecognition);
+  var rec = null;
+
+  HEM.listener = {
+    supported: !!SR,
+    start: function (onResult, onError, onEnd) {
+      if (!SR) { if (onError) onError("unsupported"); return; }
+      try {
+        rec = new SR();
+        rec.lang = "en-IN";
+        rec.interimResults = false;
+        rec.maxAlternatives = 5;
+        rec.onresult = function (e) {
+          var out = [];
+          for (var i = 0; i < e.results[0].length; i++) out.push(e.results[0][i].transcript);
+          if (onResult) onResult(out);
+        };
+        rec.onerror = function (e) { if (onError) onError((e && e.error) || "error"); };
+        rec.onend = function () { if (onEnd) onEnd(); };
+        rec.start();
+      } catch (e) { if (onError) onError("error"); }
+    },
+    stop: function () { try { if (rec) rec.stop(); } catch (e) {} }
+  };
+})(typeof window !== "undefined" ? (window.HEM = window.HEM || {}) : (global.HEM = global.HEM || {}));
+
+</script>
+<script>
+/* ==========================================================================
+   app.js — router, session engine, practice modes, screen renderers
+   Wrapped in a single IIFE. Declares no global identifiers, so it can never
+   collide with another script on the page and is safe to include twice.
+   ========================================================================== */
+(function (HEM) {
+  "use strict";
+
+  if (HEM.app && HEM.app.booted) return;
+
+  var store  = HEM.store;
+  var speech = HEM.speech;
+  var sfx    = HEM.sfx;
+  var listen = HEM.listener;
+
+  /* ---------------- dom helpers --------------------------------------- */
+  function byId(id) { return document.getElementById(id); }
+  function all(sel, root) {
+    return Array.prototype.slice.call((root || document).querySelectorAll(sel));
+  }
+  function make(tag, cls, html) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html !== undefined && html !== null) n.innerHTML = html;
+    return n;
+  }
+  function esc(s) {
+    return String(s === undefined || s === null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function setText(id, txt) { var n = byId(id); if (n) n.textContent = txt; }
+  function on(node, evt, fn) { if (node && node.addEventListener) node.addEventListener(evt, fn); }
+
+  var toastTimer = null;
+  function toast(msg, kind) {
+    var t = byId("toast");
+    if (!t) return;
+    t.textContent = msg;
+    t.className = "toast is-on" + (kind ? " " + kind : "");
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.className = "toast"; }, 2300);
+  }
+  function popup(emoji, title, text) {
+    setText("mEmoji", emoji);
+    setText("mTitle", title);
+    setText("mText", text);
+    var m = byId("modal");
+    if (m) m.classList.add("is-on");
+  }
+  function closePopup() { var m = byId("modal"); if (m) m.classList.remove("is-on"); }
+
+  /* ---------------- router --------------------------------------------- */
+  var SCREENS = ["home", "picker", "session", "summary", "revision", "leaderboard", "progress", "search", "settings"];
+  var NAV = ["home", "picker", "search", "progress", "settings"];
+  var current = "home";
+
+  var RENDER = {};   // filled in below
+
+  function go(name) {
+    if (SCREENS.indexOf(name) === -1) return;
+    speech.stop();
+    current = name;
+    SCREENS.forEach(function (s) {
+      var node = byId("s-" + s);
+      if (node) node.classList.toggle("is-on", s === name);
+    });
+    all("#nav button").forEach(function (b) {
+      b.classList.toggle("is-on", NAV.indexOf(name) !== -1 && b.getAttribute("data-go") === name);
+    });
+    if (RENDER[name]) RENDER[name]();
+    if (typeof window !== "undefined" && window.scrollTo) window.scrollTo(0, 0);
+  }
+
+  /* ---------------- home ------------------------------------------------ */
+  RENDER.home = function () {
+    var st = store.get();
+    var lv = store.levelFromXp(st.xp);
+    setText("lvlBadge", "Level " + lv.level);
+    var fill = byId("xpFill");
+    if (fill) fill.style.width = lv.pct + "%";
+    setText("xpText", st.xp + " XP · " + store.levelTitle(lv.level) + " · " + lv.into + "/" + lv.need + " to next level");
+    setText("statLearned", st.learned.length);
+    setText("statAcc", store.accuracy() + "%");
+    setText("statStreak", st.dayStreak);
+    setText("statTotal", HEM.WORDS.length);
+    setText("coinCount", st.coins);
+    setText("tileRevCount", store.dueWords().length);
+
+    var h = new Date().getHours();
+    setText("greetEn", (h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening") + ", " + (st.name || "Learner"));
+    setText("greetHi", h < 12 ? "सुप्रभात — आज दस नए शब्द सीखते हैं।"
+                     : h < 17 ? "नमस्कार — थोड़ा अभ्यास कर लीजिए।"
+                              : "शुभ संध्या — सोने से पहले दोहरा लीजिए।");
+
+    var claimed = st.lastReward === store.todayKey();
+    var rb = byId("btnReward");
+    if (rb) {
+      rb.textContent = claimed ? "Collected" : "Collect";
+      rb.disabled = !!claimed;
+      rb.className = "btn sm" + (claimed ? " muted" : "");
+    }
+    setText("rewardNote", claimed ? "आज का इनाम मिल चुका है — कल फिर आइए।" : "रोज़ लॉगिन कीजिए, सिक्के पाइए।");
+  };
+
+  function collectReward() {
+    var st = store.get();
+    if (st.lastReward === store.todayKey()) return;
+    var bonus = 15 + st.dayStreak * 5;
+    st.coins += bonus;
+    st.xp += 20;
+    st.lastReward = store.todayKey();
+    store.save();
+    sfx.right();
+    popup("🎁", "Daily reward collected", "+" + bonus + " coins and +20 XP. Day streak: " + st.dayStreak + ".");
+    RENDER.home();
+  }
+
+  /* ---------------- picker ---------------------------------------------- */
+  var pick = { cat: "all", lvl: 0, len: 10 };
+
+  RENDER.picker = function () {
+    var host = byId("catChips");
+    if (host && !host.childElementCount) {
+      HEM.CATEGORIES.forEach(function (c) {
+        var b = make("button", "chip" + (c.key === pick.cat ? " is-on" : ""),
+          c.icon + " " + esc(c.en) + " <span class='hi'>" + esc(c.hi) + "</span>");
+        b.setAttribute("type", "button");
+        b.setAttribute("data-cat", c.key);
+        host.appendChild(b);
+      });
+    }
+    updatePickCount();
+  };
+
+  function updatePickCount() {
+    var n = store.filterWords(pick.cat, pick.lvl).length;
+    setText("pickCount", n + " words match your choice · " + Math.min(n, pick.len) + " will be used");
+  }
+
+  function wireChips(hostId, attr, key, numeric) {
+    var host = byId(hostId);
+    if (!host) return;
+    on(host, "click", function (e) {
+      var b = e.target.closest ? e.target.closest(".chip") : null;
+      if (!b || !host.contains(b)) return;
+      all(".chip", host).forEach(function (c) { c.classList.remove("is-on"); });
+      b.classList.add("is-on");
+      var v = b.getAttribute("data-" + attr);
+      pick[key] = numeric ? Number(v) : v;
+      updatePickCount();
+      sfx.tap();
+    });
+  }
+
+  /* ---------------- session engine -------------------------------------- */
+  var MODE_TITLE = {
+    learn: "Learning · पढ़ाई",
+    quiz:  "Quiz · प्रश्नोत्तरी",
+    spell: "Spell Challenge · वर्तनी",
+    speak: "Pronunciation · उच्चारण",
+    flash: "Flashcards · फ़्लैशकार्ड",
+    prefix:"Prefix Builder · उपसर्ग खेल",
+    mixed: "Mixed Practice · मिश्रित"
+  };
+  var XP_FOR = { learn: 5, quiz: 10, spell: 15, speak: 12, flash: 8, prefix: 14 };
+
+  var sess = null;
+  var lastSession = null;
+  var keyHandler = null;
+
+  function startSession(words, mode, label) {
+    if (!words || !words.length) { toast("No words for this filter", "bad"); return; }
+    var testModes = ["quiz", "spell", "flash"];
+    if (listen.supported) testModes.push("speak");
+
+    sess = {
+      words: words,
+      mode: mode,
+      label: label || null,
+      steps: words.map(function (w) {
+        return { w: w, m: mode === "mixed" ? testModes[Math.floor(Math.random() * testModes.length)] : mode };
+      }),
+      i: 0, right: 0, wrong: 0, xp: 0, coins: 0, streak: 0,
+      results: [], t0: Date.now()
+    };
+    setText("sessTitle", label || MODE_TITLE[mode] || "Practice");
+    go("session");
+    renderStep();
+  }
+
+  function renderStep() {
+    keyHandler = null;
+    if (!sess) return;
+    if (sess.i >= sess.steps.length) { finishSession(); return; }
+
+    var step = sess.steps[sess.i];
+    setText("sessSub", "Word " + (sess.i + 1) + " of " + sess.steps.length +
+      (sess.mode === "mixed" ? " · " + MODE_TITLE[step.m].split(" ")[0] : ""));
+    var bar = byId("sessBar");
+    if (bar) bar.style.width = Math.round((sess.i / sess.steps.length) * 100) + "%";
+
+    var stage = byId("stage");
+    if (!stage) return;
+    stage.innerHTML = "";
+
+    if (step.m === "learn") modeLearn(stage, step.w);
+    else if (step.m === "quiz") modeQuiz(stage, step.w);
+    else if (step.m === "spell") modeSpell(stage, step.w);
+    else if (step.m === "speak") modeSpeak(stage, step.w);
+    else if (step.m === "prefix") modePrefix(stage, step.w);
+    else modeFlash(stage, step.w);
+
+    if (store.get().settings.auto) {
+      if (step.m === "prefix") {
+        setTimeout(function () { speech.say(step.w.base, "en"); }, 300);
+      } else {
+        setTimeout(function () { speech.say(step.w.en, "en"); }, 300);
+      }
+    }
+  }
+
+  function nextStep() { if (sess) { sess.i += 1; renderStep(); } }
+
+  function score(word, mode, ok) {
+    var xp;
+    if (ok) {
+      sess.streak += 1;
+      xp = XP_FOR[mode] + Math.min(sess.streak - 1, 5) * 2;
+      sess.right += 1;
+      sess.coins += 1;
+      sfx.right();
+    } else {
+      sess.streak = 0;
+      xp = 2;
+      sess.wrong += 1;
+      sfx.wrong();
+    }
+    sess.xp += xp;
+    sess.results.push({ w: word, ok: ok, mode: mode });
+    if (mode === "learn") store.recordLearn(word, xp);
+    else if (mode === "prefix") store.recordPrefixAnswer(ok, xp);
+    else store.recordAnswer(word, ok, xp, mode);
+    return xp;
+  }
+
+  function detailHTML(w) {
+    return "<p class='line'><b>" + esc(w.en) + "</b> <span class='dim'>· " + esc(w.pos) + "</span></p>" +
+      "<p class='line hi'>उच्चारण: <b>" + esc(w.pron) + "</b> · अर्थ: <b>" + esc(w.hi) + "</b></p>" +
+      "<p class='line'>" + esc(w.sent) + "</p>" +
+      "<p class='line hi dim'>" + esc(w.sentHi) + "</p>" +
+      (w.syn ? "<p class='line dim'>Synonyms: " + esc(w.syn) + (w.ant ? " · Antonyms: " + esc(w.ant) : "") + "</p>" : "") +
+      "<p class='line dim hi'>💡 " + esc(w.tip) + "</p>";
+  }
+
+  function nextButton() {
+    var last = sess && sess.i === sess.steps.length - 1;
+    var b = make("button", "btn next", last ? "Finish session" : "Next word →");
+    b.setAttribute("type", "button");
+    on(b, "click", nextStep);
+    return b;
+  }
+
+  function speakButton(text, lang, cls, label) {
+    var b = make("button", cls || "btn ghost sm", label || ("🔊 " + esc(text)));
+    b.setAttribute("type", "button");
+    on(b, "click", function () { speech.say(text, lang || "en"); });
+    return b;
+  }
+
+  /* ---------------- mode 1 · learning ----------------------------------- */
+  function modeLearn(stage, w) {
+    stage.appendChild(make("div", "wordstage",
+      "<p class='big'>" + esc(w.en.toUpperCase()) + "</p>" +
+      "<p class='readhint hi'>पढ़िए: <b>" + esc(w.pron) + "</b></p>" +
+      "<p class='posline'>" + esc(w.pos) + " · " + esc(HEM.LEVEL_NAME[w.level]) + "</p>" +
+      "<p class='prompt hi'>इस शब्द का अर्थ क्या है? पहले सोचिए।</p>"));
+
+    var revealBtn = make("button", "btn next", "Reveal Answer · उत्तर दिखाइए");
+    revealBtn.setAttribute("type", "button");
+    stage.appendChild(revealBtn);
+
+    var list = make("div", "reveal-list");
+    stage.appendChild(list);
+
+    on(revealBtn, "click", function () {
+      if (revealBtn.parentNode) revealBtn.remove();
+      var cards = [
+        ["English Word", w.en, "", ""],
+        ["Hindi Pronunciation", w.pron, "hi", ""],
+        ["Hindi Meaning", w.hi, "hi",
+          (w.syn ? esc(w.syn) + (w.ant ? " ⟷ " + esc(w.ant) : "") + "<br>" : "") + "💡 " + esc(w.tip)],
+        ["Example Sentence", w.sent, "", ""],
+        ["Hindi Translation", w.sentHi, "hi", ""]
+      ];
+      cards.forEach(function (c, k) {
+        var card = make("div", "rcard tone" + (k % 3),
+          "<p class='lab'>" + c[0] + "</p><p class='val " + c[2] + "'>" + esc(c[1]) + "</p>" +
+          (c[3] ? "<p class='meta hi'>" + c[3] + "</p>" : ""));
+        card.style.animationDelay = (k * 0.12) + "s";
+        list.appendChild(card);
+      });
+
+      var row = make("div", "rcard tone2 speakcard");
+      row.style.animationDelay = "0.60s";
+      row.appendChild(speakButton(w.en, "en", "btn", "🔊 Speak: " + w.en));
+      row.appendChild(speakButton(w.sentHi, "hi", "btn ghost sm", "🔊 हिंदी"));
+      list.appendChild(row);
+
+      setTimeout(function () { speech.say(w.en, "en"); }, 700);
+      score(w, "learn", true);
+      stage.appendChild(nextButton());
+    });
+  }
+
+  /* ---------------- mode 2 · quiz --------------------------------------- */
+  function modeQuiz(stage, w) {
+    var askHindi = Math.random() < 0.65;
+    var built = store.buildQuizOptions(w, askHindi);
+
+    stage.appendChild(make("div", "wordstage",
+      "<p class='big" + (askHindi ? "" : " hi") + "'>" + esc(askHindi ? w.en : w.hi) + "</p>" +
+      (askHindi ? "<p class='readhint hi'>पढ़िए: <b>" + esc(w.pron) + "</b></p>" : "") +
+      "<p class='posline'>" + esc(w.pos) + "</p>" +
+      "<p class='prompt" + (askHindi ? " hi" : "") + "'>" +
+      (askHindi ? "इसका सही हिंदी अर्थ चुनिए" : "Which English word means this?") + "</p>"));
+
+    var box = make("div", "options");
+    var out = make("div", "");
+    stage.appendChild(box);
+    stage.appendChild(out);
+
+    var done = false;
+
+    built.options.forEach(function (o, k) {
+      var b = make("button", "opt",
+        "<span class='k'>" + (k + 1) + "</span><span class='" + (askHindi ? "hi" : "") + "'>" + esc(o) + "</span>");
+      b.setAttribute("type", "button");
+      b.setAttribute("data-val", o);
+      on(b, "click", function () { answer(o); });
+      box.appendChild(b);
+    });
+
+    function answer(chosen) {
+      if (done) return;
+      done = true;
+      var ok = chosen === built.correct;
+      all(".opt", box).forEach(function (b) {
+        b.disabled = true;
+        var v = b.getAttribute("data-val");
+        if (v === built.correct) b.classList.add("right");
+        else if (v === chosen) b.classList.add("wrong");
+        else b.classList.add("fade");
+      });
+      var xp = score(w, "quiz", ok);
+      var panel = make("div", "explain " + (ok ? "ok" : "no"),
+        "<h4>" + (ok ? "✓ Correct · सही उत्तर" : "✕ Not correct · सही उत्तर नीचे") +
+        "<span class='xp'>+" + xp + " XP</span></h4>" + detailHTML(w));
+      out.appendChild(panel);
+      panel.appendChild(speakButton(w.en, "en", "btn ghost sm", "🔊 Hear it again"));
+      out.appendChild(nextButton());
+    }
+
+    keyHandler = function (n) {
+      var b = all(".opt", box)[n - 1];
+      if (b && !b.disabled) b.click();
+    };
+  }
+
+  /* ---------------- mode 3 · spell challenge ---------------------------- */
+  function modeSpell(stage, w) {
+    var word = w.en;
+    var letters = word.split("");
+    var blanks = store.spellBlanks(word);
+    var filled = {};
+
+    stage.appendChild(make("div", "card",
+      "<p class='eyebrow flush'>Meaning · अर्थ</p>" +
+      "<p class='spell-mean hi'>" + esc(w.hi) + "</p>" +
+      "<p class='dim hi small'>उच्चारण: " + esc(w.pron) + "</p>" +
+      "<p class='dim small'>" + esc(w.sent.replace(new RegExp(word, "ig"), "______")) + "</p>"));
+
+    var slots = make("div", "spellbox");
+    stage.appendChild(slots);
+
+    letters.forEach(function (ch, k) {
+      if (blanks.indexOf(k) === -1) {
+        slots.appendChild(make("div", "slot fixed", esc(ch)));
+      } else {
+        var s = make("div", "slot blank", "");
+        s.setAttribute("data-idx", String(k));
+        on(s, "click", function () {
+          if (!filled[k]) return;
+          var used = bank.querySelector("[data-bid='" + filled[k].bid + "']");
+          if (used) used.classList.remove("used");
+          delete filled[k];
+          s.textContent = "";
+        });
+        slots.appendChild(s);
+      }
+    });
+
+    stage.appendChild(make("p", "note", "Tap the letters · अक्षर चुनिए"));
+    var bank = make("div", "letterbank");
+    stage.appendChild(bank);
+
+    var pool = blanks.map(function (k) { return letters[k].toUpperCase(); })
+      .concat(store.shuffle("ABCDEFGHIJKLMNOPRSTUVWY".split("")).slice(0, 3));
+
+    store.shuffle(pool).forEach(function (L, bid) {
+      var b = make("button", "lkey", esc(L));
+      b.setAttribute("type", "button");
+      b.setAttribute("data-bid", String(bid));
+      on(b, "click", function () {
+        var open = null;
+        for (var i = 0; i < blanks.length; i++) {
+          if (!filled[blanks[i]]) { open = blanks[i]; break; }
+        }
+        if (open === null) { toast("All boxes are full", "bad"); return; }
+        filled[open] = { ch: L, bid: bid };
+        var target = slots.querySelector("[data-idx='" + open + "']");
+        if (target) target.textContent = L;
+        b.classList.add("used");
+        sfx.tap();
+      });
+      bank.appendChild(b);
+    });
+
+    var out = make("div", "");
+    var check = make("button", "btn next", "Check spelling · जाँचिए");
+    check.setAttribute("type", "button");
+    stage.appendChild(check);
+    stage.appendChild(out);
+
+    on(check, "click", function () {
+      for (var i = 0; i < blanks.length; i++) {
+        if (!filled[blanks[i]]) { toast("Fill every box first", "bad"); return; }
+      }
+      check.remove();
+      var guess = letters.map(function (ch, k) { return filled[k] ? filled[k].ch : ch; }).join("");
+      var ok = guess.toLowerCase() === word.toLowerCase();
+      all(".slot.blank", slots).forEach(function (s) {
+        var k = Number(s.getAttribute("data-idx"));
+        var good = filled[k].ch.toLowerCase() === letters[k].toLowerCase();
+        s.classList.add(good ? "good" : "bad");
+        if (!good) s.textContent = letters[k].toUpperCase();
+      });
+      var xp = score(w, "spell", ok);
+      out.appendChild(make("div", "explain " + (ok ? "ok" : "no"),
+        "<h4>" + (ok ? "✓ Perfect spelling · वर्तनी सही" : "✕ Correct spelling: " + esc(word)) +
+        "<span class='xp'>+" + xp + " XP</span></h4>" + detailHTML(w)));
+      speech.say(word, "en");
+      out.appendChild(nextButton());
+    });
+  }
+
+  /* ---------------- mode 4 · pronunciation ------------------------------ */
+  function modeSpeak(stage, w) {
+    stage.appendChild(make("div", "wordstage",
+      "<p class='big'>" + esc(w.en) + "</p>" +
+      "<p class='posline hi'>" + esc(w.pron) + " · " + esc(w.hi) + "</p>" +
+      "<p class='prompt hi'>पहले सुनिए, फिर माइक दबाकर बोलिए।</p>"));
+
+    stage.appendChild(speakButton(w.en, "en", "btn ghost next", "🔊 Listen first · पहले सुनिए"));
+
+    var wrap = make("div", "mic-wrap");
+    var mic = make("button", "mic", "🎤");
+    mic.setAttribute("type", "button");
+    mic.setAttribute("aria-label", "Record your pronunciation");
+    var state = make("p", "mic-state", listen.supported
+      ? "Tap and say the word · माइक दबाकर बोलिए"
+      : "This browser cannot listen · खुद जाँचिए");
+    var verdict = make("p", "verdict", "");
+    wrap.appendChild(mic); wrap.appendChild(state); wrap.appendChild(verdict);
+    stage.appendChild(wrap);
+
+    var out = make("div", "");
+    stage.appendChild(out);
+    var settled = false;
+
+    function finish(ok, label, cls, heard) {
+      if (settled) return;
+      settled = true;
+      verdict.textContent = label;
+      verdict.className = "verdict " + cls;
+      state.textContent = heard || "";
+      mic.classList.remove("rec");
+      mic.disabled = true;
+      var xp = score(w, "speak", ok);
+      out.appendChild(make("div", "explain " + (ok ? "ok" : "no"),
+        "<h4>" + esc(label) + "<span class='xp'>+" + xp + " XP</span></h4>" + detailHTML(w)));
+      out.appendChild(nextButton());
+    }
+
+    function selfRate() {
+      if (settled || out.getAttribute("data-rated")) return;
+      out.setAttribute("data-rated", "1");
+      var row = make("div", "btn-row");
+      [["Excellent", true, "good"], ["Good", true, "mid"], ["Try Again", false, "bad"]].forEach(function (r) {
+        var b = make("button", "btn" + (r[0] === "Excellent" ? "" : " ghost"), r[0]);
+        b.setAttribute("type", "button");
+        on(b, "click", function () {
+          row.remove();
+          finish(r[1], r[0] + " · self-rated", r[2], "");
+        });
+        row.appendChild(b);
+      });
+      out.appendChild(row);
+    }
+
+    if (listen.supported) {
+      on(mic, "click", function () {
+        mic.classList.add("rec");
+        state.textContent = "Listening… now say it";
+        listen.start(
+          function (heardList) {
+            var best = 0;
+            heardList.forEach(function (t) { best = Math.max(best, store.similarity(t, w.en)); });
+            var heard = "Heard: " + heardList[0];
+            if (best >= 85) finish(true, "Excellent · उत्कृष्ट", "good", heard);
+            else if (best >= 60) finish(true, "Good · अच्छा", "mid", heard + " — one more try for a perfect match");
+            else finish(false, "Try Again · फिर कोशिश", "bad", heard);
+          },
+          function (err) {
+            mic.classList.remove("rec");
+            state.textContent = err === "not-allowed"
+              ? "Microphone blocked. Allow it, or rate yourself below."
+              : "Could not hear you. Rate yourself below.";
+            selfRate();
+          },
+          function () { mic.classList.remove("rec"); }
+        );
+      });
+    } else {
+      on(mic, "click", function () { speech.say(w.en, "en"); });
+      selfRate();
+    }
+  }
+
+  /* ---------------- mode 5 · flashcards --------------------------------- */
+  function modeFlash(stage, w) {
+    var wrap = make("div", "flip-wrap");
+    var flip = make("div", "flip",
+      "<div class='face front'><p class='w'>" + esc(w.en) + "</p>" +
+      "<p class='readhint hi light'>पढ़िए: <b>" + esc(w.pron) + "</b></p>" +
+      "<p class='hint hi'>कार्ड पलटने के लिए टैप कीजिए</p></div>" +
+      "<div class='face back'>" +
+      "<p class='p hi'>" + esc(w.pron) + "</p>" +
+      "<p class='m hi'>" + esc(w.hi) + "</p>" +
+      "<p class='s'>" + esc(w.sent) + "</p>" +
+      "<p class='sh hi'>" + esc(w.sentHi) + "</p>" +
+      "<p class='sh tiny'>" + esc(w.pos) + (w.syn ? " · " + esc(w.syn) : "") + "</p></div>");
+    flip.setAttribute("role", "button");
+    flip.setAttribute("tabindex", "0");
+    wrap.appendChild(flip);
+    stage.appendChild(wrap);
+
+    var out = make("div", "");
+    stage.appendChild(out);
+
+    on(flip, "click", function () {
+      flip.classList.toggle("on");
+      if (!flip.classList.contains("on")) return;
+      speech.say(w.en, "en");
+      if (out.childElementCount) return;
+      var row = make("div", "btn-row");
+      var nope = make("button", "btn ghost", "Need practice");
+      var know = make("button", "btn", "I knew it ✓");
+      nope.setAttribute("type", "button");
+      know.setAttribute("type", "button");
+      on(nope, "click", function () { score(w, "flash", false); nextStep(); });
+      on(know, "click", function () { score(w, "flash", true); nextStep(); });
+      row.appendChild(nope); row.appendChild(know);
+      out.appendChild(row);
+    });
+  }
+
+  /* ---------------- mode 6 · prefix builder ------------------------------ */
+  function modePrefix(stage, combo) {
+    var asWord = store.comboToWord(combo);
+    var built = store.buildPrefixOptions(combo);
+
+    stage.appendChild(make("div", "wordstage",
+      "<p class='prefix-parts'>" +
+      "<span class='pfx'>" + esc(combo.prefix.toUpperCase()) + "-</span>" +
+      "<span class='plus'>+</span>" +
+      "<span class='base'>" + esc(combo.base.toUpperCase()) + "</span>" +
+      "</p>" +
+      "<p class='readhint hi'>पढ़िए: <b>" + esc(combo.prefixPron) + "</b> + <b>" + esc(combo.basePron) + "</b></p>" +
+      "<p class='posline hi'>" + esc(combo.prefix) + "- = " + esc(combo.prefixMeaningHi) +
+      " (" + esc(combo.prefixMeaningEn) + ") · " + esc(combo.base) + " = " + esc(combo.baseMeaningHi) + "</p>" +
+      "<p class='prompt hi'>दोनों जोड़ने पर कौन-सा शब्द बनेगा?</p>"));
+
+    var box = make("div", "options");
+    var out = make("div", "");
+    stage.appendChild(box);
+    stage.appendChild(out);
+
+    var done = false;
+
+    built.options.forEach(function (o, k) {
+      var b = make("button", "opt", "<span class='k'>" + (k + 1) + "</span><span>" + esc(o) + "</span>");
+      b.setAttribute("type", "button");
+      b.setAttribute("data-val", o);
+      on(b, "click", function () { answer(o); });
+      box.appendChild(b);
+    });
+
+    function answer(chosen) {
+      if (done) return;
+      done = true;
+      var ok = chosen === built.correct;
+      all(".opt", box).forEach(function (b) {
+        b.disabled = true;
+        var v = b.getAttribute("data-val");
+        if (v === built.correct) b.classList.add("right");
+        else if (v === chosen) b.classList.add("wrong");
+        else b.classList.add("fade");
+      });
+      var xp = score(asWord, "prefix", ok);
+      var panel = make("div", "explain " + (ok ? "ok" : "no"),
+        "<h4>" + (ok ? "✓ Correct · सही शब्द बना" : "✕ Not quite · सही शब्द नीचे देखिए") +
+        "<span class='xp'>+" + xp + " XP</span></h4>" +
+        "<p class='line'><b>" + esc(combo.prefix) + "-</b> + <b>" + esc(combo.base) + "</b> = <b>" + esc(combo.result) + "</b></p>" +
+        detailHTML(asWord));
+      out.appendChild(panel);
+      panel.appendChild(speakButton(combo.result, "en", "btn ghost sm", "🔊 Hear it again"));
+      out.appendChild(nextButton());
+    }
+
+    keyHandler = function (n) {
+      var b = all(".opt", box)[n - 1];
+      if (b && !b.disabled) b.click();
+    };
+  }
+
+
+  function finishSession() {
+    if (!sess) { go("home"); return; }
+    var st = store.get();
+    st.timeMs += Date.now() - sess.t0;
+    st.coins += sess.coins;
+    store.save();
+    store.touchDay();
+
+    if (sess.label && sess.label.indexOf("Daily") === 0) {
+      st.daily.done = true;
+      st.dailyDone += 1;
+      store.save();
+    }
+    store.addScore(sess.xp);
+
+    var answered = sess.right + sess.wrong;
+    var pct = answered ? Math.round((sess.right / answered) * 100) : 100;
+    var circ = 2 * Math.PI * 52;
+    var ring = byId("sumRing");
+    if (ring) {
+      ring.style.strokeDasharray = String(circ);
+      ring.style.strokeDashoffset = String(circ);
+      setTimeout(function () { ring.style.strokeDashoffset = String(circ * (1 - pct / 100)); }, 80);
+    }
+    setText("sumPct", pct + "%");
+    setText("sumRight", sess.right);
+    setText("sumWrong", sess.wrong);
+    setText("sumXp", sess.xp);
+    setText("sumCoins", sess.coins);
+
+    var band = pct === 100 ? ["Perfect session", "शानदार — एक भी गलती नहीं!"]
+      : pct >= 70 ? ["Well done", "बहुत अच्छा — ऐसे ही चलते रहिए।"]
+      : pct >= 40 ? ["Good effort", "अच्छा प्रयास — दोहराई कीजिए।"]
+      : ["Keep going", "कोई बात नहीं — अभ्यास से सब आता है।"];
+    setText("sumTitle", band[0]);
+    setText("sumHi", band[1]);
+
+    var list = byId("sumList");
+    if (list) {
+      list.innerHTML = "";
+      sess.results.forEach(function (r) {
+        var row = make("div", "row");
+        row.innerHTML =
+          "<span class='rank " + (r.ok ? "ok" : "no") + "'>" + (r.ok ? "✓" : "✕") + "</span>" +
+          "<span class='who'><b>" + esc(r.w.en) + "</b><small class='hi'>" + esc(r.w.pron) + " · " + esc(r.w.hi) + "</small></span>";
+        row.appendChild(speakButton(r.w.en, "en", "icon-btn accent", "🔊"));
+        list.appendChild(row);
+      });
+    }
+
+    var fresh = store.checkBadges();
+    lastSession = { words: sess.words, mode: sess.mode, label: sess.label };
+    sess = null;
+    go("summary");
+    if (fresh.length) {
+      setTimeout(function () {
+        popup(fresh[0].icon, "Badge unlocked: " + fresh[0].en, fresh[0].desc + " (+10 coins)");
+      }, 650);
+    }
+  }
+
+  function leaveSession() {
+    if (sess && sess.i > 0) finishSession();
+    else { sess = null; go("home"); }
+  }
+
+  /* ---------------- daily challenge -------------------------------------- */
+  function startDaily() {
+    var words = store.dailySet();
+    var replay = store.get().daily.done;
+    startSession(store.shuffle(words), "mixed", "Daily Challenge · आज की चुनौती");
+    if (replay) toast("Replaying today's challenge");
+  }
+
+  /* ---------------- prefix builder ---------------------------------------- */
+  function startPrefixSession(len) {
+    var n = Math.min(len || 10, HEM.PREFIXES.length);
+    var combos = store.shuffle(HEM.PREFIXES).slice(0, n);
+    startSession(combos, "prefix", MODE_TITLE.prefix);
+  }
+
+  /* ---------------- revision --------------------------------------------- */
+  RENDER.revision = function () {
+    var due = store.dueWords();
+    var weak = store.weakWords();
+    var info = byId("revInfo");
+    if (info) {
+      info.innerHTML =
+        "<b class='card-title'>" + due.length + " words are due today</b>" +
+        "<p class='dim hi small'>गलत शब्द 1, 2, 4, 8 और 16 दिन बाद दोबारा आते हैं — यही स्मृति अंतराल विधि है।</p>";
+      var set = due.length ? due : weak;
+      var b = make("button", "btn next", set.length
+        ? "Revise " + Math.min(set.length, 15) + " words"
+        : "Nothing due yet");
+      b.setAttribute("type", "button");
+      b.disabled = !set.length;
+      on(b, "click", function () {
+        if (!set.length) return;
+        startSession(store.shuffle(set).slice(0, 15), "quiz", "Revision · दोहराई");
+      });
+      info.appendChild(b);
+    }
+
+    var list = byId("revList");
+    if (!list) return;
+    list.innerHTML = "";
+    var show = (weak.length ? weak : due).slice(0, 30);
+    if (!show.length) {
+      list.innerHTML = "<div class='card center dim'>No mistakes recorded yet.<br><span class='hi'>अभी कोई गलती दर्ज नहीं है।</span></div>";
+      return;
+    }
+    var card = make("div", "card", "<b class='card-title'>Words you missed · जिन शब्दों में चूक हुई</b>");
+    var srs = store.get().srs;
+    show.forEach(function (w) {
+      var r = srs[w.id] || { box: 1, misses: 0 };
+      card.appendChild(make("div", "row",
+        "<span class='rank'>" + (r.misses || 0) + "</span>" +
+        "<span class='who'><b>" + esc(w.en) + "</b><small class='hi'>" + esc(w.pron) + " · " + esc(w.hi) + "</small></span>" +
+        "<span class='dim tiny'>Box " + r.box + "</span>"));
+    });
+    list.appendChild(card);
+  };
+
+  /* ---------------- leaderboard ------------------------------------------ */
+  RENDER.leaderboard = function () {
+    var host = byId("lbList");
+    if (!host) return;
+    var mine = store.get().scores.map(function (s) {
+      return { name: s.name + " · " + s.date, score: s.score, me: true };
+    });
+    var rows = mine.concat(store.sampleBoard).sort(function (a, b) { return b.score - a.score; }).slice(0, 12);
+    host.innerHTML = "";
+    if (!rows.length) {
+      host.innerHTML = "<p class='dim'>Finish a session to appear here.</p>";
+      return;
+    }
+    rows.forEach(function (r, i) {
+      host.appendChild(make("div", "row" + (r.me ? " me" : ""),
+        "<span class='rank g" + (i < 3 ? i + 1 : 0) + "'>" + (i + 1) + "</span>" +
+        "<span class='who'><b>" + esc(r.name) + "</b><small>" + (r.me ? "your session" : "sample score") + "</small></span>" +
+        "<span class='val'>" + r.score + " XP</span>"));
+    });
+  };
+
+  /* ---------------- progress --------------------------------------------- */
+  RENDER.progress = function () {
+    var st = store.get();
+    setText("pgLearned", st.learned.length + " / " + HEM.WORDS.length);
+    setText("pgAcc", store.accuracy() + "%");
+    setText("pgStreak", st.dayStreak);
+    setText("pgBest", st.bestStreak);
+    var mins = Math.round(st.timeMs / 60000);
+    setText("pgTime", mins < 60 ? mins + "m" : Math.floor(mins / 60) + "h " + (mins % 60) + "m");
+    setText("pgXp", st.xp);
+
+    var host = byId("catProgress");
+    if (host) {
+      host.innerHTML = "";
+      HEM.CATEGORIES.forEach(function (c) {
+        if (c.key === "all") return;
+        var total = 0, got = 0;
+        HEM.WORDS.forEach(function (w) {
+          if (w.cat !== c.key) return;
+          total += 1;
+          if (st.learned.indexOf(w.id) !== -1) got += 1;
+        });
+        var pct = total ? Math.round((got / total) * 100) : 0;
+        host.appendChild(make("div", "catrow",
+          "<p class='catlabel'><span>" + c.icon + " " + esc(c.en) +
+          " <i class='hi'>" + esc(c.hi) + "</i></span><span class='dim'>" + got + "/" + total + "</span></p>" +
+          "<span class='catbar'><span style='width:" + pct + "%'></span></span>"));
+      });
+    }
+
+    var grid = byId("badgeGrid");
+    if (grid) {
+      grid.innerHTML = "";
+      HEM.ACHIEVEMENTS.forEach(function (a) {
+        var got = st.badges.indexOf(a.id) !== -1;
+        grid.appendChild(make("div", "badge" + (got ? " got" : ""),
+          "<span class='e'>" + a.icon + "</span><b>" + esc(a.en) + "</b><small class='hi'>" + esc(a.hi) + "</small>"));
+      });
+    }
+  };
+
+  /* ---------------- search ----------------------------------------------- */
+  RENDER.search = function () {
+    var input = byId("searchInput");
+    renderSearch(input ? input.value : "");
+    if (input && input.focus) setTimeout(function () { input.focus(); }, 120);
+  };
+
+  function renderSearch(term) {
+    var host = byId("searchOut");
+    if (!host) return;
+    host.innerHTML = "";
+    var q = String(term || "").trim();
+    var list = q ? store.searchWords(q).slice(0, 40) : store.shuffle(HEM.WORDS).slice(0, 12);
+
+    if (!list.length) {
+      host.innerHTML = "<div class='card center dim'>No word found.<br><span class='hi'>यह शब्द सूची में नहीं है।</span></div>";
+      return;
+    }
+    if (!q) host.appendChild(make("p", "note flush", "Some words to explore · कुछ शब्द"));
+
+    list.forEach(function (w) {
+      var cat = null;
+      HEM.CATEGORIES.forEach(function (c) { if (c.key === w.cat) cat = c; });
+      var card = make("div", "result",
+        "<p class='res-top'><b>" + esc(w.en) + "</b><span class='pron hi'>" + esc(w.pron) + "</span></p>" +
+        "<p class='mean hi'>" + esc(w.hi) + "</p>" +
+        "<p class='ex'>" + esc(w.sent) + "</p>" +
+        "<p class='ex hi dim'>" + esc(w.sentHi) + "</p>" +
+        "<p class='tags'><span class='tagpill'>" + esc(w.pos) + "</span>" +
+        "<span class='tagpill lv" + w.level + "'>" + esc(HEM.LEVEL_NAME[w.level]) + "</span>" +
+        "<span class='tagpill'>" + (cat ? cat.icon + " " + esc(cat.en) : esc(w.cat)) + "</span></p>" +
+        (w.syn ? "<p class='dim tiny'>Syn: " + esc(w.syn) + (w.ant ? " · Ant: " + esc(w.ant) : "") + "</p>" : "") +
+        "<p class='dim tiny hi'>💡 " + esc(w.tip) + "</p>");
+      var top = card.querySelector(".res-top");
+      if (top) top.appendChild(speakButton(w.en, "en", "icon-btn accent", "🔊"));
+      host.appendChild(card);
+    });
+  }
+
+  /* ---------------- settings ---------------------------------------------- */
+  function applyTheme() {
+    var dark = store.get().settings.theme === "dark";
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    var t = byId("btnTheme");
+    if (t) t.textContent = dark ? "☀" : "🌙";
+    var sw = byId("swTheme");
+    if (sw) {
+      sw.classList.toggle("is-on", dark);
+      sw.setAttribute("aria-checked", dark ? "true" : "false");
+    }
+  }
+
+  function toggleTheme() {
+    var s = store.get().settings;
+    s.theme = s.theme === "dark" ? "light" : "dark";
+    store.save();
+    applyTheme();
+  }
+
+  function bindSwitch(id, key) {
+    var sw = byId(id);
+    if (!sw) return;
+    function paint() {
+      var v = !!store.get().settings[key];
+      sw.classList.toggle("is-on", v);
+      sw.setAttribute("aria-checked", v ? "true" : "false");
+    }
+    on(sw, "click", function () {
+      var s = store.get().settings;
+      s[key] = !s[key];
+      store.save();
+      paint();
+    });
+    paint();
+  }
+
+  function fillVoices() {
+    var sel = byId("selVoice");
+    if (!sel) return;
+    var want = store.get().settings.voice;
+    sel.innerHTML = "<option value=''>Automatic</option>";
+    speech.voices().forEach(function (v) {
+      if (!/^en/i.test(v.lang || "")) return;
+      var o = document.createElement("option");
+      o.value = v.name;
+      o.textContent = v.name.slice(0, 28) + " (" + v.lang + ")";
+      if (want === v.name) o.selected = true;
+      sel.appendChild(o);
+    });
+  }
+
+  /* ---------------- wiring ------------------------------------------------ */
+  function wire() {
+    on(document, "click", function (e) {
+      var t = e.target;
+      var b = t && t.closest ? t.closest("[data-go]") : null;
+      if (!b) return;
+      var dest = b.getAttribute("data-go");
+      if (dest === "daily") { startDaily(); return; }
+      if (dest === "prefix") { startPrefixSession(pick.len); return; }
+      go(dest);
+    });
+
+    all("#modeGrid [data-mode]").forEach(function (b) {
+      on(b, "click", function () {
+        var mode = b.getAttribute("data-mode");
+        if (mode === "prefix") { startPrefixSession(pick.len); return; }
+        var pool = store.filterWords(pick.cat, pick.lvl);
+        if (!pool.length) { toast("No words for this filter", "bad"); return; }
+        startSession(store.shuffle(pool).slice(0, Math.min(pick.len, pool.length)), mode, null);
+      });
+    });
+
+    wireChips("catChips", "cat", "cat", false);
+    wireChips("lvlChips", "lvl", "lvl", true);
+    wireChips("lenChips", "len", "len", true);
+
+    on(byId("sessBack"), "click", leaveSession);
+    on(byId("sessSpeak"), "click", function () {
+      if (!sess) return;
+      var step = sess.steps[Math.min(sess.i, sess.steps.length - 1)];
+      if (step) speech.say(step.w.en, "en");
+    });
+    on(byId("btnAgain"), "click", function () {
+      if (!lastSession) { go("picker"); return; }
+      startSession(store.shuffle(lastSession.words), lastSession.mode, lastSession.label);
+    });
+
+    on(byId("btnReward"), "click", collectReward);
+    on(byId("btnTheme"), "click", toggleTheme);
+    on(byId("swTheme"), "click", toggleTheme);
+    bindSwitch("swAuto", "auto");
+    bindSwitch("swSfx", "sfx");
+
+    var rate = byId("rngRate");
+    if (rate) {
+      rate.value = String(store.get().settings.rate);
+      on(rate, "input", function (e) {
+        store.get().settings.rate = Number(e.target.value) || 0.85;
+        store.save();
+      });
+      on(rate, "change", function () { speech.say("This is my speaking speed", "en"); });
+    }
+
+    on(byId("selVoice"), "change", function (e) {
+      store.get().settings.voice = e.target.value;
+      store.save();
+      speech.say("Hello, I will read your words", "en");
+    });
+
+    var name = byId("inpName");
+    if (name) {
+      name.value = store.get().name;
+      on(name, "input", function (e) {
+        store.get().name = String(e.target.value).trim() || "Learner";
+        store.save();
+      });
+    }
+
+    on(byId("btnReset"), "click", function () {
+      var okToReset = true;
+      if (typeof window !== "undefined" && window.confirm) {
+        okToReset = window.confirm("Delete all progress on this device? / सारा डेटा मिट जाएगा?");
+      }
+      if (!okToReset) return;
+      store.reset();
+      applyTheme();
+      fillVoices();
+      if (name) name.value = store.get().name;
+      toast("Progress reset", "bad");
+      go("home");
+    });
+
+    on(byId("coinPill"), "click", function () {
+      popup("🪙", store.get().coins + " coins", "Earn coins for every correct answer, the daily reward and each new badge.");
+    });
+
+    on(byId("searchInput"), "input", function (e) { renderSearch(e.target.value); });
+    on(byId("mClose"), "click", closePopup);
+    on(byId("modal"), "click", function (e) { if (e.target === byId("modal")) closePopup(); });
+
+    on(document, "keydown", function (e) {
+      if (current !== "session" || !keyHandler) return;
+      if (["1", "2", "3", "4"].indexOf(e.key) !== -1) keyHandler(Number(e.key));
+    });
+
+    speech.onVoices(fillVoices);
+  }
+
+  /* ---------------- boot --------------------------------------------------- */
+  function boot() {
+    store.load();
+    wire();
+    applyTheme();
+    fillVoices();
+    setTimeout(fillVoices, 800);
+    store.touchDay();
+    RENDER.picker();
+    go("home");
+    setText("storeNote", store.backend === "local"
+      ? "Progress is saved on this device with local storage and works offline."
+      : "This preview blocks local storage, so progress lasts only for this visit. Download the file and open it in your browser to save progress.");
+    HEM.app.booted = true;
+  }
+
+  HEM.app = {
+    booted: false,
+    boot: boot,
+    go: go,
+    startSession: startSession,
+    startDaily: startDaily,
+    renderSearch: renderSearch,
+    getPick: function () { return pick; },
+    getSession: function () { return sess; }
+  };
+
+  if (typeof document !== "undefined") {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", boot);
+    } else {
+      boot();
+    }
+  }
+})(typeof window !== "undefined" ? (window.HEM = window.HEM || {}) : (global.HEM = global.HEM || {}));
+
+</script>
+</body>
+</html>

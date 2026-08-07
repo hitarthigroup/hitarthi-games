@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B2545">
+<meta name="description" content="Hitarthi English Master — learn English vocabulary in Hindi with quizzes, flashcards, spelling and pronunciation practice.">
+<title>Hitarthi English Master</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="appbar">
+  <div class="wrap">
+    <div class="logo">H</div>
+    <div class="brand">
+      <h1>Hitarthi English Master</h1>
+      <p class="hi">अंग्रेज़ी सीखिए — अपनी भाषा में</p>
+    </div>
+    <button class="icon-btn" id="coinPill" type="button" aria-label="Coins">🪙 <span id="coinCount">0</span></button>
+    <button class="icon-btn" id="btnTheme" type="button" aria-label="Switch light or dark theme">🌙</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ================= HOME ================= -->
+  <section class="screen is-on" id="s-home">
+    <div class="hero">
+      <h2 id="greetEn">Welcome</h2>
+      <p class="hi" id="greetHi">आज दस नए शब्द सीखते हैं।</p>
+      <div class="lvlrow">
+        <span class="lvl-badge" id="lvlBadge">Level 1</span>
+        <span class="xpbar"><span id="xpFill"></span></span>
+      </div>
+      <p class="xptext" id="xpText">0 XP</p>
+    </div>
+
+    <div class="stat-strip">
+      <div class="stat-mini"><b id="statLearned">0</b><span>Learned</span></div>
+      <div class="stat-mini"><b id="statAcc">0%</b><span>Accuracy</span></div>
+      <div class="stat-mini"><b id="statStreak">0</b><span>Streak</span></div>
+      <div class="stat-mini"><b id="statTotal">0</b><span>Words</span></div>
+    </div>
+
+    <div class="tiles">
+      <button class="tile" type="button" data-go="picker">
+        <span class="ico">▶</span><b>Start Learning</b>
+        <small>Learn · Quiz · Spell · Speak</small><span class="hi">सीखना शुरू करें</span>
+      </button>
+      <button class="tile blue" type="button" data-go="daily">
+        <span class="ico">📅</span><b>Daily Challenge</b>
+        <small>10 fresh words today</small><span class="hi">आज की चुनौती</span>
+      </button>
+      <button class="tile green" type="button" data-go="revision">
+        <span class="ico">🔁</span><b>Revision</b>
+        <small><span id="tileRevCount">0</span> words due</small><span class="hi">दोहराई</span>
+      </button>
+      <button class="tile" type="button" data-go="prefix">
+        <span class="ico">➕</span><b>Prefix Builder</b>
+        <small>Prefix + word = new word</small><span class="hi">उपसर्ग खेल</span>
+      </button>
+      <button class="tile blue" type="button" data-go="leaderboard">
+        <span class="ico">🏅</span><b>Leaderboard</b>
+        <small>Your best sessions</small><span class="hi">अंक तालिका</span>
+      </button>
+      <button class="tile" type="button" data-go="progress">
+        <span class="ico">📊</span><b>Progress</b>
+        <small>Stats and badges</small><span class="hi">प्रगति</span>
+      </button>
+      <button class="tile blue" type="button" data-go="settings">
+        <span class="ico">⚙</span><b>Settings</b>
+        <small>Theme, voice, reset</small><span class="hi">सेटिंग्स</span>
+      </button>
+    </div>
+
+    <div class="card reward">
+      <span class="reward-ico">🎁</span>
+      <div class="reward-txt">
+        <b>Daily reward</b>
+        <small class="hi" id="rewardNote">रोज़ लॉगिन कीजिए, सिक्के पाइए।</small>
+      </div>
+      <button class="btn sm" type="button" id="btnReward">Collect</button>
+    </div>
+  </section>
+
+  <!-- ================= PICKER ================= -->
+  <section class="screen" id="s-picker">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2>Start Learning</h2><p class="sub hi">श्रेणी और तरीका चुनिए</p></div>
+    </div>
+
+    <p class="eyebrow">Category · श्रेणी</p>
+    <div class="chips" id="catChips"></div>
+
+    <p class="eyebrow">Difficulty · कठिनाई</p>
+    <div class="chips" id="lvlChips">
+      <button class="chip is-on" type="button" data-lvl="0">All</button>
+      <button class="chip" type="button" data-lvl="1">Easy · आसान</button>
+      <button class="chip" type="button" data-lvl="2">Medium · मध्यम</button>
+      <button class="chip" type="button" data-lvl="3">Hard · कठिन</button>
+    </div>
+
+    <p class="eyebrow">Words per session</p>
+    <div class="chips" id="lenChips">
+      <button class="chip" type="button" data-len="5">5</button>
+      <button class="chip is-on" type="button" data-len="10">10</button>
+      <button class="chip" type="button" data-len="20">20</button>
+    </div>
+
+    <p class="eyebrow">Mode · तरीका</p>
+    <div class="tiles" id="modeGrid">
+      <button class="tile" type="button" data-mode="learn"><span class="ico">📖</span><b>Learning</b><small>Reveal cards one by one</small><span class="hi">पढ़ाई मोड</span></button>
+      <button class="tile blue" type="button" data-mode="quiz"><span class="ico">❓</span><b>Quiz</b><small>Four options, instant answer</small><span class="hi">प्रश्नोत्तरी</span></button>
+      <button class="tile green" type="button" data-mode="spell"><span class="ico">✍</span><b>Spell Challenge</b><small>Fill the missing letters</small><span class="hi">वर्तनी</span></button>
+      <button class="tile" type="button" data-mode="speak"><span class="ico">🎤</span><b>Pronunciation</b><small>Speak and get checked</small><span class="hi">उच्चारण</span></button>
+      <button class="tile blue" type="button" data-mode="flash"><span class="ico">🃏</span><b>Flashcards</b><small>Tap to flip the card</small><span class="hi">फ़्लैशकार्ड</span></button>
+      <button class="tile" type="button" data-mode="prefix"><span class="ico">➕</span><b>Prefix Builder</b><small>Prefix + word = new word</small><span class="hi">उपसर्ग खेल</span></button>
+      <button class="tile green" type="button" data-mode="mixed"><span class="ico">🎲</span><b>Mixed Practice</b><small>All modes together</small><span class="hi">मिश्रित अभ्यास</span></button>
+    </div>
+    <p class="note" id="pickCount"></p>
+  </section>
+
+  <!-- ================= SESSION ================= -->
+  <section class="screen" id="s-session">
+    <div class="screen-head">
+      <button class="back" type="button" id="sessBack" aria-label="Leave session">←</button>
+      <div class="grow"><h2 id="sessTitle">Practice</h2><p class="sub" id="sessSub">Word 1 of 10</p></div>
+      <button class="icon-btn accent" type="button" id="sessSpeak" aria-label="Play pronunciation">🔊</button>
+    </div>
+    <div class="progress"><span id="sessBar"></span></div>
+    <div id="stage"></div>
+  </section>
+
+  <!-- ================= SUMMARY ================= -->
+  <section class="screen" id="s-summary">
+    <div class="summary">
+      <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+        <circle class="ring-fg" id="sumRing" cx="60" cy="60" r="52" transform="rotate(-90 60 60)"></circle>
+        <text class="ring-txt" id="sumPct" x="60" y="69" text-anchor="middle">0%</text>
+      </svg>
+      <h2 id="sumTitle">Session complete</h2>
+      <p class="hi" id="sumHi">बहुत बढ़िया!</p>
+    </div>
+    <div class="stat-strip">
+      <div class="stat-mini"><b id="sumRight">0</b><span>Correct</span></div>
+      <div class="stat-mini"><b id="sumWrong">0</b><span>Wrong</span></div>
+      <div class="stat-mini"><b id="sumXp">0</b><span>XP</span></div>
+      <div class="stat-mini"><b id="sumCoins">0</b><span>Coins</span></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn ghost" type="button" data-go="home">Home</button>
+      <button class="btn" type="button" id="btnAgain">Practise again</button>
+    </div>
+    <div class="card">
+      <b class="card-title">Words in this session</b>
+      <div id="sumList"></div>
+    </div>
+  </section>
+
+  <!-- ================= REVISION ================= -->
+  <section class="screen" id="s-revision">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2>Revision</h2><p class="sub hi">गलत शब्द दोबारा — स्मृति अंतराल विधि</p></div>
+    </div>
+    <div class="card" id="revInfo"></div>
+    <div id="revList"></div>
+  </section>
+
+  <!-- ================= LEADERBOARD ================= -->
+  <section class="screen" id="s-leaderboard">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2>Leaderboard</h2><p class="sub hi">इस डिवाइस पर सहेजे गए अंक</p></div>
+    </div>
+    <div class="card"><div id="lbList"></div></div>
+    <p class="note">Scores stay on this device. Practice partners are sample entries to aim at.</p>
+  </section>
+
+  <!-- ================= PROGRESS ================= -->
+  <section class="screen" id="s-progress">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2>Progress</h2><p class="sub hi">आपकी पूरी प्रगति</p></div>
+    </div>
+    <div class="bigstats">
+      <div class="bigstat"><b id="pgLearned">0</b><span>Words Learned</span><i class="hi">सीखे गए शब्द</i></div>
+      <div class="bigstat"><b id="pgAcc">0%</b><span>Accuracy</span><i class="hi">शुद्धता</i></div>
+      <div class="bigstat"><b id="pgStreak">0</b><span>Current Streak</span><i class="hi">वर्तमान श्रृंखला</i></div>
+      <div class="bigstat"><b id="pgBest">0</b><span>Best Streak</span><i class="hi">सर्वश्रेष्ठ श्रृंखला</i></div>
+      <div class="bigstat"><b id="pgTime">0m</b><span>Practice Time</span><i class="hi">अभ्यास समय</i></div>
+      <div class="bigstat"><b id="pgXp">0</b><span>Total XP</span><i class="hi">कुल अंक</i></div>
+    </div>
+    <div class="card">
+      <b class="card-title">Category progress · श्रेणीवार प्रगति</b>
+      <div id="catProgress"></div>
+    </div>
+    <div class="card">
+      <b class="card-title">Achievements · उपलब्धियाँ</b>
+      <div class="badges" id="badgeGrid"></div>
+    </div>
+  </section>
+
+  <!-- ================= SEARCH ================= -->
+  <section class="screen" id="s-search">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2>Search</h2><p class="sub hi">कोई भी शब्द खोजिए</p></div>
+    </div>
+    <div class="searchbar">
+      <span aria-hidden="true">🔍</span>
+      <input id="searchInput" type="search" placeholder="Type English or हिंदी…" autocomplete="off" aria-label="Search words">
+    </div>
+    <div id="searchOut"></div>
+  </section>
+
+  <!-- ================= SETTINGS ================= -->
+  <section class="screen" id="s-settings">
+    <div class="screen-head">
+      <button class="back" type="button" data-go="home" aria-label="Back">←</button>
+      <div><h2>Settings</h2><p class="sub hi">अपनी पसंद तय कीजिए</p></div>
+    </div>
+    <div class="card">
+      <div class="setrow">
+        <div class="t"><b>Dark mode</b><small class="hi">रात के लिए गहरा रंग</small></div>
+        <button class="switch" type="button" id="swTheme" role="switch" aria-checked="false" aria-label="Dark mode"></button>
+      </div>
+      <div class="setrow">
+        <div class="t"><b>Auto-speak new word</b><small class="hi">नया शब्द अपने आप बोले</small></div>
+        <button class="switch" type="button" id="swAuto" role="switch" aria-checked="true" aria-label="Auto speak"></button>
+      </div>
+      <div class="setrow">
+        <div class="t"><b>Sound effects</b><small class="hi">सही और गलत की ध्वनि</small></div>
+        <button class="switch" type="button" id="swSfx" role="switch" aria-checked="true" aria-label="Sound effects"></button>
+      </div>
+      <div class="setrow">
+        <div class="t"><b>Speech speed</b><small class="hi">बोलने की गति</small></div>
+        <input type="range" id="rngRate" min="0.5" max="1.2" step="0.05" value="0.85" aria-label="Speech speed">
+      </div>
+      <div class="setrow">
+        <div class="t"><b>English voice</b><small class="hi">आवाज़ चुनिए</small></div>
+        <select id="selVoice" aria-label="English voice"><option value="">Automatic</option></select>
+      </div>
+    </div>
+    <div class="card">
+      <div class="setrow">
+        <div class="t"><b>Your name</b><small class="hi">अंक तालिका में दिखेगा</small></div>
+        <input id="inpName" class="txtinput" maxlength="16" aria-label="Your name">
+      </div>
+      <div class="setrow">
+        <div class="t"><b>Reset all progress</b><small class="hi">सारा डेटा मिटा दें</small></div>
+        <button class="btn sm danger" type="button" id="btnReset">Reset</button>
+      </div>
+    </div>
+    <p class="note" id="storeNote"></p>
+  </section>
+
+</main>
+
+<nav class="bottomnav" id="nav">
+  <button type="button" data-go="home" class="is-on"><i>⌂</i>Home</button>
+  <button type="button" data-go="picker"><i>▶</i>Practice</button>
+  <button type="button" data-go="search"><i>🔍</i>Search</button>
+  <button type="button" data-go="progress"><i>📊</i>Progress</button>
+  <button type="button" data-go="settings"><i>⚙</i>Settings</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-emoji" id="mEmoji">🎉</div>
+    <h3 id="mTitle"></h3>
+    <p id="mText"></p>
+    <button class="btn" type="button" id="mClose">Great</button>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/prefixdata.js"></script>
+<script src="js/store.js"></script>
+<script src="js/speech.js"></script>
+<script src="js/app.js"></script>
+<script src="../assets/arcade-bar.js" defer></script>
+</body>
+</html>
